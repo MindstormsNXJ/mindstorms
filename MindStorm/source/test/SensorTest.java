@@ -11,7 +11,7 @@ public class SensorTest {
 		ColorHTSensor cos= new ColorHTSensor(SensorPort.S3);
 		System.out.println("Start SensorTest");
 		Button.ENTER.waitForPressAndRelease();
-		for (int i = 0; i < 100; i++) {
+		while (true) {
 			System.out.println(us.getDistance());
 			System.out.println(cs.getDegrees());
 			System.out.println(cos.getColorID());
