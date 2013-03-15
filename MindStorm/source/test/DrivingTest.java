@@ -2,6 +2,7 @@ package test;
 
 import lejos.nxt.*;
 import lejos.nxt.addon.*;
+import lejos.nxt.comm.LCPBTResponder;
 
 public class DrivingTest extends Thread implements ButtonListener {
 
@@ -18,13 +19,59 @@ public class DrivingTest extends Thread implements ButtonListener {
 
 	public DrivingTest() {
 		System.out.println("Initialize");
+		initialize();
 		Button.ESCAPE.addButtonListener(this);
 		calibrate();
 		System.out.println("Enter to Start");
-		Button.ENTER.waitForPressAndRelease();
+//		Button.ENTER.waitForPressAndRelease();
+		this.start();
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		new DrivingTest();
+	}
+
+	public void initialize() {
 		left.setAcceleration(4000);
 		right.setAcceleration(4000);
-		this.start();
+		// Escape Funktion
+		Button.ESCAPE.addButtonListener(this);
+		// Monitor Daemon
+		LCPBTResponder lcpThread = new LCPBTResponder();
+		lcpThread.setDaemon(true);
+		lcpThread.start();
+	}
+
+	public void calibrate() {
+		System.out.println("Calibrate");
+		right(50);
+		com.startCalibration();
+		sleep(14100); //Time for one rotaion
+		com.stopCalibration();
+		System.out.println("Calibrated");
+		stop();
+	}
+
+	public void right(int rotationspeed) {
+		setSpeed(rotationspeed);
+		left.forward();
+		right.backward();		
+	}
+
+	public void right() {
+		right(rotationspeed);
+	}
+
+	public void left() {
+		left(rotationspeed);
+	}
+	public void left(int rotationspeed) {
+		setSpeed(rotationspeed);
+		left.backward();
+		right.forward();
 	}
 
 	public void run() {
@@ -39,31 +86,12 @@ public class DrivingTest extends Thread implements ButtonListener {
 		stop();
 		System.out.println("Ticks: " + ticks);
 		System.out.println("Enter for Exit");
-		Button.ENTER.waitForPressAndRelease();
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		new DrivingTest();
+//		Button.ENTER.waitForPressAndRelease();
 	}
 
 	public void stop() {
 		left.stop();
 		right.stop();
-	}
-
-	public void right() {
-		setSpeed(rotationspeed);
-		left.forward();
-		right.backward();
-	}
-
-	public void left() {
-		setSpeed(rotationspeed);
-		left.backward();
-		right.forward();
 	}
 
 	public void setSpeed(int speed) {
@@ -92,18 +120,6 @@ public class DrivingTest extends Thread implements ButtonListener {
 		}
 	}
 
-	public void calibrate() {
-		Button.ENTER.waitForPressAndRelease();
-		setSpeed(50);
-		System.out.println("Calibrate");
-		right();
-		com.startCalibration();
-		Button.ENTER.waitForPressAndRelease();
-		com.stopCalibration();
-		System.out.println("Calibrated");
-		stop();
-	}
-
 	@Override
 	public void buttonPressed(Button b) {
 		if (b.getId() == Button.ID_ESCAPE) {
@@ -122,16 +138,17 @@ public class DrivingTest extends Thread implements ButtonListener {
 		int direction = getDegrees();
 		right();
 		int targetDirection = (direction + 90) % 360;
-		System.out.println("90° Right\t"+ targetDirection);
+		System.out.println("90° Right\t" + targetDirection);
 		while (!checkDegrees(targetDirection)) {
 		}
 		stop();
 	}
+
 	public void stepLeft() {
 		int direction = getDegrees();
 		left();
 		int targetDirection = (direction - 90) % 360;
-		System.out.println("90° Left\t"+ targetDirection);
+		System.out.println("90° Left\t" + targetDirection);
 		while (!checkDegrees(targetDirection)) {
 		}
 		stop();
@@ -139,12 +156,13 @@ public class DrivingTest extends Thread implements ButtonListener {
 
 	public boolean checkDegrees(int targetDirection) {
 		int direction = getDegrees();
-//		System.out.println(direction + "\t" + targetDirection);
+		// System.out.println(direction + "\t" + targetDirection);
 		if (Math.abs(direction - targetDirection) % 360 < drift) {
 			return true;
 		} else
 			return false;
 	}
+
 	public int getDegrees() {
 		return (int) com.getDegrees();
 	}
