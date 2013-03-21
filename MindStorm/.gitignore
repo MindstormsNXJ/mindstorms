@@ -3,3 +3,4 @@
 *.nxd
 # NXT Error Logs
 hs_err_pid*.log
+.classpath
