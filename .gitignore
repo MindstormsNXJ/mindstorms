@@ -4,4 +4,4 @@
 *.war
 *.ear
 
-.classpath
+*.classpath
