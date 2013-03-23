@@ -8,17 +8,22 @@ public class CalibrationStore {
 	private CompassHTSensor compassSensor;
 	
 	public CalibrationStore() {
+		Button.ESCAPE.addButtonListener(new EscapeButtonListener());
 		compassSensor = new CompassHTSensor(SensorPort.S1);
 		calibrate();
 		showDegreesOnDisplay(20);
 //		final NXTRegulatedMotor motor = Motor.A;
+//		motor.setSpeed(5);
 //		motor.forward();
 //		try {
-//			Thread.sleep(10000);
+//			Thread.sleep(2000);
 //		} catch (InterruptedException e) {
 //			e.printStackTrace();
 //		}
 //		motor.stop();
+//		while (true) {
+//			System.out.println(compassSensor.getDegrees());
+//		}
 	}
 	
 	private void calibrate() {
@@ -72,6 +77,20 @@ public class CalibrationStore {
 	
 	public static void main(String args[]) {
 		new CalibrationStore();
+	}
+
+	private class EscapeButtonListener implements ButtonListener {
+
+		@Override
+		public void buttonPressed(Button b) {
+			System.exit(0);
+		}
+
+		@Override
+		public void buttonReleased(Button b) {
+			//nothing
+		}
+		
 	}
 	
 }
