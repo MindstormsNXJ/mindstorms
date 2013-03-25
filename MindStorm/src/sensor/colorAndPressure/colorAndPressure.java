@@ -11,7 +11,6 @@ import lejos.nxt.addon.CompassHTSensor;
 public class colorAndPressure {
 	// Motor declaration
 	NXTRegulatedMotor left = Motor.B; // right
-	NXTRegulatedMotor right = Motor.C; // left
 	NXTRegulatedMotor grappler = Motor.A; // Grappler arm
 	// Sensor declaration
 	UltrasonicSensor son = new UltrasonicSensor(SensorPort.S1);
