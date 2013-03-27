@@ -13,10 +13,11 @@ public class CalibrationStore {
 		Button.ESCAPE.addButtonListener(new EscapeButtonListener());
 		Button.LEFT.addButtonListener(new StopCalibrationButtonListener());
 		compassSensor = new CompassHTSensor(SensorPort.S1);
-		motorA = Motor.A;
+		motorA = Motor.A; 
 		motorB = Motor.B;
-//		motorA.setSpeed(20);
-//		motorB.setSpeed(20);		
+		int motorSpeed = 216;
+		motorA.setSpeed(motorSpeed);
+		motorB.setSpeed(motorSpeed);		
 		calibrate();
 		Button.ESCAPE.waitForPress();
 	}
