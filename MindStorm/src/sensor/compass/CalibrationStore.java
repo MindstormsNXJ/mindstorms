@@ -19,9 +19,35 @@ public class CalibrationStore {
 		motorA.setSpeed(motorSpeed);
 		motorB.setSpeed(motorSpeed);		
 		calibrate();
+		try {
+			Thread.sleep(50000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		showDegreesForTwentySeconds();
 		Button.ESCAPE.waitForPress();
 	}
 	
+	private void showDegreesForTwentySeconds() {
+		motorA.forward();
+		motorB.backward();
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while (motorA.isMoving()) {
+					System.out.println(compassSensor.getDegrees());
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+		}).start();
+	}
+
 	private void calibrate() {
 		compassSensor.startCalibration();
 		motorA.forward();
