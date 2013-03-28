@@ -3,13 +3,13 @@ package sensor.compass;
 import lejos.nxt.*;
 import lejos.nxt.addon.CompassHTSensor;
 
-public class CalibrationStore {
+public class Calibrator {
 
 	private CompassHTSensor compassSensor;
 	private NXTRegulatedMotor motorA;
 	private NXTRegulatedMotor motorB;
 	
-	public CalibrationStore() {
+	public Calibrator() {
 		Button.ESCAPE.addButtonListener(new EscapeButtonListener());
 		Button.LEFT.addButtonListener(new StopCalibrationButtonListener());
 		compassSensor = new CompassHTSensor(SensorPort.S1);
@@ -55,7 +55,7 @@ public class CalibrationStore {
 	}
 	
 	public static void main(String args[]) {
-		new CalibrationStore();
+		new Calibrator();
 	}
 
 	public class EscapeButtonListener implements ButtonListener {
