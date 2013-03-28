@@ -1,4 +1,4 @@
-package sensor.colorAndPressure;
+package sensor.color_and_pressure;
 
 import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
