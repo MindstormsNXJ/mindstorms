@@ -79,7 +79,7 @@ public class CalibrationStore {
 		new CalibrationStore();
 	}
 
-	private class EscapeButtonListener implements ButtonListener {
+	public class EscapeButtonListener implements ButtonListener {
 
 		@Override
 		public void buttonPressed(Button b) {
