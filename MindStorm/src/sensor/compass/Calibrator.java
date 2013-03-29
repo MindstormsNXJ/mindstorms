@@ -2,11 +2,12 @@ package sensor.compass;
 
 import lejos.nxt.*;
 import lejos.nxt.addon.CompassHTSensor;
+import lejos.robotics.navigation.Pose;
 
 /**
  * A simple test class in order to evaluate the usage of the compass sensor.
  * 
- * @author Patrick Rosenkranz
+ * @author Patrick Rosenkranz & Tobias Schießl
  * @version 1.0
  */
 public class Calibrator {
@@ -27,12 +28,14 @@ public class Calibrator {
 		motorA = Motor.A; 
 		motorB = Motor.B;		
 		calibrate();
+		Button.LEFT.waitForPress(); //wait till calibration is finished
 		try {
-			Thread.sleep(50000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		showDegrees();
+//		showDegrees();
+		holdDirection();
 		Button.ESCAPE.waitForPress();
 	}
 	
@@ -72,6 +75,32 @@ public class Calibrator {
 			
 		}).start();
 	}
+	
+	/**
+	 * Reads the current direction and tries to hold it.
+	 */
+	private void holdDirection() {
+		final float directionToHold = compassSensor.getDegrees();
+		final double deltaDirection = 0.05;
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				float currentDirection = compassSensor.getDegrees();
+				double difference = Math.abs(directionToHold - currentDirection);
+				if (difference > deltaDirection) {
+					//direction changed too much, correct it
+					
+				}
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}).start();
+	}
 
 	public static void main(String args[]) {
 		new Calibrator();
@@ -85,7 +114,7 @@ public class Calibrator {
 	 * @author Tobias Schießl
 	 * @version 1.0
 	 */
-	public class EscapeButtonListener implements ButtonListener {
+	private class EscapeButtonListener implements ButtonListener {
 
 		@Override
 		public void buttonPressed(Button b) {
