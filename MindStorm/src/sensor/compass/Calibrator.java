@@ -3,6 +3,7 @@ package sensor.compass;
 import lejos.nxt.*;
 import lejos.nxt.addon.CompassHTSensor;
 import lejos.robotics.navigation.Pose;
+import lejos.util.Delay;
 
 /**
  * A simple test class in order to evaluate the usage of the compass sensor.
@@ -27,7 +28,7 @@ public class Calibrator {
 		compassSensor = new CompassHTSensor(SensorPort.S1);
 		motorA = Motor.A; 
 		motorB = Motor.B;		
-		calibrate();
+//		calibrate();
 		Button.LEFT.waitForPress(); //wait till calibration is finished
 		try {
 			Thread.sleep(5000);
@@ -81,21 +82,31 @@ public class Calibrator {
 	 */
 	private void holdDirection() {
 		final float directionToHold = compassSensor.getDegrees();
-		final double deltaDirection = 0.05;
+		final double deltaDirection = 1;
+		motorA.forward();
+		motorB.forward();
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				float currentDirection = compassSensor.getDegrees();
-				double difference = Math.abs(directionToHold - currentDirection);
-				if (difference > deltaDirection) {
-					//direction changed too much, correct it
-					
-				}
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				while (true) {
+					float currentDirection = compassSensor.getDegrees();
+					double difference = Math.abs(directionToHold - currentDirection);
+					if (difference > deltaDirection) {
+						//direction changed too much, correct it
+						if (currentDirection < directionToHold) {
+							//turn left --> Motor A must be slowed down
+							motorA.setSpeed(150);
+							Delay.msDelay(250);
+							motorA.setSpeed(216);
+						} else {
+							//turn right --> Motor B must be slowed down
+							motorB.setSpeed(150);
+							Delay.msDelay(250);
+							motorB.setSpeed(216);
+						}
+					}
+					Delay.msDelay(250);
 				}
 			}
 			
