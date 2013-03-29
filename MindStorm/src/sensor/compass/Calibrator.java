@@ -82,35 +82,37 @@ public class Calibrator {
 	 */
 	private void holdDirection() {
 		final float directionToHold = compassSensor.getDegrees();
-		final double deltaDirection = 1;
 		motorA.forward();
 		motorB.forward();
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				while (true) {
-					float currentDirection = compassSensor.getDegrees();
-					double difference = Math.abs(directionToHold - currentDirection);
-					if (difference > deltaDirection) {
-						//direction changed too much, correct it
-						if (currentDirection < directionToHold) {
-							//turn left --> Motor A must be slowed down
-							motorA.setSpeed(150);
-							Delay.msDelay(250);
-							motorA.setSpeed(216);
-						} else {
-							//turn right --> Motor B must be slowed down
-							motorB.setSpeed(150);
-							Delay.msDelay(250);
-							motorB.setSpeed(216);
-						}
-					}
-					Delay.msDelay(250);
-				}
-			}
-			
-		}).start();
+//		new Thread(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				final double deltaDirection = 1;
+//				while (true) {
+//					float currentDirection = compassSensor.getDegrees();
+//					double difference = Math.abs(directionToHold - currentDirection);
+//					if (difference > deltaDirection) {
+//						//direction changed too much, correct it
+//						if (currentDirection < directionToHold) {
+//							//turn left --> Motor A must be slowed down
+//							motorA.setSpeed(150);
+//							Delay.msDelay(250);
+//							motorA.setSpeed(216);
+//						} else {
+//							//turn right --> Motor B must be slowed down
+//							motorB.setSpeed(150);
+//							Delay.msDelay(250);
+//							motorB.setSpeed(216);
+//						}
+//					}
+//					Delay.msDelay(250);
+//				}
+//			}
+//			
+//		}).start();
+		DirectionHolder holder = new DirectionHolder(250, directionToHold, motorB, motorA, compassSensor);
+		holder.start();
 	}
 
 	public static void main(String args[]) {
