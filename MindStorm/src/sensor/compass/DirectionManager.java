@@ -92,16 +92,31 @@ public class DirectionManager {
 						double difference = Math.abs(direction - currentDirection);
 						if (difference > deltaDirection) {
 							//direction changed too much, correct it
-							if (currentDirection > direction) {
-								//turn left
-								leftMotor.setSpeed(reducedMotorSpeed);
-								Delay.msDelay(DELAY_TIME);
-								leftMotor.setSpeed(normalMotorSpeed);
+							if (difference > 180) {
+								//360 degrees have been passed, so the robot must rotate the other way as usual
+								if (currentDirection < direction) {
+									//turn left
+									leftMotor.setSpeed(reducedMotorSpeed);
+									Delay.msDelay(DELAY_TIME);
+									leftMotor.setSpeed(normalMotorSpeed);
+								} else {
+									//turn right
+									rightMotor.setSpeed(reducedMotorSpeed);
+									Delay.msDelay(DELAY_TIME);
+									rightMotor.setSpeed(normalMotorSpeed);
+								}
 							} else {
-								//turn right
-								rightMotor.setSpeed(reducedMotorSpeed);
-								Delay.msDelay(DELAY_TIME);
-								rightMotor.setSpeed(normalMotorSpeed);
+								if (currentDirection > direction) {
+									//turn left
+									leftMotor.setSpeed(reducedMotorSpeed);
+									Delay.msDelay(DELAY_TIME);
+									leftMotor.setSpeed(normalMotorSpeed);
+								} else {
+									//turn right
+									rightMotor.setSpeed(reducedMotorSpeed);
+									Delay.msDelay(DELAY_TIME);
+									rightMotor.setSpeed(normalMotorSpeed);
+								}
 							}
 						}
 						Delay.msDelay(DELAY_TIME);

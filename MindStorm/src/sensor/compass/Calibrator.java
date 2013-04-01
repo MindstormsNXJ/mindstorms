@@ -19,8 +19,8 @@ public class Calibrator {
 	
 	/**
 	 * Initialises a Calibrator and starts the calibration. After the calibration
-	 * is finished, the robot will wait 10 seconds and starts printing the current
-	 * degrees on the screen afterwards.
+	 * is finished, the robot will wait 5 seconds and either starts printing the current
+	 * degrees on the screen afterwards or holds it's current direction.
 	 */
 	public Calibrator() {
 		Button.ESCAPE.addButtonListener(new EscapeButtonListener());
