@@ -111,7 +111,7 @@ public class Calibrator {
 //			}
 //			
 //		}).start();
-		DirectionHolder holder = new DirectionHolder(250, directionToHold, motorB, motorA, compassSensor);
+		DirectionManager holder = new DirectionManager(250, directionToHold, motorB, motorA, compassSensor);
 		holder.start();
 	}
 
