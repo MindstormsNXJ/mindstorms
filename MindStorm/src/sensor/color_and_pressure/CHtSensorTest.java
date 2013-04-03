@@ -17,16 +17,13 @@ import lejos.nxt.addon.CompassHTSensor;
 import lejos.robotics.Color;
 import lejos.util.Delay;
 
-public class colorAndPressure {
+public class CHtSensorTest {
+	
 	// Motor declaration
-	TouchSensor touch = new TouchSensor(SensorPort.S3);
 	ColorHTSensor colorHt = new ColorHTSensor(SensorPort.S4);
-	ColorSensor cNormal = new ColorSensor(SensorPort.S2);
 	
 
-	public colorAndPressure() {
-		colorHt.initWhiteBalance();
-		LCD.drawInt(lejos.nxt.ColorSensor.Color.RED, 0, 0);
+	public CHtSensorTest() {
 		Delay.msDelay(1000);
 		Button.LEFT.addButtonListener(new ButtonListener() {
 
@@ -48,18 +45,31 @@ public class colorAndPressure {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		colorAndPressure cAP = new colorAndPressure();
+		CHtSensorTest cAP = new CHtSensorTest();
 		cAP.run();
 	}
 
 	public void run() {
 		while (true) {
 			Delay.msDelay(100);
-			LCD.drawInt(colorHt.getColorID(), 0, 0);
 			if(lejos.nxt.ColorSensor.Color.RED==colorHt.getColorID()){
-				LCD.drawString("Rot", 0, 0);
-				
+				LCD.clear();
+				LCD.drawString("Rot", 0, 0);	
+			}else{
+			LCD.drawInt(colorHt.getColorID(), 0, 0);
+			if(lejos.nxt.ColorSensor.Color.BLUE==colorHt.getColorID()){
+				LCD.clear();
+				LCD.drawString("Blau", 0, 0);	
+			}else{
+			LCD.drawInt(colorHt.getColorID(), 0, 0);
+			if(7==colorHt.getColorID()){
+				LCD.clear();
+				LCD.drawString("undefiniert", 0, 0);	
 			}
+			else{
+				LCD.clear();
+				LCD.drawString("nicht zugeordnet", 0, 0);
+			}}}
 		}
 	}
 }
