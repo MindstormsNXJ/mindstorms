@@ -18,7 +18,7 @@ public class Testing {
 		while(run) {
 			distance = getDistance();
 			forward();
-			if(distance <= 40) {
+			if(distance <= 30) {
 				System.out.println(distance);
 				stop();
 				sleep(200);
