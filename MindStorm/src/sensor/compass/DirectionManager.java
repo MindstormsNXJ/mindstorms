@@ -4,6 +4,14 @@ import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.addon.CompassHTSensor;
 import lejos.util.Delay;
 
+/**
+ * A direction manager is responsible for controlling the robots direction.
+ * It auto corrects if the direction changes too much and is able to
+ * let the robot drive curves.
+ * 
+ * @author Tobias Schießl
+ * @version 1.0
+ */
 public class DirectionManager {
 
 	private int normalMotorSpeed;

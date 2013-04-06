@@ -4,6 +4,12 @@ import lejos.nxt.*;
 import lejos.nxt.addon.CompassHTSensor;
 import lejos.util.Delay;
 
+/**
+ * A simple test class to demonstrate the DirectionManager.
+ * 
+ * @author Tobias Schießl
+ * @version 1.0
+ */
 public class ManagerTest {
 
 	public ManagerTest() {
@@ -18,7 +24,7 @@ public class ManagerTest {
 		leftMotor.forward();
 		rightMotor.forward();
 		manager.start();
-		Delay.msDelay(5000);
+		Delay.msDelay(15000);
 		leftMotor.stop();
 		rightMotor.stop();
 		System.out.println("Direction - 45: 45");
@@ -26,7 +32,7 @@ public class ManagerTest {
 		leftMotor.forward();
 		rightMotor.forward();
 		manager.turnLeft(45);
-		Delay.msDelay(10000);
+		Delay.msDelay(15000);
 		leftMotor.stop();
 		rightMotor.stop();
 		System.out.println("Direction - 90: 315");

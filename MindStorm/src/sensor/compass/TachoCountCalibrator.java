@@ -16,6 +16,7 @@ import lejos.nxt.NXTRegulatedMotor;
  * calibration mode afterwards.
  *    
  * @author Tobias Schießl
+ * @version 1.0
  */
 public class TachoCountCalibrator {
 

@@ -6,42 +6,55 @@ import lejos.nxt.ButtonListener;
 import lejos.nxt.Motor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
-import lejos.robotics.navigation.CompassPilot;
 import lejos.util.Delay;
 
-
-@SuppressWarnings("deprecation")
-public class WayStoneOne{
+/**
+ * The auto calibrator calibrates the compass sensor automatically as the name
+ * says. Therefore, it takes the time the robot needs to turn 360 degrees on
+ * the current underground, then adapts the speed and lets the robot turn 2 times
+ * with smaller speed.
+ * 
+ * @author Patrick Rosenkranz
+ * @version 1.1
+ */
+public class AutoCalibrator{
 	
 	private CompassHTSensor compassSensor;
 	private NXTRegulatedMotor motB;
-	private NXTRegulatedMotor motC;
+	private NXTRegulatedMotor motA;
 	private long runningTime;
 	private int motSpeed;
 	
-	public WayStoneOne() {
+	/**
+	 * Initialises a new auto calibrator and it's motors.
+	 */
+	public AutoCalibrator() {
 		Button.ESCAPE.addButtonListener(new EscapeButtonListener());
 		motB = Motor.B;
-		motC = Motor.C;
+		motA = Motor.A;
 		compassSensor = new CompassHTSensor(SensorPort.S1);
 		setMotSpeed(50);
-		motC.setSpeed(motSpeed);
+		motA.setSpeed(motSpeed);
 		motB.setSpeed(motSpeed);
 	}
 
 	public static void main(String[] args) {
-		WayStoneOne wso = new WayStoneOne();
+		AutoCalibrator wso = new AutoCalibrator();
 		wso.preCalibrate();
 		wso.Calibrate();
 		Button.ESCAPE.waitForPress();
 	}
 
+	/**
+	 * Starts the pre calibration, which is the 360 degrees rotation.
+	 * Also calculates the new speed after this rotation.
+	 */
 	public void preCalibrate() {
 		long before = System.currentTimeMillis();		
 		final float startDirection = compassSensor.getDegrees();
 		final int BUFFER = 40;
 		motB.forward();
-		motC.backward();
+		motA.backward();
 		Thread check = new Thread(new Runnable() {
 			
 			@Override
@@ -51,7 +64,7 @@ public class WayStoneOne{
 					float direction = compassSensor.getDegrees();
 					if (Math.abs(((startDirection + BUFFER) % 360) - direction) < 2) {
 						motB.stop();
-						motC.stop();
+						motA.stop();
 					}
 					Delay.msDelay(10);
 				}
@@ -72,13 +85,13 @@ public class WayStoneOne{
 	}
 
 	/**
-	 * Need pre Calibrate ² know how much speed it need for a whole Round
+	 * Need preCalibrate() to know how much speed is needed for the calibration.
 	 */
 	public void Calibrate() {
-		motC.setSpeed(motSpeed);
+		motA.setSpeed(motSpeed);
 		motB.setSpeed(motSpeed);
 		compassSensor.startCalibration();
-		motC.forward();
+		motA.forward();
 		motB.backward();
 			try {
 				Thread.sleep(40000);
@@ -87,7 +100,7 @@ public class WayStoneOne{
 			}
 		compassSensor.stopCalibration();
 		motB.stop();
-		motC.stop();
+		motA.stop();
 		System.out.println("Kalibration fertig");
 	}	
 	

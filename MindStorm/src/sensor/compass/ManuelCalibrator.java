@@ -2,8 +2,6 @@ package sensor.compass;
 
 import lejos.nxt.*;
 import lejos.nxt.addon.CompassHTSensor;
-import lejos.robotics.navigation.Pose;
-import lejos.util.Delay;
 
 /**
  * A simple test class in order to evaluate the usage of the compass sensor.
@@ -11,7 +9,7 @@ import lejos.util.Delay;
  * @author Patrick Rosenkranz & Tobias Schießl
  * @version 1.0
  */
-public class Calibrator {
+public class ManuelCalibrator {
 
 	private CompassHTSensor compassSensor;
 	private NXTRegulatedMotor motorA;
@@ -22,20 +20,20 @@ public class Calibrator {
 	 * is finished, the robot will wait 5 seconds and either starts printing the current
 	 * degrees on the screen afterwards or holds it's current direction.
 	 */
-	public Calibrator() {
+	public ManuelCalibrator() {
 		Button.ESCAPE.addButtonListener(new EscapeButtonListener());
 		Button.LEFT.addButtonListener(new StopCalibrationButtonListener());
 		compassSensor = new CompassHTSensor(SensorPort.S1);
 		motorA = Motor.A; 
 		motorB = Motor.B;		
-//		calibrate();
+		calibrate();
 		Button.LEFT.waitForPress(); //wait till calibration is finished
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-//		showDegrees();
+		showDegrees();
 		holdDirection();
 		Button.ESCAPE.waitForPress();
 	}
@@ -59,7 +57,7 @@ public class Calibrator {
 	 */
 	private void showDegrees() {
 		motorA.forward();
-		motorB.backward();
+		motorB.forward();
 		new Thread(new Runnable() {
 
 			@Override
@@ -82,41 +80,12 @@ public class Calibrator {
 	 */
 	private void holdDirection() {
 		final float directionToHold = compassSensor.getDegrees();
-		motorA.forward();
-		motorB.forward();
-//		new Thread(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				final double deltaDirection = 1;
-//				while (true) {
-//					float currentDirection = compassSensor.getDegrees();
-//					double difference = Math.abs(directionToHold - currentDirection);
-//					if (difference > deltaDirection) {
-//						//direction changed too much, correct it
-//						if (currentDirection < directionToHold) {
-//							//turn left --> Motor A must be slowed down
-//							motorA.setSpeed(150);
-//							Delay.msDelay(250);
-//							motorA.setSpeed(216);
-//						} else {
-//							//turn right --> Motor B must be slowed down
-//							motorB.setSpeed(150);
-//							Delay.msDelay(250);
-//							motorB.setSpeed(216);
-//						}
-//					}
-//					Delay.msDelay(250);
-//				}
-//			}
-//			
-//		}).start();
 		DirectionManager holder = new DirectionManager(250, directionToHold, motorB, motorA, compassSensor);
 		holder.start();
 	}
 
 	public static void main(String args[]) {
-		new Calibrator();
+		new ManuelCalibrator();
 	}
 
 	/**
