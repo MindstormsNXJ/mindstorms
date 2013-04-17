@@ -14,6 +14,10 @@ import lejos.util.Delay;
  * the current underground, then adapts the speed and lets the robot turn 2 times
  * with smaller speed.
  * 
+ * ***IMPORTANT***
+ * When stopping the robot while calibrating, it is important to stop the 
+ * calibration mode first!!!
+ * 
  * @author Patrick Rosenkranz
  * @version 1.1
  */
@@ -32,27 +36,39 @@ public class AutoCalibrator{
 		Button.ESCAPE.addButtonListener(new EscapeButtonListener());
 		motB = Motor.B;
 		motA = Motor.A;
-		compassSensor = new CompassHTSensor(SensorPort.S1);
-		setMotSpeed(50);
+		SensorPort.S2.reset();
+		compassSensor = new CompassHTSensor(SensorPort.S2);
+		compassSensor.stopCalibration();
+		motSpeed = 200;
 		motA.setSpeed(motSpeed);
 		motB.setSpeed(motSpeed);
 	}
 
 	public static void main(String[] args) {
 		AutoCalibrator wso = new AutoCalibrator();
-		wso.preCalibrate();
-		wso.Calibrate();
-		Button.ESCAPE.waitForPress();
+		boolean success = wso.preCalibrate();
+		if (success)
+			wso.Calibrate();
+		else {
+			System.out.println("pre calibration not successful");
+		}
+		Button.ENTER.waitForPress();
+		wso.turn(0);
+		Button.ENTER.waitForPress();
 	}
 
 	/**
 	 * Starts the pre calibration, which is the 360 degrees rotation.
 	 * Also calculates the new speed after this rotation.
+	 * 
+	 * @return true if pre calibration was successful
 	 */
-	public void preCalibrate() {
+	public boolean preCalibrate() {
 		long before = System.currentTimeMillis();		
 		final float startDirection = compassSensor.getDegrees();
-		final int BUFFER = 40;
+		if (startDirection == 506) 
+			return false;
+		System.out.println("Start direction: " + startDirection);
 		motB.forward();
 		motA.backward();
 		Thread check = new Thread(new Runnable() {
@@ -62,12 +78,13 @@ public class AutoCalibrator{
 				Delay.msDelay(1000);
 				while (motB.isMoving()) {
 					float direction = compassSensor.getDegrees();
-					if (Math.abs(((startDirection + BUFFER) % 360) - direction) < 2) {
+					if (Math.abs(startDirection - direction) < 2) {
 						motB.stop();
 						motA.stop();
 					}
 					Delay.msDelay(10);
 				}
+				System.out.println("Final direction: " + compassSensor.getDegrees());
 			}
 			
 		});
@@ -79,9 +96,10 @@ public class AutoCalibrator{
 		}
 		long after = System.currentTimeMillis();
 		runningTime = after - before;
-		System.out.println(runningTime);
-		setMotSpeed((int) (getMotSpeed()*2000 / (runningTime)));
-		System.out.println("Speed :" +getMotSpeed());
+		System.out.println("Time: " + runningTime + "ms");
+		motSpeed = (int) ((motSpeed * runningTime) / 20000);
+		System.out.println("Speed: " + motSpeed);
+		return true;
 	}
 
 	/**
@@ -101,27 +119,32 @@ public class AutoCalibrator{
 		compassSensor.stopCalibration();
 		motB.stop();
 		motA.stop();
-		System.out.println("Kalibration fertig");
+		System.out.println("finished");
 	}	
 	
+	private void turn(int degrees) {
+		motA.forward();
+		motB.backward();
+		while (motA.isMoving()) {
+			int currentDeg = (int) compassSensor.getDegrees();
+			if (Math.abs(currentDeg - degrees) < 2) {
+				motA.stop();
+				motB.stop();
+			}
+		}
+	}
+
 	private class EscapeButtonListener implements ButtonListener {
 		
 		@Override
 		public void buttonPressed(Button b) {
+			compassSensor.stopCalibration();
 			System.exit(0);
 		}
-
+	
 		@Override
 		public void buttonReleased(Button b) {	}	
 		
-	}
-	
-	public int getMotSpeed() {
-		return motSpeed;
-	}
-
-	public void setMotSpeed(int motSpeed) {
-		this.motSpeed = motSpeed;
 	}	
 	
 }
