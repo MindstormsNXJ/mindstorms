@@ -2,19 +2,10 @@ package sensor.color_and_pressure;
 
 import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
-import lejos.nxt.ColorSensor;
 import lejos.nxt.LCD;
-import lejos.nxt.Motor;
-import lejos.nxt.MotorPort;
 import lejos.nxt.NXT;
-import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
-import lejos.nxt.SystemSettings;
-import lejos.nxt.TouchSensor;
-import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.addon.ColorHTSensor;
-import lejos.nxt.addon.CompassHTSensor;
-import lejos.robotics.Color;
 import lejos.util.Delay;
 
 public class CHtSensorTest {

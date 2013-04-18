@@ -1,7 +1,6 @@
 package test;
 
 import lejos.nxt.LCD;
-import lejos.nxt.comm.LCPBTResponder;
 
 public class DisplayTest {
 
