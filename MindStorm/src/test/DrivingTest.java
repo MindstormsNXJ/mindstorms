@@ -52,7 +52,7 @@ public class DrivingTest extends Thread implements ButtonListener {
 		sleep(14100); //Time for one rotaion
 		com.stopCalibration();
 		System.out.println("Calibrated");
-		stop();
+		stopMotor();
 	}
 
 	public void right(int rotationspeed) {
@@ -83,13 +83,13 @@ public class DrivingTest extends Thread implements ButtonListener {
 				forward();
 			}
 		}
-		stop();
+		stopMotor();
 		System.out.println("Ticks: " + ticks);
 		System.out.println("Enter for Exit");
 //		Button.ENTER.waitForPressAndRelease();
 	}
 
-	public void stop() {
+	public void stopMotor() {
 		left.stop();
 		right.stop();
 	}
@@ -141,7 +141,7 @@ public class DrivingTest extends Thread implements ButtonListener {
 		System.out.println("90° Right\t" + targetDirection);
 		while (!checkDegrees(targetDirection)) {
 		}
-		stop();
+		stopMotor();
 	}
 
 	public void stepLeft() {
@@ -151,7 +151,7 @@ public class DrivingTest extends Thread implements ButtonListener {
 		System.out.println("90° Left\t" + targetDirection);
 		while (!checkDegrees(targetDirection)) {
 		}
-		stop();
+		stopMotor();
 	}
 
 	public boolean checkDegrees(int targetDirection) {
