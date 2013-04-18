@@ -22,7 +22,6 @@ public class CompassCalibrator {
 			System.out.println("pre calibration failed, please restart program");
 			return;
 		}
-		System.out.println("start direction: " + startDirection);
 		robot.leftMotor.forward();
 		robot.rightMotor.backward();
 		Thread check = new Thread(new Runnable() {
@@ -38,7 +37,6 @@ public class CompassCalibrator {
 					}
 					Delay.msDelay(10);
 				}
-				System.out.println("final direction: " + robot.compassSensor.getDegrees());
 			}
 			
 		});
@@ -50,9 +48,7 @@ public class CompassCalibrator {
 		}
 		long after = System.currentTimeMillis();
 		long runningTime = after - before;
-		System.out.println("time: " + runningTime + "ms");
 		motSpeed = (int) ((motSpeed * runningTime) / 20000);
-		System.out.println("speed: " + motSpeed);
 	}
 
 	public void calibrate() {

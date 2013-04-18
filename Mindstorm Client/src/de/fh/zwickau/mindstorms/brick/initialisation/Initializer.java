@@ -7,7 +7,6 @@ import lejos.nxt.NXT;
 import lejos.nxt.SensorPort;
 import lejos.nxt.addon.CompassHTSensor;
 import lejos.nxt.comm.Bluetooth;
-import lejos.nxt.comm.NXTConnection;
 import de.fh.zwickau.mindstorms.brick.PickerRobot;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.WorkerRobot;
