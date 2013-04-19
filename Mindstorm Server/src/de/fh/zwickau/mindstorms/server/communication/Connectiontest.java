@@ -1,4 +1,4 @@
-package communication;
+package de.fh.zwickau.mindstorms.server.communication;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

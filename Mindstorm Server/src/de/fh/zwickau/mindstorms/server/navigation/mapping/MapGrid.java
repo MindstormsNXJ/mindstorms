@@ -1,4 +1,4 @@
-package navigation.mapping;
+package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
 public class MapGrid {
 	private final int G_SIZE = 128; // GridSize

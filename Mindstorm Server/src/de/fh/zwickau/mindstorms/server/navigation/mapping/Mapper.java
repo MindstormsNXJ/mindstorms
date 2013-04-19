@@ -1,4 +1,4 @@
-package navigation.mapping;
+package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
@@ -22,10 +22,10 @@ public class Mapper {
 	 * @param dist located obstacle distance
 	 */
 	public void addObstacle(Pose pose, int dist/*, ID id*/) {
-		//Todo: first check if its a other robot or a goal
+		//TODO: first check if its a other robot or a goal
 		
 		
-		//Todo: calculate the right coordinates
+		//TODO: calculate the right coordinates
 		int ObstacleX = (int)pose.getX();
 		int ObstacleY = (int)pose.getY();
 		
