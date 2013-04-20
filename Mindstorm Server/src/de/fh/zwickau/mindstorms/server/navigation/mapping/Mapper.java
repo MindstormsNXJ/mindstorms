@@ -1,9 +1,12 @@
 package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
+
+import de.fh.zwickau.mindstorms.server.view.View;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
 
 public class Mapper {
+	private View observer;
 	private MapGrid mapGrid;
 	private LineMap lineMap;
 	
@@ -31,6 +34,7 @@ public class Mapper {
 		
 		mapGrid.set(ObstacleX, ObstacleY);
 		buildLineMap();
+		observer.mapChanged();
 	}
 	
 	/**
@@ -40,8 +44,17 @@ public class Mapper {
 		
 	}
 	
+	public MapGrid getGrid(){
+		return mapGrid;
+	}
+	
 	public LineMap getLineMap(){
 		return lineMap;
 	}
+	
+	public void setObserverView(View observer){
+		this.observer = observer;
+	}
+	
 	
 }

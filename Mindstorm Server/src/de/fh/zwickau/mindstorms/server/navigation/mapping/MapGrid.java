@@ -19,4 +19,8 @@ public class MapGrid {
 	public void clear(int x, int y){
 		grid[x][y] = 0;
 	}
+	
+	public int getGridSize(){
+		return G_SIZE;
+	}
 }

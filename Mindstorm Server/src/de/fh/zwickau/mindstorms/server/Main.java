@@ -9,9 +9,13 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Mapper mapper = new Mapper();
 		View view = new View();
-		view.start();
+		Mapper mapper = new Mapper();
+		
+		mapper.setObserverView(view);
+		view.registerMapper(mapper);
+		
+		view.start();	// new Thread for view
 
 	}
 
