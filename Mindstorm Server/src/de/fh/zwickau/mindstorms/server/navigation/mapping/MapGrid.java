@@ -10,6 +10,8 @@ public class MapGrid {
 	
 	public void set(int x, int y){
 		grid[x][y]++;
+		if(grid[x][y] > 3)
+			grid[x][y] = 3;
 	}
 	
 	public byte get(int x , int y){

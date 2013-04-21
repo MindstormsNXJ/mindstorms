@@ -96,16 +96,17 @@ public class View extends Thread {
 		final int size = grid.getGridSize();
 
 		int c = -1;
+		float strength;
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {
-				if (grid.get(x, y) > 0) {
-					colors[++c] = 1.0f; // red
-					colors[++c] = 0.0f; // green
-					colors[++c] = 0.0f; // blue
+				if ((strength = (float)grid.get(x, y)) > 0) {
+					colors[++c] = 4.0f * strength / 4.0f; 		// red
+					colors[++c] = 1.0f -  1.0f *strength/ 3.0f; // green
+					colors[++c] = 0.0f; 						// blue
 				} else {
-					colors[++c] = 0.0f; // red
+					colors[++c] = 1.0f; // red
 					colors[++c] = 1.0f; // green
-					colors[++c] = 0.0f; // blue
+					colors[++c] = 1.0f; // blue
 				}
 			}
 		}
