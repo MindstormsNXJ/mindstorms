@@ -1,7 +1,7 @@
 package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
 public class MapGrid {
-	private final int G_SIZE = 128; // GridSize
+	private final int G_SIZE = 64; // GridSize
 	private byte[][] grid;
 	
 	public MapGrid(){
@@ -18,5 +18,9 @@ public class MapGrid {
 	
 	public void clear(int x, int y){
 		grid[x][y] = 0;
+	}
+	
+	public int getGridSize(){
+		return G_SIZE;
 	}
 }
