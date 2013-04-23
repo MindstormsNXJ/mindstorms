@@ -20,7 +20,7 @@ public abstract class Robot {
 	public NXTRegulatedMotor rightMotor;
 	public CompassHTSensor compassSensor;
 	public UltrasonicSensor ultrasonicSensor;
-	public double driveTranslation;
+	public double driveTranslation; // angel in degrees per cm
 
 
 	public Robot(String id) {

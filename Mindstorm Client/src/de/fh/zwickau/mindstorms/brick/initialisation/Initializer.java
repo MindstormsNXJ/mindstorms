@@ -45,7 +45,6 @@ public class Initializer {
 		robot.rightMotor = Motor.B;
 		robot.compassSensor = new CompassHTSensor(SensorPort.S2);
 		robot.ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
-//		robot.ultrasonicSensor.reset();
 
 		// add the universal listener to stop the robot
 		Button.ESCAPE.addButtonListener(new ButtonListener() {

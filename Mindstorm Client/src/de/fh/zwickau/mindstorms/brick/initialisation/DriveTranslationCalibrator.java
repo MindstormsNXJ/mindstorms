@@ -18,13 +18,13 @@ public class DriveTranslationCalibrator implements FeatureListener {
 	public DriveTranslationCalibrator(Robot robot) {
 		this.robot = robot;
 		rotations = 3;
-		interval = 20;
+		interval = 10;
 		minDistance = 20;
 		maxDistance = 45;
 		motAcc = 500;
 	}
 
-	private void reCalibrate() {
+	private void reset() {
 		robot.leftMotor.setAcceleration(motAcc);
 		robot.rightMotor.setAcceleration(motAcc);
 		robot.leftMotor.resetTachoCount();
@@ -36,7 +36,7 @@ public class DriveTranslationCalibrator implements FeatureListener {
 				robot.ultrasonicSensor, maxDistance, interval);
 		scanner.addListener(this);
 		for (int i = 0; i < 3; i++) {
-			reCalibrate();
+			reset();
 			setSpeed(100 + i * 50);
 			rotate(-360 * rotations);
 			rotate(360 * rotations);
