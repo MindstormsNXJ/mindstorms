@@ -22,7 +22,7 @@ public class Main {
 		
 		
 		//TODO: (just Debug) make some test calls to Mapper.
-		for(int i = 0; i < 360*2; i++){
+		for(int i = 0; i < 360*8; i++){
 			Pose pose = new Pose(10.0f,10.0f, i);
 			mapper.addObstacle(pose, (int)(400 * (Math.random() * 0.25 * Math.sin(i) +1)));
 		}

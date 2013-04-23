@@ -2,6 +2,8 @@ package de.fh.zwickau.mindstorms.server.view;
 
 import java.util.concurrent.Semaphore;
 
+import lejos.geom.Line;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -16,10 +18,12 @@ public class View extends Thread {
 	private Mapper mapper;
 	private boolean mapChanged;
 	private Semaphore semaphore;
-
+	
+	
 	// Draw Items
-	private float[] vertices;
-	private float[] colors;
+	private float[] tileVertices;
+	private float[] tileColors;
+	private float[] lineVertices;
 
 	public View() {
 		this.mapChanged = true;
@@ -61,24 +65,27 @@ public class View extends Thread {
 
 		// GL initialize
 		glPointSize(Display.getWidth() / size - 1);
+		glLineWidth(3.0f);
 
 		// initialize pixel grid
-		vertices = new float[size * size * 2];
-		colors = new float[size * size * 3];
+		tileVertices = new float[size * size * 2];
+		tileColors = new float[size * size * 3];
 
 		int i = -1;
 		int c = -1;
 		float offset = -1.0f + 1.0f / size;
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {
-				vertices[++i] = x / ((float) size / 2.0f) + offset; // X
-				vertices[++i] = y / ((float) size / 2.0f) + offset; // Y
+				tileVertices[++i] = x / ((float) size / 2.0f) + offset; // X
+				tileVertices[++i] = y / ((float) size / 2.0f) + offset; // Y
 
-				colors[++c] = 0.5f; // red
-				colors[++c] = 0.5f; // green
-				colors[++c] = 0.5f; // blue
+				tileColors[++c] = 0.5f; // red
+				tileColors[++c] = 0.5f; // green
+				tileColors[++c] = 0.5f; // blue
 			}
 		}
+		
+		
 	}
 
 	/**
@@ -93,22 +100,35 @@ public class View extends Thread {
 		semaphore.release();
 
 		MapGrid grid = mapper.getGrid();
-		final int size = grid.getGridSize();
-
+		final int g_size = grid.getGridSize();
+		final float gstsh = g_size * grid.getTileSize() / 2.0f; 
+		
+		//Rebuild tile colors
 		int c = -1;
 		float strength;
-		for (int x = 0; x < size; x++) {
-			for (int y = 0; y < size; y++) {
+		for (int x = 0; x < g_size; x++) {
+			for (int y = 0; y < g_size; y++) {
 				if ((strength = (float)grid.get(x, y)) > 0) {
-					colors[++c] = 4.0f * strength / 4.0f; 		// red
-					colors[++c] = 1.0f -  1.0f *strength/ 3.0f; // green
-					colors[++c] = 0.0f; 						// blue
+					tileColors[++c] = 4.0f * strength / 4.0f; 		// red
+					tileColors[++c] = 1.0f -  1.0f *strength/ 3.0f; // green
+					tileColors[++c] = 0.0f; 						// blue
 				} else {
-					colors[++c] = 1.0f; // red
-					colors[++c] = 1.0f; // green
-					colors[++c] = 1.0f; // blue
+					tileColors[++c] = 1.0f; // red
+					tileColors[++c] = 1.0f; // green
+					tileColors[++c] = 1.0f; // blue
 				}
 			}
+		}
+		
+		//Rebuild Line vertices
+		Line[] lines = mapper.getLineMap().getLines();
+		lineVertices = new float[lines.length * 4];
+		int j = -1;
+		for (int i = 0; i < lines.length; i++){
+			lineVertices[++j] = lines[i].x1 / gstsh;
+			lineVertices[++j] = lines[i].y1 / gstsh;
+			lineVertices[++j] = lines[i].x2 / gstsh;
+			lineVertices[++j] = lines[i].y2 / gstsh;
 		}
 	}
 
@@ -153,17 +173,28 @@ public class View extends Thread {
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		
-		int size = vertices.length - 1;
+		int size = tileVertices.length - 1;
 		int i = -1;
 		int c = -1;
 
 		glBegin(GL_POINTS); // Begin to draw Points
 		while (i < size) {
-			glColor3f(colors[++c], colors[++c], colors[++c]);	// set pixel color
-			glVertex2f(vertices[++i], vertices[++i]); 			// make a point
+			glColor3f(tileColors[++c], tileColors[++c], tileColors[++c]);	// set pixel color
+			glVertex2f(tileVertices[++i], tileVertices[++i]); 			    // make a point
 		}
-		glEnd(); 												// End with draw
+		glEnd();                                                            // End with draw
 
+		
+		size = lineVertices.length -1;
+		i = -1;
+		
+		glColor3f(0.0f, 0.5f, 1.0f);
+		glBegin(GL_LINES);
+		while(i < size){
+			glVertex2f(lineVertices[++i], lineVertices[++i]);
+		}
+		glEnd();
+		
 		Display.update(); 										// Bring it to the screen.
 	}
 

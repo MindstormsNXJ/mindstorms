@@ -8,11 +8,9 @@ public class Mapper {
 	private View observer;
 	private MapGrid mapGrid;
 	private LineMap lineMap;
-	private int tileSize;
 
-	public Mapper(int tileSize) {
-		this.tileSize = tileSize;
-		mapGrid = new MapGrid();
+	public Mapper(float tileSize) {
+		mapGrid = new MapGrid(tileSize);
 		lineMap = new LineMap();
 	}
 
@@ -34,8 +32,9 @@ public class Mapper {
 		//TODO: check if its a other robot or a goal
 		boolean isNotRobotOrGoal = true; // =)
 		
-		if(isNotRobotOrGoal)
+		if(isNotRobotOrGoal){
 			addObstacle(obstacle_position);
+		}
 	}
 
 	/**
@@ -44,7 +43,7 @@ public class Mapper {
 	 * @param pos position
 	 */
 	private void addObstacle(float[] pos){
-		addObstacle((int)(pos[0]/(float)tileSize + 0.5f) + 32,(int)(pos[1]/(float)tileSize + 0.5f) + 32);
+		addObstacle((int)(pos[0]/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2,(int)(pos[1]/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2);
 	}
 	
 	/**
@@ -69,7 +68,7 @@ public class Mapper {
 	 * generate a new LineMap
 	 */
 	private void buildLineMap() {
-		
+		lineMap = Converter.gridToLineMap(mapGrid);
 	}
 
 	public MapGrid getGrid() {

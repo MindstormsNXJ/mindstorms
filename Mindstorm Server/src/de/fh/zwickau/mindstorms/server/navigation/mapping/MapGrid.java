@@ -2,9 +2,11 @@ package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
 public class MapGrid {
 	private final int G_SIZE = 64; // GridSize
+	private float tileSize;
 	private byte[][] grid;
 	
-	public MapGrid(){
+	public MapGrid(float tileSize){
+		this.tileSize = tileSize;
 		grid = new byte[G_SIZE][G_SIZE];
 	}
 	
@@ -24,5 +26,9 @@ public class MapGrid {
 	
 	public int getGridSize(){
 		return G_SIZE;
+	}
+	
+	public float getTileSize(){
+		return tileSize;
 	}
 }
