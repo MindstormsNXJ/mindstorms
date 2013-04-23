@@ -53,15 +53,23 @@ public class Mapper {
 	 * @param y position
 	 */
 	public void addObstacle(int x, int y){
-		mapGrid.set(x, y);
-		buildLineMap();
-		observer.mapChanged();
+		try {
+			mapGrid.set(x, y);
+			buildLineMap();
+			observer.mapChanged();
+		} catch (ArrayIndexOutOfBoundsException e){
+			//ignore it
+		}
 	}
 	
 	public void removeObstacle(int x, int y){
-		mapGrid.clear(x, y);
-		buildLineMap();
-		observer.mapChanged();
+		try {
+			mapGrid.clear(x, y);
+			buildLineMap();
+			observer.mapChanged();
+		} catch (ArrayIndexOutOfBoundsException e){
+			//ignore it
+		}
 	}
 
 	/**
