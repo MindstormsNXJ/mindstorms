@@ -5,6 +5,7 @@ import java.util.concurrent.Semaphore;
 import lejos.geom.Line;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -19,12 +20,15 @@ public class View extends Thread {
 	private boolean mapChanged;
 	private Semaphore semaphore;
 	
-	
 	// Draw Items
 	private float[] tileVertices;
 	private float[] tileColors;
 	private float[] lineVertices;
 
+	//Draw options
+	boolean drawLine = true;
+	boolean drawTile = true;
+	
 	public View() {
 		this.mapChanged = true;
 		this.semaphore = new Semaphore(1);
@@ -62,11 +66,13 @@ public class View extends Thread {
 	 */
 	private void initialize() {
 		final int size = mapper.getGrid().getGridSize();
-
+		
 		// GL initialize
-		glPointSize(Display.getWidth() / size - 1);
 		glLineWidth(3.0f);
-
+		glPointSize(Display.getWidth() / mapper.getGrid().getGridSize()+0.5f);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		
+		
 		// initialize pixel grid
 		tileVertices = new float[size * size * 2];
 		tileColors = new float[size * size * 3];
@@ -142,9 +148,51 @@ public class View extends Thread {
 			}
 		}
 		
-		//Handle User Inputs
+		input();
+		
+	}
+	
+	/**
+	 * Draw all data on OpenGL canvas.
+	 */
+	private void draw() {
+		glClear(GL_COLOR_BUFFER_BIT);
+			
+		int size = tileVertices.length - 1;
+		int i = -1;
+		int c = -1;
+
+		if(drawTile){
+			glBegin(GL_POINTS);                                                //Begin to draw Points
+			while (i < size) {
+				glColor3f(tileColors[++c], tileColors[++c], tileColors[++c]);  //set pixel color
+				glVertex2f(tileVertices[++i], tileVertices[++i]); 			   //make a point
+			}
+			glEnd();                                                           //End with draw
+		}
+		
+		size = lineVertices.length -1;
+		i = -1;
+		
+		if(drawLine){                                                          
+			glColor3f(0.0f, 0.5f, 1.0f);
+			glBegin(GL_LINES);                                                 //Begin to draw Points
+			while(i < size){
+				glVertex2f(lineVertices[++i], lineVertices[++i]);
+			}
+			glEnd();
+		}
+		Display.update(); 										               // Bring it to the screen.
+	}
+
+	/**
+	 * Handle user input
+	 */
+	private void input(){
+
 		boolean l_Button = Mouse.isButtonDown(0); //left
 		boolean r_Button = Mouse.isButtonDown(1); //right
+		
 		
 		if(l_Button){	// create a Obstacle
 			int view_offset = Display.getWidth() / mapper.getGrid().getGridSize();
@@ -164,40 +212,19 @@ public class View extends Thread {
 			mapper.removeObstacle(X, Y);
 		}
 		
+		//Draw Lines? 
+		if(Keyboard.isKeyDown(Keyboard.KEY_F1))
+			drawLine = false;
+		else
+			drawLine = true;
+		
+		//Draw Tiles?
+		if(Keyboard.isKeyDown(Keyboard.KEY_F2))
+			drawTile = false;
+		else
+			drawTile = true;
 	}
 	
-	/**
-	 * Draw all data on OpenGL canvas.
-	 */
-	private void draw() {
-		glClear(GL_COLOR_BUFFER_BIT);
-		
-		
-		int size = tileVertices.length - 1;
-		int i = -1;
-		int c = -1;
-
-		glBegin(GL_POINTS); // Begin to draw Points
-		while (i < size) {
-			glColor3f(tileColors[++c], tileColors[++c], tileColors[++c]);	// set pixel color
-			glVertex2f(tileVertices[++i], tileVertices[++i]); 			    // make a point
-		}
-		glEnd();                                                            // End with draw
-
-		
-		size = lineVertices.length -1;
-		i = -1;
-		
-		glColor3f(0.0f, 0.5f, 1.0f);
-		glBegin(GL_LINES);
-		while(i < size){
-			glVertex2f(lineVertices[++i], lineVertices[++i]);
-		}
-		glEnd();
-		
-		Display.update(); 										// Bring it to the screen.
-	}
-
 	/**
 	 * Register the Mapper to be observed.
 	 * 
@@ -221,4 +248,5 @@ public class View extends Thread {
 		mapChanged = true;
 		semaphore.release();
 	}
+	
 }
