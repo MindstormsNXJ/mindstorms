@@ -17,21 +17,25 @@ import lejos.util.Delay;
  * @author simon
  */
 public class BtSpeedtest {
+	static NXTConnection connection=null;
+	static DataOutputStream dataOut=null;
+	static DataInputStream dataIn=null;
 	public static void main(String[] args) {
-		while (true) {
 			// the NXT is waiting for a usb connection
+		byte[] b = new byte[256];
+		byte[] c = new byte[256];
+		while (true) {
 			System.out.println("waiting for Bluetooth...");
-			NXTConnection connection = Bluetooth.waitForConnection();
+			 
+				 connect();
+			 
 
-			// get input- and output stream from connection
-			DataOutputStream dataOut = connection.openDataOutputStream();
-			DataInputStream dataIn = connection.openDataInputStream();
+			
 
 			// try to exchange information over IO-streams
 
 			try {
 				// write a String in the dataOutStream and flush it
-				byte[] b = new byte[256];
 				for (int i = 0; i < 256; i++) {
 					b[i] = (byte) i;
 				}
@@ -40,14 +44,27 @@ public class BtSpeedtest {
 
 				System.out.println("gesendet");
 
-				byte[] c = new byte[256];
 				dataIn.read(c);
 				System.out.println("gelesen");
 
 				Sound.beep();
+				connection.close();
 			} catch (IOException e) {
 				System.out.println(" write error " + e);
 			}
+		}
+	}
+	static void connect(){
+		try{
+		connection = Bluetooth.waitForConnection();
+		// get input- and output stream from connection
+			dataOut = connection.openDataOutputStream();
+			dataIn = connection.openDataInputStream();
+		}catch(Exception e){
+			System.out.println("Streamlesefehler");
+			System.out.println("waiting for Bluetooth...");
+			Delay.msDelay(1000);
+			connect();
 		}
 	}
 }
