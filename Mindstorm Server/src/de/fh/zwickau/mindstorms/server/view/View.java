@@ -14,6 +14,12 @@ import de.fh.zwickau.mindstorms.server.navigation.mapping.MapGrid;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * OpenGL View for mapping data
+ * 
+ * @author Andre Furchner
+ *
+ */
 public class View extends Thread {
 
 	private Mapper mapper;
@@ -90,13 +96,13 @@ public class View extends Thread {
 				tileColors[++c] = 0.5f; // blue
 			}
 		}
-		
-		
 	}
 
 	/**
-	 * Update the colors of the MapGrid. Green = clear area Red = area with
-	 * located obstacle
+	 * Update the colors of the MapGrid. Green = clear area,
+	 * Red = area with located obstacle.
+	 * 
+	 * And generate the new LineMap view.
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -168,7 +174,7 @@ public class View extends Thread {
 				glColor3f(tileColors[++c], tileColors[++c], tileColors[++c]);  //set pixel color
 				glVertex2f(tileVertices[++i], tileVertices[++i]); 			   //make a point
 			}
-			glEnd();                                                           //End with draw
+			glEnd();                                                           //End with tile draw
 		}
 		
 		size = lineVertices.length -1;
@@ -178,11 +184,11 @@ public class View extends Thread {
 			glColor3f(0.0f, 0.5f, 1.0f);
 			glBegin(GL_LINES);                                                 //Begin to draw Points
 			while(i < size){
-				glVertex2f(lineVertices[++i], lineVertices[++i]);
+				glVertex2f(lineVertices[++i], lineVertices[++i]);              //Set new LinePoint
 			}
-			glEnd();
+			glEnd();                                                           //End with Line draw
 		}
-		Display.update(); 										               // Bring it to the screen.
+		Display.update();                                                      // Bring it to the screen.
 	}
 
 	/**
@@ -192,7 +198,6 @@ public class View extends Thread {
 
 		boolean l_Button = Mouse.isButtonDown(0); //left
 		boolean r_Button = Mouse.isButtonDown(1); //right
-		
 		
 		if(l_Button){	// create a Obstacle
 			int view_offset = Display.getWidth() / mapper.getGrid().getGridSize();

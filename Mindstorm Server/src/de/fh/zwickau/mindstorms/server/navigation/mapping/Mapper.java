@@ -1,14 +1,26 @@
 package de.fh.zwickau.mindstorms.server.navigation.mapping;
-import de.fh.zwickau.mindstorms.server.view.View;
 
+import de.fh.zwickau.mindstorms.server.view.View;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
 
+/**
+ * The Mapper generate a GridMap of obstacles.
+ * Obstacles can be added by local or world
+ * coordinates.
+ * 
+ * @author Andre Furchner
+ *
+ */
 public class Mapper {
 	private View observer;
 	private MapGrid mapGrid;
 	private LineMap lineMap;
 
+	/**
+	 * New Instace of Mapper
+	 * @param tileSize tile size for grid
+	 */
 	public Mapper(float tileSize) {
 		mapGrid = new MapGrid(tileSize);
 		lineMap = new LineMap();
@@ -62,6 +74,11 @@ public class Mapper {
 		}
 	}
 	
+	/**
+	 * Remove a Obstacle at the local position
+	 * @param x	position
+	 * @param y position
+	 */
 	public void removeObstacle(int x, int y){
 		try {
 			mapGrid.clear(x, y);
