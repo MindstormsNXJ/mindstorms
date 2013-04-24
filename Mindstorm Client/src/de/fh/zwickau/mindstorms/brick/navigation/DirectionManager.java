@@ -51,10 +51,10 @@ public class DirectionManager implements Manager{
 					directioner = (int) robot.compassSensor.getDegrees();
 					if (directioner ==( startDirection + degrees) % 360) {
 						rotate = false;
-						stop();
 					}
 				}
 
+				stop();
 			}
 
 		});
