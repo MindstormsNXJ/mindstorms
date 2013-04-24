@@ -1,5 +1,6 @@
 package de.fh.zwickau.mindstorms.brick.navigation;
 
+import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.util.Manager;
 
@@ -50,6 +51,7 @@ public class DirectionManager implements Manager{
 					directioner = (int) robot.compassSensor.getDegrees();
 					if (directioner ==( startDirection + degrees) % 360) {
 						rotate = false;
+						stop();
 					}
 				}
 
