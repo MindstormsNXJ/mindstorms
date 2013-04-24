@@ -2,9 +2,11 @@ package de.fh.zwickau.mindstorms.brick.initialisation;
 
 import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
+import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.NXT;
 import lejos.nxt.SensorPort;
+import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.addon.CompassHTSensor;
 import lejos.nxt.comm.Bluetooth;
 import de.fh.zwickau.mindstorms.brick.PickerRobot;
@@ -22,13 +24,13 @@ import de.fh.zwickau.mindstorms.brick.WorkerRobot;
 public class Initializer {
 
 	private Robot robot;
-	
+
 	/**
-	 * Initialises the NXT and adds a button listener to the escape button, that will shut
-	 * down the robot whenever it its pressed.
+	 * Initialises the NXT and adds a button listener to the escape button, that
+	 * will shut down the robot whenever it its pressed.
 	 */
 	public void initialize() {
-		//create NXT and init sensors
+		// create NXT and init sensors
 		String id = Bluetooth.getFriendlyName();
 		if (id.equals("Worker1") || id.equals("Worker2")) {
 			robot = new WorkerRobot(id);
@@ -42,31 +44,40 @@ public class Initializer {
 		robot.leftMotor = Motor.A;
 		robot.rightMotor = Motor.B;
 		robot.compassSensor = new CompassHTSensor(SensorPort.S2);
-		
-		//add the universal listener to stop the robot
+		robot.ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
+
+		// add the universal listener to stop the robot
 		Button.ESCAPE.addButtonListener(new ButtonListener() {
-			
+
 			@Override
 			public void buttonReleased(Button b) {
-				//nothing
+				// nothing
 			}
-			
+
 			@Override
 			public void buttonPressed(Button b) {
 				robot.compassSensor.stopCalibration();
 				NXT.shutDown();
 			}
-			
+
 		});
-		
-		//TODO calibrate ultrasonic sensor
-		
-		//calibrate compass sensor
-		CompassCalibrator compassCalibrator = new CompassCalibrator(robot);
-		compassCalibrator.preCalibrate();
-		compassCalibrator.calibrate();
-		
-		//TODO establish connection to the server
-		
+		// Calibtration
+		{
+			System.out.println("Calibrate");
+			// calibrate translation
+
+			DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(
+					robot);
+			driveTranslationCalibrator.calibrate();
+
+			// calibrate compass sensor
+			CompassCalibrator compassCalibrator = new CompassCalibrator(robot);
+			compassCalibrator.preCalibrate();
+			compassCalibrator.calibrate();
+			System.out.println("Calibrated");
+
+		}
+		// TODO establish connection to the server
+
 	}
 }

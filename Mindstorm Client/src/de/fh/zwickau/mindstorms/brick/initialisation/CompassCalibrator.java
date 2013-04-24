@@ -12,7 +12,7 @@ public class CompassCalibrator {
 		this.robot = robot;
 		motSpeed = 200;
 		robot.leftMotor.setSpeed(motSpeed);
-		robot.leftMotor.setSpeed(motSpeed);
+		robot.rightMotor.setSpeed(motSpeed);
 	}
 
 	public void preCalibrate() {
