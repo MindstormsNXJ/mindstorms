@@ -2,7 +2,6 @@ package de.fh.zwickau.mindstorms.brick.initialisation;
 
 import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
-import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.NXT;
 import lejos.nxt.SensorPort;
@@ -14,7 +13,6 @@ import lejos.robotics.navigation.Pose;
 import de.fh.zwickau.mindstorms.brick.PickerRobot;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.WorkerRobot;
-import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
 import de.fh.zwickau.mindstorms.brick.sensors.SensorManager;
 
@@ -66,31 +64,33 @@ public class Initializer {
 			}
 
 		});
+		
 		// Calibtration
 		{
-			System.out.println("Calibrate");
+			System.out.println("starting to calibrate");
+			
 			// calibrate translation
-
-			DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(
-					robot);
+			DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(robot);
 			driveTranslationCalibrator.calibrate();
 
 			// calibrate compass sensor
 			CompassCalibrator compassCalibrator = new CompassCalibrator(robot);
 			compassCalibrator.preCalibrate();
 			compassCalibrator.calibrate();
-			System.out.println("Calibrated");
+			
+			System.out.println("calibrated");
 			Sound.beep();
 			
-			robot.driveTranslation = 38;
-
+			// value to be set if the translation calibration should be skipped (test only)
+			// robot.driveTranslation = 38;
 		}
+		
 		// TODO establish connection to the server
 		
+		// obstacle detection test
 		Button.ENTER.waitForPress();
 		new PositionManager(new Pose(0,0,0), robot);
 		new SensorManager(robot);
-		
 		Button.ESCAPE.waitForPress();
 	}
 }
