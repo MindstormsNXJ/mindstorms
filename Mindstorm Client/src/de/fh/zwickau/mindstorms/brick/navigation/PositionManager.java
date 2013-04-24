@@ -44,18 +44,19 @@ public class PositionManager implements Manager {
 		}
 	}
 	
-	public void rotate(int deg, Direction direction){
-		directionManager.rotateInDirection(deg, direction);
+	public void rotate(int degree, Direction direction){
+		directionManager.rotateInDirection(degree, direction);
 	}
 
 	/**
 	 * Rotate in ...steps in an direction
 	 * 
 	 * @param steps
-	 * @param dir
+	 * @param direction
+	 * @param stepWide, default stepWide should be 45
 	 */
-	public void rotateStepwise(int steps, Direction dir) {
-		directionManager.rotateInDirection(steps * directionManager.getStepWide(), dir);
+	public void rotateStepwise(int steps, Direction direction, int stepWide) {
+		directionManager.rotateInDirection(steps * stepWide, direction);
 	}
 	
 	public void move(int distance){
