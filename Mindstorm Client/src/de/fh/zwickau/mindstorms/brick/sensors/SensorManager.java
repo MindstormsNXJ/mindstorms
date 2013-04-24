@@ -36,8 +36,15 @@ public class SensorManager {
 				System.out.println("Moving to target");
 				moveToTarget();
 				System.out.println("Target reached - scanning");
-				scan();
-				isWorking = false;
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						scan();
+						isWorking = false;
+					}
+					
+				}).start();
 			}
 		}
 		

@@ -9,12 +9,10 @@ public class CompassCalibrator {
 	private int motSpeed;
 	
 	public CompassCalibrator(Robot robot) {
-		robot.leftMotor.setAcceleration(5000);
-		robot.rightMotor.setAcceleration(5000);
+		robot.setModeRotate();
 		this.robot = robot;
 		motSpeed = 200;
-		robot.leftMotor.setSpeed(motSpeed);
-		robot.rightMotor.setSpeed(motSpeed);
+		robot.setMotorSpeed(motSpeed);
 	}
 
 	public void preCalibrate() {
@@ -54,8 +52,8 @@ public class CompassCalibrator {
 	}
 
 	public void calibrate() {
-		robot.rightMotor.setSpeed(motSpeed);
-		robot.leftMotor.setSpeed(motSpeed);
+		robot.rotateSpeed = motSpeed;
+		robot.setModeRotate();
 		robot.compassSensor.startCalibration();
 		robot.rightMotor.forward();
 		robot.leftMotor.backward();
@@ -67,8 +65,7 @@ public class CompassCalibrator {
 		robot.compassSensor.stopCalibration();
 		robot.leftMotor.stop();
 		robot.rightMotor.stop();
-		robot.leftMotor.setAcceleration(500);
-		robot.rightMotor.setAcceleration(500);
+		robot.setModeDrive();
 		System.out.println("compass calibration finished");
 	}
 	
