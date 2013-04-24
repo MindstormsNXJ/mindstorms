@@ -10,8 +10,10 @@ import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
 
 /**
- * Helper class
- * @author Patrick Rosenkranz
+ * Helper class to convert MapGrid to LineMap
+ * and Pose/distance Data to World coordinates.
+ * 
+ * @author Patrick Rosenkranz, Andre Furchner
  *
  */
 public class Converter {
@@ -31,6 +33,11 @@ public class Converter {
 		return target;
 	}
 	
+	/**
+	 * Convert a MapGrid to a Linemap
+	 * 
+	 * @return LineMap
+	 */
 	public static LineMap gridToLineMap(MapGrid grid) {
 		
 		final int g_size = grid.getGridSize();
@@ -40,9 +47,8 @@ public class Converter {
 		
 		for(int x = 0; x < g_size; x++) {
 			for(int y = 0; y < g_size; y++) {
-				
 				if(grid.get(x, y) == 0) {
-					
+
 					//right
 					if(x != g_size -1){
 						if(grid.get(x + 1, y) > 0) {
@@ -71,20 +77,17 @@ public class Converter {
 						}
 					}
 				}
-				
-				
-				
 			}
-			
 		}
 		
+		//Create the LineArray for LineMap constructor.
 		Line[] lines = new Line[line_array.size()];
 		for(int i = 0; i < lines.length; i++){
 			lines[i] = line_array.get(i);
 		}
 		
+		//calculate rectangle
 		float recp = g_size * grid.getTileSize() / 2.0f;
 		return new LineMap(lines, new Rectangle(-recp, -recp, recp, recp));
-		
 	}
 }
