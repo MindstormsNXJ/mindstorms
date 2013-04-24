@@ -8,9 +8,10 @@ public class MovementManager implements Manager {
 
 	double driveTranslation;
 	Robot robot;
-	private float startdegrees;
+	private int startdegrees;
 	private int robotspeed;
 	private boolean driving;
+	private int tachoRight;
 
 	public MovementManager(Robot robot) {
 		this.robot = robot;
@@ -19,31 +20,31 @@ public class MovementManager implements Manager {
 
 	public void move(int dist) {
 		driving = true;
-		startdegrees = robot.compassSensor.getDegrees();
-		robot.rightMotor.rotate((int) (dist * driveTranslation), true);
-		robot.leftMotor.rotate((int) (dist * driveTranslation), false);
+		startdegrees = (int) robot.compassSensor.getDegrees();
+		robot.rightMotor.rotate((int) (dist * driveTranslation),true);
+		robot.leftMotor.rotate((int) (dist * driveTranslation),false);
+		tachoRight=robot.rightMotor.getTachoCount();
 //		Thread check = new Thread(new Runnable() {
 //
 //			@Override
 //			public void run() {
 //				while (driving) {
-//					if (Math.abs(startdegrees)
-//							- Math.abs(robot.compassSensor.getDegrees()) > 2) {
-//
-//					}
+////					if (Math.abs(startdegrees)
+////							- Math.abs(robot.compassSensor.getDegrees()) > 2) {
+////
+////						
+////					}
 //				}
 //			}
 //
 //		});
 //		check.start();
-//		try {
-//			check.join();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-		if (robot.rightMotor.isMoving() & robot.leftMotor.isMoving() == false) {
-			driving = false;
+		while(tachoRight+(dist * driveTranslation)==robot.rightMotor.getTachoCount()) {
+
+			
+			driving=false;
 		}
+		
 	}
 
 	@Override
