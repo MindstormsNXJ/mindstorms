@@ -6,6 +6,7 @@ import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.NXT;
 import lejos.nxt.SensorPort;
+import lejos.nxt.Sound;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.addon.CompassHTSensor;
 import lejos.nxt.comm.Bluetooth;
@@ -13,6 +14,7 @@ import lejos.robotics.navigation.Pose;
 import de.fh.zwickau.mindstorms.brick.PickerRobot;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.WorkerRobot;
+import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
 import de.fh.zwickau.mindstorms.brick.sensors.SensorManager;
 
@@ -78,6 +80,9 @@ public class Initializer {
 			compassCalibrator.preCalibrate();
 			compassCalibrator.calibrate();
 			System.out.println("Calibrated");
+			Sound.beep();
+			
+			robot.driveTranslation = 38;
 
 		}
 		// TODO establish connection to the server

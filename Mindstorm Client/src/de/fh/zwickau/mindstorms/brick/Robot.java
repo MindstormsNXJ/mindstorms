@@ -23,6 +23,11 @@ public abstract class Robot {
 	public UltrasonicSensor ultrasonicSensor;
 	public double driveTranslation; // angel in degrees per cm
 	public PositionManager positionManager;
+	
+	public int rotateSpeed = 200; //standard values, not to use
+	public int driveSpeed = 200; 
+	public final int STANDARD_ROTATE_ACC = 5000;
+	public final int STANDARD_DRIVE_ACC = 500;
 
 	public Robot(String id) {
 		this.id = id;
@@ -31,4 +36,29 @@ public abstract class Robot {
 	public String getId() {
 		return id;
 	}
+	
+	public void setMotorSpeed(int speed) {
+		leftMotor.setSpeed(speed);
+		rightMotor.setSpeed(speed);
+	}
+	
+	public void setAcc(int acc) {
+		leftMotor.setAcceleration(acc);
+		rightMotor.setAcceleration(acc);
+	}
+	
+	public void setModeDrive() {
+		setMotorSpeed(driveSpeed);
+		setAcc(STANDARD_DRIVE_ACC);
+	}
+	
+	public void setModeRotate() {
+		setMotorSpeed(rotateSpeed);
+		setAcc(STANDARD_ROTATE_ACC);
+	}
+	
+	public int getDirection() {
+		return (int) compassSensor.getDegrees();
+	}
+	
 }
