@@ -9,6 +9,8 @@ public class CompassCalibrator {
 	private int motSpeed;
 	
 	public CompassCalibrator(Robot robot) {
+		robot.leftMotor.setAcceleration(5000);
+		robot.rightMotor.setAcceleration(5000);
 		this.robot = robot;
 		motSpeed = 200;
 		robot.leftMotor.setSpeed(motSpeed);
@@ -65,6 +67,8 @@ public class CompassCalibrator {
 		robot.compassSensor.stopCalibration();
 		robot.leftMotor.stop();
 		robot.rightMotor.stop();
+		robot.leftMotor.setAcceleration(500);
+		robot.rightMotor.setAcceleration(500);
 		System.out.println("compass calibration finished");
 	}
 	

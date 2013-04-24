@@ -17,6 +17,9 @@ public class SensorManager {
 	public SensorManager(Robot robot) {
 		this.robot = robot;
 		isWorking = false;
+		System.out.println("moving forward");
+		robot.rightMotor.forward();
+		robot.leftMotor.forward();
 		FeatureDetector scanner = new RangeFeatureDetector(robot.ultrasonicSensor, 50, 10);
 		scanner.addListener(new MyFeatureListener());
 	}
@@ -27,8 +30,12 @@ public class SensorManager {
 		public void featureDetected(Feature feature, FeatureDetector detector) {
 			distance = (int) feature.getRangeReading().getRange();
 			if (!isWorking) {
+				robot.rightMotor.stop();
+				robot.leftMotor.stop();
 				isWorking = true;
+				System.out.println("Moving to target");
 				moveToTarget();
+				System.out.println("Target reached - scanning");
 				scan();
 				isWorking = false;
 			}
@@ -42,12 +49,14 @@ public class SensorManager {
 			boolean change = false;
 			int startDistance = distance;
 			int startDirection = (int) robot.compassSensor.getDegrees();
+			System.out.println("start direction: " + startDirection);
 			while (!change) {
 				robot.positionManager.rotate(2, Direction.LEFT);
 				if (Math.abs(distance - startDistance) >= 5)
 					change = true;
 			}
 			int leftBorder = (int) robot.compassSensor.getDegrees();
+			System.out.println("left border: " + leftBorder);
 			robot.positionManager.rotateTo(startDirection);
 			change = false;
 			while (!change) {
@@ -56,6 +65,7 @@ public class SensorManager {
 					change = true;
 			}
 			int rightBorder = (int) robot.compassSensor.getDegrees();
+			System.out.println("right direction: " + rightBorder);
 			int middle = ((leftBorder + rightBorder) % 360) / 2;
 			System.out.println("middle: " + middle);
 			Sound.beep();

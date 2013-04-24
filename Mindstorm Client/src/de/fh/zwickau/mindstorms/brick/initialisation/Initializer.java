@@ -82,6 +82,7 @@ public class Initializer {
 		}
 		// TODO establish connection to the server
 		
+		Button.ENTER.waitForPress();
 		new PositionManager(new Pose(0,0,0), robot);
 		new SensorManager(robot);
 		
