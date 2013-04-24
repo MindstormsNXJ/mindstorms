@@ -4,6 +4,12 @@ import lejos.robotics.navigation.Pose;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 import de.fh.zwickau.mindstorms.server.view.View;
 
+/**
+ * The Server start point
+ * 
+ * @author Andre Furchner
+ *
+ */
 public class Main {
 
 	/**
