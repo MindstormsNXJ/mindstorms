@@ -8,10 +8,10 @@ public class DirectionManager implements Manager{
 	int motSpeed = 200;// Speed how fast the Robot should Rotate
 	private Robot robot;// the Robot who is to rotate
 	private boolean rotate;// boolean if robot is rotating
-	private float startDirection;// the direction where the robot stands at
+	private int startDirection;// the direction where the robot stands at
 									// start
-	private float directioner;// the direction where the Robot should move
-	private float degrees;// the dergree what to move
+	private int currentDirection;// the direction where the Robot should move
+	private int targetDirection;// the dergree what to move
 	private int stepWide = 45;// the stepwide for stepwise rotating
 
 	/**
@@ -31,25 +31,27 @@ public class DirectionManager implements Manager{
 	 */
 	public void rotateInDirection(int deg, Direction dir) {
 		rotate = true;
-		startDirection = robot.compassSensor.getDegrees();
+		startDirection = (int) robot.compassSensor.getDegrees();
 		if (dir == Direction.RIGHT) {
 			robot.leftMotor.forward();
 			robot.rightMotor.backward();
-			degrees = deg;
+			targetDirection = (startDirection + deg) % 360;
 		}
 		if (dir == Direction.LEFT) {
-			robot.leftMotor.forward();
-			robot.rightMotor.backward();
-			degrees = -deg;
+			robot.leftMotor.backward();
+			robot.rightMotor.forward();
+			targetDirection = (startDirection - deg) % 360;
 		}
 		Thread check = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				while (rotate == true) {
-					directioner = robot.compassSensor.getDegrees();
-					if (directioner == startDirection + degrees % 360) {
+					currentDirection = (int) robot.compassSensor.getDegrees();
+					if (Math.abs(currentDirection - targetDirection) <= 1) {
 						rotate = false;
+						robot.leftMotor.stop();
+						robot.rightMotor.stop();
 					}
 				}
 
