@@ -19,10 +19,13 @@ public class DirectionManager {
 	 * @return 
 	 */
 	public DirectionManager (Robot robot) {
-		robot.leftMotor.setSpeed(motSpeed);
-		robot.leftMotor.setSpeed(motSpeed);
+		this.robot=robot;
 	}
 
+	/**
+	 * rotate to an angle 
+	 * @param deg
+	 */
 	public void rotate(int deg) {
 		int startdegrees=(int) robot.compassSensor.getDegrees();
 		int right = (startdegrees+deg)%360;
@@ -35,7 +38,7 @@ public class DirectionManager {
 		}
 	}
 	/**
-	 * 
+	 * rotate with an angle in a specific direction
 	 * @param deg
 	 * @param dir
 	 */
@@ -77,7 +80,7 @@ public class DirectionManager {
 	
 	
 	/**
-	 * 
+	 * Rotate in ...steps in an direction
 	 * @param steps
 	 * @param dir
 	 */
@@ -86,11 +89,6 @@ public class DirectionManager {
 		
 	}
 	
-	public void setMotSpeed(int motSpeed) {
-		this.motSpeed = motSpeed;
-		robot.leftMotor.setSpeed(this.motSpeed);
-		robot.leftMotor.setSpeed(this.motSpeed);
-	}
 	public void setStepWide(int stepWide) {
 		this.stepWide = stepWide;
 	}
