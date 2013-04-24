@@ -90,7 +90,6 @@ public class timedelayMeter
         	zstVorher = System.currentTimeMillis();
         	
             DataOutputStream dataOut = new DataOutputStream(uselink.getOutputStream());
-			
             dataOut.write(b);
             dataOut.flush();
             System.out.println("gesendet");
