@@ -1,5 +1,5 @@
 package de.fh.zwickau.mindstorms.brick.navigation;
 
-public enum direction {
-RIGHT, LEFT
+public enum Direction {
+	RIGHT, LEFT
 }

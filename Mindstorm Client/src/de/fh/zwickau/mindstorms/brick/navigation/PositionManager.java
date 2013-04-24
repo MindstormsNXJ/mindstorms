@@ -11,12 +11,12 @@ public class PositionManager implements Manager {
 	private DirectionManager directionManager;
 	private MovementManager movementManager;
 
-	public PositionManager(Pose pose, Robot robot,
-			DirectionManager directionManager, MovementManager movementManager) {
+	public PositionManager(Pose pose, Robot robot) {
 		this.pose = pose;
 		this.robot = robot;
-		this.directionManager = directionManager;
-		this.movementManager = movementManager;
+		this.directionManager = new DirectionManager(robot);
+		this.movementManager = new MovementManager(robot);
+		robot.positionManager = this;
 	}
 
 	public Pose getPose() {
@@ -37,14 +37,14 @@ public class PositionManager implements Manager {
 		int right = (startdegrees + deg) % 360;
 		int left = (startdegrees - deg) % 360;
 		if (right <= left) {
-			directionManager.rotateInDirection(right, direction.RIGHT);
+			directionManager.rotateInDirection(right, Direction.RIGHT);
 		}
 		if (left < right) {
-			directionManager.rotateInDirection(left, direction.LEFT);
+			directionManager.rotateInDirection(left, Direction.LEFT);
 		}
 	}
 	
-	public void rotate(int deg, direction direction){
+	public void rotate(int deg, Direction direction){
 		directionManager.rotateInDirection(deg, direction);
 	}
 
@@ -54,7 +54,7 @@ public class PositionManager implements Manager {
 	 * @param steps
 	 * @param dir
 	 */
-	public void rotateStepwise(int steps, direction dir) {
+	public void rotateStepwise(int steps, Direction dir) {
 		directionManager.rotateInDirection(steps * directionManager.getStepWide(), dir);
 	}
 	

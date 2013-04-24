@@ -1,5 +1,6 @@
 package de.fh.zwickau.mindstorms.brick;
 
+import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.addon.CompassHTSensor;
@@ -21,7 +22,7 @@ public abstract class Robot {
 	public CompassHTSensor compassSensor;
 	public UltrasonicSensor ultrasonicSensor;
 	public double driveTranslation; // angel in degrees per cm
-
+	public PositionManager positionManager;
 
 	public Robot(String id) {
 		this.id = id;

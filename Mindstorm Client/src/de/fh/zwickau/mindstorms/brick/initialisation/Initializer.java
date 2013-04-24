@@ -9,9 +9,12 @@ import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.addon.CompassHTSensor;
 import lejos.nxt.comm.Bluetooth;
+import lejos.robotics.navigation.Pose;
 import de.fh.zwickau.mindstorms.brick.PickerRobot;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.WorkerRobot;
+import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
+import de.fh.zwickau.mindstorms.brick.sensors.SensorManager;
 
 /**
  * This class is responsible for managing all tasks that have to be performed
@@ -78,6 +81,10 @@ public class Initializer {
 
 		}
 		// TODO establish connection to the server
-
+		
+		new PositionManager(new Pose(0,0,0), robot);
+		new SensorManager(robot);
+		
+		Button.ESCAPE.waitForPress();
 	}
 }

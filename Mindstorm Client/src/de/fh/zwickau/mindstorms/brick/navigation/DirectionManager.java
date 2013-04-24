@@ -29,15 +29,15 @@ public class DirectionManager implements Manager{
 	 * @param deg
 	 * @param dir
 	 */
-	public void rotateInDirection(int deg, direction dir) {
+	public void rotateInDirection(int deg, Direction dir) {
 		rotate = true;
 		startDirection = robot.compassSensor.getDegrees();
-		if (dir == direction.RIGHT) {
+		if (dir == Direction.RIGHT) {
 			robot.leftMotor.forward();
 			robot.rightMotor.backward();
 			degrees = deg;
 		}
-		if (dir == direction.LEFT) {
+		if (dir == Direction.LEFT) {
 			robot.leftMotor.forward();
 			robot.rightMotor.backward();
 			degrees = -deg;
