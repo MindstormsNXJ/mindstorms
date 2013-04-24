@@ -21,10 +21,10 @@ public abstract class Robot {
 	public NXTRegulatedMotor rightMotor;
 	public CompassHTSensor compassSensor;
 	public UltrasonicSensor ultrasonicSensor;
-	public double driveTranslation; // angel in degrees per cm
+	public double driveTranslation; //angel in degrees per cm
 	public PositionManager positionManager;
 	
-	public int rotateSpeed = 200; //standard values, not to use
+	public int rotateSpeed = 200; //standard values, will be changed after the calibration
 	public int driveSpeed = 200; 
 	public final int STANDARD_ROTATE_ACC = 5000;
 	public final int STANDARD_DRIVE_ACC = 500;

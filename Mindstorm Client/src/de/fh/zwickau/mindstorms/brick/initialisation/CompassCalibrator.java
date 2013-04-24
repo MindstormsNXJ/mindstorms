@@ -6,20 +6,21 @@ import lejos.util.Delay;
 public class CompassCalibrator {
 
 	private Robot robot;
-	private int motSpeed;
+	private int rotationSpeed;
+	private boolean preCalibrationSuccessful;
 	
 	public CompassCalibrator(Robot robot) {
-		robot.setModeRotate();
+		System.out.println("starting compass calibration");
 		this.robot = robot;
-		motSpeed = 200;
-		robot.setMotorSpeed(motSpeed);
+		robot.setModeRotate();
+		preCalibrationSuccessful = false;
 	}
 
 	public void preCalibrate() {
 		long before = System.currentTimeMillis();		
 		final float startDirection = robot.compassSensor.getDegrees();
 		if (startDirection == 506) {
-			System.out.println("pre calibration failed, please restart program");
+			System.out.println("pre calibration failed, please restart NXT");
 			return;
 		}
 		robot.leftMotor.forward();
@@ -48,11 +49,16 @@ public class CompassCalibrator {
 		}
 		long after = System.currentTimeMillis();
 		long runningTime = after - before;
-		motSpeed = (int) ((motSpeed * runningTime) / 20000);
+		rotationSpeed = (int) ((rotationSpeed * runningTime) / 20000);
+		preCalibrationSuccessful = true;
 	}
 
 	public void calibrate() {
-		robot.rotateSpeed = motSpeed;
+		if (!preCalibrationSuccessful) {
+			System.out.println("pre calibration is necessary before calibration compass sensor");
+			return;
+		}
+		robot.rotateSpeed = rotationSpeed;
 		robot.setModeRotate();
 		robot.compassSensor.startCalibration();
 		robot.rightMotor.forward();
