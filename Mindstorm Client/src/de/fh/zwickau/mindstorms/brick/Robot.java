@@ -18,36 +18,41 @@ public abstract class Robot {
 	public NXTRegulatedMotor rightMotor;
 	public CompassHTSensor compassSensor;
 	public UltrasonicSensor ultrasonicSensor;
-	public double driveTranslation; //angel in degrees per cm
+	public double driveTranslation; // angel in degrees per cm
 	public PositionManager positionManager;
-	
-	public int rotateSpeed = 100; //standard values, will be changed after the calibration
-	public int driveSpeed = 200; 
+
+	public int rotationSpeed = 100; // standard values, will be changed after
+									// the calibration
+	public int driveSpeed = 200;
 	public final int STANDARD_ROTATE_ACC = 5000;
 	public final int STANDARD_DRIVE_ACC = 500;
-	
+
 	public void setMotorSpeed(int speed) {
 		leftMotor.setSpeed(speed);
 		rightMotor.setSpeed(speed);
 	}
-	
+
 	public void setAcc(int acc) {
 		leftMotor.setAcceleration(acc);
 		rightMotor.setAcceleration(acc);
 	}
-	
+
 	public void setModeDrive() {
 		setMotorSpeed(driveSpeed);
 		setAcc(STANDARD_DRIVE_ACC);
 	}
-	
+
 	public void setModeRotate() {
-		setMotorSpeed(rotateSpeed);
+		setMotorSpeed(rotationSpeed);
 		setAcc(STANDARD_ROTATE_ACC);
 	}
-	
+
 	public int getDirection() {
 		return (int) compassSensor.getDegrees();
 	}
-	
+
+	public void setRotateSpeed(int rotationSpeed) {
+		this.rotationSpeed = rotationSpeed;
+	}
+
 }
