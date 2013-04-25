@@ -91,7 +91,7 @@ public class Initializer {
 		
 		// obstacle detection test
 		Button.ENTER.waitForPress();
-		new PositionManager(new Pose(0,0,0), robot, connectionManager);
+		new PositionManager(new Pose(0,0,0), robot);
 		new SensorManager(robot);
 		Button.ESCAPE.waitForPress();
 	}
