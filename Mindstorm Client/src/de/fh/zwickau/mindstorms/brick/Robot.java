@@ -14,6 +14,7 @@ import lejos.nxt.addon.CompassHTSensor;
  * @version 1.0
  */
 public abstract class Robot {
+	
 	public NXTRegulatedMotor leftMotor;
 	public NXTRegulatedMotor rightMotor;
 	public CompassHTSensor compassSensor;
@@ -53,6 +54,10 @@ public abstract class Robot {
 
 	public void setRotateSpeed(int rotationSpeed) {
 		this.rotationSpeed = rotationSpeed;
+	}
+
+	public void setDriveTranslation(double driveTranslation) {
+		this.driveTranslation = driveTranslation;
 	}
 
 }

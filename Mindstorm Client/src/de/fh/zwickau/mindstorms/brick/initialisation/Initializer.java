@@ -7,6 +7,7 @@ import lejos.nxt.NXT;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.Sound;
+import lejos.nxt.TouchSensor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.addon.CompassHTSensor;
 import lejos.robotics.navigation.Pose;
@@ -23,13 +24,16 @@ import de.fh.zwickau.mindstorms.brick.sensors.SensorManager;
  * @author Tobias Schießl
  * @version 1.0
  */
-public class Initializer {
+public class Initializer implements ButtonListener {
 
 	private Robot robot;
 	private NXTRegulatedMotor leftMotor;
 	private NXTRegulatedMotor rightMotor;
+	private NXTRegulatedMotor grabberMotor;
+	private TouchSensor touchSensor;
 	private CompassHTSensor compassSensor;
 	private UltrasonicSensor ultrasonicSensor;
+	private boolean hasToCalibrate;
 
 	/**
 	 * Initialises the NXT and adds a button listener to the escape button, that
@@ -38,48 +42,23 @@ public class Initializer {
 	public Initializer() {
 		leftMotor = robot.leftMotor = Motor.A;
 		rightMotor = robot.rightMotor = Motor.B;
+		grabberMotor = Motor.C;
 		compassSensor = robot.compassSensor = new CompassHTSensor(SensorPort.S2);
 		ultrasonicSensor = robot.ultrasonicSensor = new UltrasonicSensor(
 				SensorPort.S1);
+		touchSensor = new TouchSensor(SensorPort.S3);
 		initialize();
 	}
 
+	@Override
+	public void buttonPressed(Button b) {
+		compassSensor.stopCalibration();
+		NXT.shutDown();
+	}
+
 	public void initialize() {
-		// add the universal listener to stop the robot
-		Button.ESCAPE.addButtonListener(new ButtonListener() {
-
-			@Override
-			public void buttonReleased(Button b) {
-				// nothing
-			}
-
-			@Override
-			public void buttonPressed(Button b) {
-				robot.compassSensor.stopCalibration();
-				NXT.shutDown();
-			}
-
-		});
-
-		// Calibtration
-		{
-			System.out.println("starting to calibrate");
-
-			// calibrate translation
-			// DriveTranslationCalibrator driveTranslationCalibrator = new
-			// DriveTranslationCalibrator(robot);
-			// driveTranslationCalibrator.calibrate();
-
-			// calibrate compass sensor
-			CompassCalibrator compassCalibrator = new CompassCalibrator(robot, leftMotor,rightMotor,compassSensor);
-			System.out.println("calibrated");
-			Sound.beep();
-			
-
-			// value to be set if the translation calibration should be skipped
-			// (test only)
-			// robot.driveTranslation = 38;
-		}
+		Button.ESCAPE.addButtonListener(this);
+		calibrate();
 
 		// establish connection to the server
 		ConnectionManager connectionManager = new ConnectionManager(robot);
@@ -91,7 +70,32 @@ public class Initializer {
 		Button.ESCAPE.waitForPress();
 	}
 
+	private void calibrate() {
+		{
+			System.out.println("calibrate");
+			{
+				// calculate driveTranslation
+				DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(
+						leftMotor, rightMotor, ultrasonicSensor);
+				robot.driveTranslation = driveTranslationCalibrator
+						.getDriveTranslation();
+
+				// calibrate compass sensor
+				CompassCalibrator compassCalibrator = new CompassCalibrator(
+						leftMotor, rightMotor, compassSensor);
+
+			}
+			System.out.println("calibrated");
+			Sound.beep();
+		}
+	}
+
 	public Robot getRobot() {
 		return robot;
+	}
+
+	@Override
+	public void buttonReleased(Button b) {
+		// nothing
 	}
 }

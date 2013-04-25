@@ -2,6 +2,8 @@ package de.fh.zwickau.mindstorms.brick.initialisation;
 
 import java.util.ArrayList;
 
+import lejos.nxt.NXTRegulatedMotor;
+import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.objectdetection.Feature;
 import lejos.robotics.objectdetection.FeatureDetector;
 import lejos.robotics.objectdetection.FeatureListener;
@@ -9,31 +11,37 @@ import lejos.robotics.objectdetection.RangeFeatureDetector;
 import de.fh.zwickau.mindstorms.brick.Robot;
 
 public class DriveTranslationCalibrator implements FeatureListener {
-	private Robot robot;
 	private final int motAcc, rotations, minDistance, maxDistance, interval;
 	private int lastTacho;
 	private double driveTranslation, lastRange;
 	private ArrayList<Double> translations = new ArrayList<Double>();
+	private UltrasonicSensor ultrasonicSensor;
+	private NXTRegulatedMotor rightMotor;
+	private NXTRegulatedMotor leftMotor;
 
-	public DriveTranslationCalibrator(Robot robot) {
-		this.robot = robot;
+	public DriveTranslationCalibrator(NXTRegulatedMotor leftMotor,
+			NXTRegulatedMotor rightMotor, UltrasonicSensor ultrasonicSensor) {
+		this.leftMotor = leftMotor;
+		this.rightMotor = rightMotor;
+		this.ultrasonicSensor = ultrasonicSensor;
 		rotations = 3;
 		interval = 10;
 		minDistance = 20;
 		maxDistance = 45;
 		motAcc = 500;
+		calibrate();
 	}
 
 	private void reset() {
-		robot.leftMotor.setAcceleration(motAcc);
-		robot.rightMotor.setAcceleration(motAcc);
-		robot.leftMotor.resetTachoCount();
-		robot.rightMotor.resetTachoCount();
+		leftMotor.setAcceleration(motAcc);
+		rightMotor.setAcceleration(motAcc);
+		leftMotor.resetTachoCount();
+		rightMotor.resetTachoCount();
 	}
 
 	public void calibrate() {
-		FeatureDetector scanner = new RangeFeatureDetector(
-				robot.ultrasonicSensor, maxDistance, interval);
+		FeatureDetector scanner = new RangeFeatureDetector(ultrasonicSensor,
+				maxDistance, interval);
 		scanner.addListener(this);
 		for (int i = 0; i < 3; i++) {
 			reset();
@@ -45,9 +53,8 @@ public class DriveTranslationCalibrator implements FeatureListener {
 		for (double trans : translations) {
 			summe += trans;
 		}
-		driveTranslation= summe/translations.size();
+		driveTranslation = summe / translations.size();
 		System.out.println("Translation: " + driveTranslation);
-		robot.driveTranslation = driveTranslation;
 	}
 
 	@Override
@@ -55,14 +62,14 @@ public class DriveTranslationCalibrator implements FeatureListener {
 		double range = feature.getRangeReading().getRange();
 		if (range > minDistance) {
 			if (lastRange < range) {
-				int tacho = robot.leftMotor.getTachoCount();
+				int tacho = getTacho();
 				if (tacho < lastTacho) {
 					translations.add((lastTacho - tacho) / (range - lastRange));
 					lastRange = range;
 					lastTacho = tacho;
 				}
 			} else if (lastRange > range) {
-				int tacho = robot.leftMotor.getTachoCount();
+				int tacho = getTacho();
 				if (tacho > lastTacho) {
 					translations.add((tacho - lastTacho) / (lastRange - range));
 					lastRange = range;
@@ -71,17 +78,25 @@ public class DriveTranslationCalibrator implements FeatureListener {
 			}
 		} else if (range == minDistance) {
 			lastRange = feature.getRangeReading().getRange();
-			lastTacho = robot.leftMotor.getTachoCount();
+			lastTacho = getTacho();
 		}
 	}
 
 	private void rotate(int angel) {
-		robot.leftMotor.rotate(angel, true);
-		robot.rightMotor.rotate(angel, false);
+		leftMotor.rotate(angel, true);
+		rightMotor.rotate(angel, false);
+	}
+
+	private int getTacho() {
+		return (leftMotor.getTachoCount() + rightMotor.getTachoCount()) / 2;
 	}
 
 	private void setSpeed(int speed) {
-		robot.leftMotor.setSpeed(speed);
-		robot.rightMotor.setSpeed(speed);
+		leftMotor.setSpeed(speed);
+		rightMotor.setSpeed(speed);
+	}
+
+	public double getDriveTranslation() {
+		return driveTranslation;
 	}
 }

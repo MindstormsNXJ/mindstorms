@@ -7,26 +7,26 @@ import lejos.util.Delay;
 
 public class CompassCalibrator {
 
-	private Robot robot;
+//	private Robot robot;
 	private int rotationSpeed;
 	private boolean preCalibrationSuccessful;
 	private CompassHTSensor compassSensor;
 	private NXTRegulatedMotor rightMotor;
 	private NXTRegulatedMotor leftMotor;
 	
-	public CompassCalibrator(Robot robot, NXTRegulatedMotor leftMotor, NXTRegulatedMotor rightMotor, CompassHTSensor compassSensor) {
-		this.robot=robot;
+	public CompassCalibrator(NXTRegulatedMotor leftMotor, NXTRegulatedMotor rightMotor, CompassHTSensor compassSensor) {
 		this.leftMotor=leftMotor;
 		this.rightMotor=rightMotor;
 		this.compassSensor=compassSensor;
 		System.out.println("starting compass calibration");
-		robot.setModeRotate();
 		preCalibrationSuccessful = false;
 		preCalibrate();
 		calibrate();
 	}
 
 	public void preCalibrate() {
+		leftMotor.setAcceleration(5000);
+		rightMotor.setAcceleration(5000);
 		long before = System.currentTimeMillis();		
 		final float startDirection = compassSensor.getDegrees();
 		if (startDirection == 506) {
@@ -68,8 +68,10 @@ public class CompassCalibrator {
 			System.out.println("pre calibration is necessary before calibration compass sensor");
 			return;
 		}
-		robot.setRotateSpeed(rotationSpeed);
-		robot.setModeRotate();
+		leftMotor.setSpeed(rotationSpeed);
+		rightMotor.setSpeed(rotationSpeed);
+		leftMotor.setAcceleration(5000);
+		rightMotor.setAcceleration(5000);
 		compassSensor.startCalibration();
 		rightMotor.forward();
 		leftMotor.backward();
@@ -79,9 +81,8 @@ public class CompassCalibrator {
 				e.printStackTrace();
 			}
 		compassSensor.stopCalibration();
-		leftMotor.stop();
-		rightMotor.stop();
-		robot.setModeDrive();
+		leftMotor.stop(true);
+		rightMotor.stop(false);
 		System.out.println("compass calibration finished");
 	}
 	
