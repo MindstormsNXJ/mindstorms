@@ -75,7 +75,7 @@ public class View extends Thread {
 		
 		// GL initialize
 		glLineWidth(3.0f);
-		glPointSize(Display.getWidth() / mapper.getGrid().getGridSize()+0.5f);
+		glPointSize(Display.getWidth() / mapper.getGrid().getGridSize()+0.51f);
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		
 		
