@@ -14,7 +14,7 @@ import de.fh.zwickau.mindstorms.brick.Robot;
 public class ConnectionManager {
 	
 	private Robot robot;
-	private DataOutputStream positionWriter;
+	private DataOutputStream positionSender;
 	private DataInputStream commandReceiver;
 	
 	public ConnectionManager(Robot robot) {
@@ -27,7 +27,7 @@ public class ConnectionManager {
 		NXTConnection connection = USB.waitForConnection();
 //		NXTConnection connection = Bluetooth.waitForConnection();
 		
-		positionWriter = connection.openDataOutputStream();
+		positionSender = connection.openDataOutputStream();
 		commandReceiver = connection.openDataInputStream();
 	}
 	
@@ -59,7 +59,7 @@ public class ConnectionManager {
 		boolean success = false;
 		String parsedPose = parsePose(pose);
 		try {
-			positionWriter.writeUTF(parsedPose);
+			positionSender.writeUTF(parsedPose);
 			success = true;
 		} catch (IOException e) {
 			e.printStackTrace();

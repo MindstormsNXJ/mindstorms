@@ -1,6 +1,7 @@
 package de.fh.zwickau.mindstorms.server;
 
 import lejos.robotics.navigation.Pose;
+import de.fh.zwickau.mindstorms.server.communication.ConnectionManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 import de.fh.zwickau.mindstorms.server.view.View;
 
@@ -33,6 +34,7 @@ public class Main {
 			mapper.addObstacle(pose, (int)(400 * (Math.random() * 0.25 * Math.sin(i) +1)));
 		}
 
+		new ConnectionManager(mapper);
 	}
 
 }
