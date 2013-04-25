@@ -12,6 +12,7 @@ public class CompassCalibrator {
 	public CompassCalibrator(Robot robot) {
 		System.out.println("starting compass calibration");
 		this.robot = robot;
+		rotationSpeed = robot.rotateSpeed;
 		robot.setModeRotate();
 		preCalibrationSuccessful = false;
 	}

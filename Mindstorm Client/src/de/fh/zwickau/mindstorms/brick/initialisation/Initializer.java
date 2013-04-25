@@ -71,8 +71,8 @@ public class Initializer {
 			System.out.println("starting to calibrate");
 			
 			// calibrate translation
-			DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(robot);
-			driveTranslationCalibrator.calibrate();
+//			DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(robot);
+//			driveTranslationCalibrator.calibrate();
 
 			// calibrate compass sensor
 			CompassCalibrator compassCalibrator = new CompassCalibrator(robot);
