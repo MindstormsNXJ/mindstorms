@@ -1,7 +1,6 @@
 package de.fh.zwickau.mindstorms.brick.navigation;
 
 import de.fh.zwickau.mindstorms.brick.Robot;
-import de.fh.zwickau.mindstorms.brick.communication.ConnectionManager;
 import de.fh.zwickau.mindstorms.brick.util.Manager;
 import lejos.robotics.navigation.Pose;
 
@@ -11,12 +10,10 @@ public class PositionManager implements Manager {
 	private Robot robot;
 	private DirectionManager directionManager;
 	private MovementManager movementManager;
-	private ConnectionManager connectionManager;
 
-	public PositionManager(Pose pose, Robot robot, ConnectionManager connectionManager) {
+	public PositionManager(Pose pose, Robot robot) {
 		this.pose = pose;
 		this.robot = robot;
-		this.connectionManager = connectionManager;
 		this.directionManager = new DirectionManager(robot);
 		this.movementManager = new MovementManager(robot);
 		robot.positionManager = this;
@@ -37,13 +34,12 @@ public class PositionManager implements Manager {
 	 */
 	public void rotateTo(int deg) {
 		int startdegrees = (int) robot.compassSensor.getDegrees();
-		int right = (startdegrees + deg) % 360;
-		int left = (startdegrees - deg) % 360;
-		if (right <= left) {
-			directionManager.rotateInDirection(right, Direction.RIGHT);
+		int toRotate=Math.abs(angelCorrection(startdegrees, deg));
+		if (angelCorrection(startdegrees, deg)<=0) {
+			directionManager.rotateInDirection(toRotate, Direction.LEFT);
 		}
-		if (left < right) {
-			directionManager.rotateInDirection(left, Direction.LEFT);
+		if ((angelCorrection(startdegrees, deg))>0) {
+			directionManager.rotateInDirection(toRotate, Direction.RIGHT);
 		}
 	}
 	
@@ -72,4 +68,15 @@ public class PositionManager implements Manager {
 		directionManager.stop();
 	}
 
+	int angelCorrection(int currentDegree,int newDegree){
+		int c =newDegree-currentDegree;
+		if(c>=180){
+			c=c-360;
+		}
+		if(c<-180){
+			c=c+360;
+		}
+		return c;
+		
+	}
 }
