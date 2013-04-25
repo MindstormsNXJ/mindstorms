@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import lejos.pc.comm.NXTConnector;
+import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
 
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
@@ -53,6 +54,23 @@ public class ConnectionManager {
 	}
 	
 	private void decodePose(String poseString) {
+		int index = 1; //skip 'x'
+		String xPos = "", yPos = "", dir = "";
+		while (poseString.charAt(index) != 'y') {
+			xPos += poseString.charAt(index);
+			++index;
+		}
+		++index; //skip 'y'
+		while (poseString.charAt(index) != 'd') {
+			yPos += poseString.charAt(index);
+			++index;
+		}
+		index += 3; // skip 'dir'
+		while (poseString.charAt(index) != 'e') {
+			dir += poseString.charAt(index);
+			++index;
+		}
+		Pose pose = new Pose(Integer.parseInt(xPos), Integer.parseInt(yPos), Integer.parseInt(dir));
 		//TODO
 	}
 	

@@ -70,11 +70,11 @@ public class ConnectionManager {
 	private String parsePose(Pose poseToParse) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("x");
-		builder.append(poseToParse.getX());
+		builder.append((int) poseToParse.getX());
 		builder.append("y");
-		builder.append(poseToParse.getY());
+		builder.append((int) poseToParse.getY());
 		builder.append("dir");
-		builder.append(poseToParse.getHeading());
+		builder.append((int) poseToParse.getHeading());
 		builder.append("end");
 		return builder.toString();
 	}
