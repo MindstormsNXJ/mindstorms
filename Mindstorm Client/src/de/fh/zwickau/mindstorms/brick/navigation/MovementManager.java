@@ -6,11 +6,17 @@ import de.fh.zwickau.mindstorms.brick.util.Manager;
 
 public class MovementManager implements Manager {
 
-	double driveTranslation;
-	Robot robot;
-	private int startdegrees;
-	private int robotspeed=200;
-	private boolean driving;
+	/** value for translating motorcycles to a distance */
+ 	double driveTranslation;
+	/** the robot */
+ 	Robot robot;
+	/** direction to the beginning */
+ 	private int startdegrees;
+	/** default speed for stopping*/
+	//TODO Why set here? Overwritten at Line 37
+	private int robotspeed = 200;
+	/** whether the robot is currently moving */
+	private boolean isMoving;
 	private int tachoRight;
 	private int rotToDriveRight;
 	private double rotToDriveLeft;
@@ -30,7 +36,7 @@ public class MovementManager implements Manager {
 		robot.setModeDrive();
 		robotspeed=robot.driveSpeed;
 		this.dist2=dist;
-		driving = true;
+		isMoving = true;
 		startdegrees = (int) robot.compassSensor.getDegrees();
 		translationRight=translationLeft=driveTranslation;
 		
@@ -58,7 +64,7 @@ public class MovementManager implements Manager {
 				/**
 				 * Angelcorrection
 				 */
-				while(driving==true){
+				while(isMoving==true){
 //					System.out.println("start"+startdegrees);
 //					System.out.println("aktuall"+(int) robot.compassSensor.getDegreesCartesian());
 //					if(angelCorrection(startdegrees, (int) robot.compassSensor.getDegreesCartesian())<-10){
@@ -82,13 +88,13 @@ public class MovementManager implements Manager {
 					if(tachoRight+(rotToDriveRight)<=robot.rightMotor.getTachoCount()||
 							tachoLeft+(rotToDriveLeft)<=robot.rightMotor.getTachoCount()
 							) {
-						driving=false;
+						isMoving=false;
 					}}
 			if(!forward){
 				if(tachoRight+(rotToDriveRight)>=robot.rightMotor.getTachoCount()||
 						tachoLeft+(rotToDriveLeft)>=robot.rightMotor.getTachoCount()
 						) {
-					driving=false;
+					isMoving=false;
 				}}
 				}
 				
@@ -111,13 +117,13 @@ public class MovementManager implements Manager {
 	public void stop() {
 		robot.rightMotor.stop(true);//also in direction + doku +arbeitspaketbericht
 		robot.leftMotor.stop(true);
-		driving = false;
+		isMoving = false;
 		int x=(int) ((( (robot.rightMotor.getTachoCount()-tachoRight)+ (robot.leftMotor.getTachoCount()-tachoLeft))/2)*((translationLeft+translationRight))/2);
 
 	}
 
 	public boolean isMoving() {
-		return driving;
+		return isMoving;
 	}
 
 	 int angelCorrection(int a,int n){
