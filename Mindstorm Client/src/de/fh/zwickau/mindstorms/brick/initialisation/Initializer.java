@@ -8,11 +8,8 @@ import lejos.nxt.SensorPort;
 import lejos.nxt.Sound;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.addon.CompassHTSensor;
-import lejos.nxt.comm.Bluetooth;
 import lejos.robotics.navigation.Pose;
-import de.fh.zwickau.mindstorms.brick.PickerRobot;
 import de.fh.zwickau.mindstorms.brick.Robot;
-import de.fh.zwickau.mindstorms.brick.WorkerRobot;
 import de.fh.zwickau.mindstorms.brick.communication.ConnectionManager;
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
 import de.fh.zwickau.mindstorms.brick.sensors.SensorManager;
@@ -34,17 +31,6 @@ public class Initializer {
 	 * will shut down the robot whenever it its pressed.
 	 */
 	public void initialize() {
-		// create NXT and init sensors
-		String id = Bluetooth.getFriendlyName();
-		if (id.equals("Worker1") || id.equals("Worker2")) {
-			robot = new WorkerRobot(id);
-		} else if (id.equals("Picker")) {
-			robot = new PickerRobot(id);
-		} else {
-			System.out.println("please check the robots id");
-			Button.ENTER.waitForPress();
-			NXT.shutDown();
-		}
 		robot.leftMotor = Motor.A;
 		robot.rightMotor = Motor.B;
 		robot.compassSensor = new CompassHTSensor(SensorPort.S2);
