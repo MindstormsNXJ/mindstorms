@@ -52,7 +52,7 @@ public class ConnectionManager {
 	}
 	
 	private void parseCommand(String command) {
-		
+		//TODO
 	}
 	
 	public boolean sendPose(Pose pose) {
