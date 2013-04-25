@@ -72,11 +72,9 @@ public class Initializer {
 
 			// calibrate compass sensor
 			CompassCalibrator compassCalibrator = new CompassCalibrator(robot, leftMotor,rightMotor,compassSensor);
-			compassCalibrator.preCalibrate();
-			compassCalibrator.calibrate();
-
 			System.out.println("calibrated");
 			Sound.beep();
+			
 
 			// value to be set if the translation calibration should be skipped
 			// (test only)
