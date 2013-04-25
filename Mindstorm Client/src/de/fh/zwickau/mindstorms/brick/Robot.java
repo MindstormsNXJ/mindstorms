@@ -13,7 +13,7 @@ import lejos.nxt.addon.CompassHTSensor;
  * @author Tobias Schießl
  * @version 1.0
  */
-public abstract class Robot {
+public class Robot {
 	
 	public NXTRegulatedMotor leftMotor;
 	public NXTRegulatedMotor rightMotor;

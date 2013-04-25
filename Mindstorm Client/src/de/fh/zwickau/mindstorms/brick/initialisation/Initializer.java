@@ -33,20 +33,26 @@ public class Initializer implements ButtonListener {
 	private TouchSensor touchSensor;
 	private CompassHTSensor compassSensor;
 	private UltrasonicSensor ultrasonicSensor;
-	private boolean hasToCalibrate;
+	private boolean hasToCalibrate = false;
+	private final double STD_DRIVE_TRANSLATION = 38.0;
 
 	/**
 	 * Initialises the NXT and adds a button listener to the escape button, that
 	 * will shut down the robot whenever it its pressed.
 	 */
 	public Initializer() {
-		leftMotor = robot.leftMotor = Motor.A;
-		rightMotor = robot.rightMotor = Motor.B;
+		robot=new Robot();
+		leftMotor = Motor.A;
+		robot.leftMotor = leftMotor;  
+		rightMotor = Motor.B;
+		robot.rightMotor=rightMotor;
 		grabberMotor = Motor.C;
-		compassSensor = robot.compassSensor = new CompassHTSensor(SensorPort.S2);
-		ultrasonicSensor = robot.ultrasonicSensor = new UltrasonicSensor(
-				SensorPort.S1);
-		touchSensor = new TouchSensor(SensorPort.S3);
+		compassSensor  = new CompassHTSensor(SensorPort.S2);
+		robot.compassSensor = compassSensor;
+		robot.ultrasonicSensor = ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
+
+						
+						touchSensor = new TouchSensor(SensorPort.S3);
 		initialize();
 	}
 
@@ -72,20 +78,25 @@ public class Initializer implements ButtonListener {
 
 	private void calibrate() {
 		{
-			System.out.println("calibrate");
-			{
-				// calculate driveTranslation
-				DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(
-						leftMotor, rightMotor, ultrasonicSensor);
-				robot.driveTranslation = driveTranslationCalibrator
-						.getDriveTranslation();
+			if (hasToCalibrate) {
+				System.out.println("calibrate");
+				{
+					// calculate driveTranslation
+					DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(
+							leftMotor, rightMotor, ultrasonicSensor);
+					robot.driveTranslation = driveTranslationCalibrator
+							.getDriveTranslation();
 
-				// calibrate compass sensor
-				CompassCalibrator compassCalibrator = new CompassCalibrator(
-						leftMotor, rightMotor, compassSensor);
+					// calibrate compass sensor
+					CompassCalibrator compassCalibrator = new CompassCalibrator(
+							leftMotor, rightMotor, compassSensor);
 
+				}
+				System.out.println("calibrated");
+			} else {
+				System.out.println("not Calibrated");
+				robot.driveTranslation= STD_DRIVE_TRANSLATION;
 			}
-			System.out.println("calibrated");
 			Sound.beep();
 		}
 	}
