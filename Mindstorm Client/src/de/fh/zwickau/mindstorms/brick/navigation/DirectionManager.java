@@ -1,25 +1,24 @@
 package de.fh.zwickau.mindstorms.brick.navigation;
 
+import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.util.Manager;
 
-public class DirectionManager implements Manager {
+public class DirectionManager implements Manager{
 
-	/** speed how fast the robot should rotate */
-	int motSpeed = 200;
-	/** robot which is rotating */
-	private Robot robot;
-	/** robot is rotating */
-	private boolean isRotating;
-	/** the direction the robot stands at start */
-	private int startDirection;
-	/** the degree to rotate */
-	private int degrees;
+	int motSpeed = 200;// Speed how fast the Robot should Rotate
+	private Robot robot;// the Robot who is to rotate
+	private boolean rotate;// boolean if robot is rotating
+	private int startDirection;// the direction where the robot stands at
+									// start
+	private int directioner;// the direction where the Robot should move
+	private int degrees;// the dergree what to move
+	private int stepWide = 45;// the stepwide for stepwise rotating
 
 	/**
-	 * Constructor for the DirectionManager
 	 * 
 	 * @param robot
+	 * @return
 	 */
 	public DirectionManager(Robot robot) {
 		this.robot = robot;
@@ -32,7 +31,8 @@ public class DirectionManager implements Manager {
 	 * @param dir
 	 */
 	public void rotateInDirection(int deg, Direction dir) {
-		isRotating = true;
+		robot.setModeRotate();
+		rotate = true;
 		startDirection = (int) robot.compassSensor.getDegrees();
 		if (dir == Direction.RIGHT) {
 			robot.leftMotor.forward();
@@ -44,20 +44,23 @@ public class DirectionManager implements Manager {
 			robot.rightMotor.forward();
 			degrees = -deg;
 		}
+		System.out.println(degrees);
 		Thread check = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				while (isRotating == true) {
-					int directioner = (int) robot.compassSensor.getDegrees();
-					if (directioner == (startDirection + degrees) % 360) {
-						isRotating = false;
+				while (rotate == true) {
+					directioner = (int) robot.compassSensor.getDegrees();
+					if (directioner ==( startDirection + degrees) % 360) {
+						rotate = false;
 					}
 				}
+
+			
 				stop();
 			}
-		});
 
+		});
 		check.start();
 		try {
 			check.join();
@@ -66,14 +69,27 @@ public class DirectionManager implements Manager {
 		}
 	}
 
+	public void setStepWide(int stepWide) {
+		this.stepWide = stepWide;
+	}
+
+	public int getStepWide() {
+		return stepWide;
+	}
+
 	public boolean isRotating() {
-		return isRotating;
+		return rotate;
 	}
 
 	@Override
 	public void stop() {
-		robot.leftMotor.stop();
+		robot.leftMotor.stop(true);
 		robot.rightMotor.stop();
-		isRotating = false;
+		rotate = false;
+		System.out.println( (int) robot.compassSensor.getDegrees());
+		Delay.msDelay(1000);
 	}
+	
+	
+
 }
