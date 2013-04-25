@@ -6,12 +6,15 @@ import de.fh.zwickau.mindstorms.brick.util.Manager;
 
 public class DirectionManager implements Manager{
 
-	int motSpeed = 200;// Speed how fast the Robot should Rotate
-	private Robot robot;// the Robot who is to rotate
-	private boolean rotate;// boolean if robot is rotating
-	private int startDirection;// the direction where the robot stands at
-									// start
+	int motSpeed = 200;
+	/** speed how fast the robot should rotate */
+	private Robot robot;
+	/** robot which is rotating */
+	private boolean isrotating;
+	/** the direction the robot stands at start */
+	private int startDirection;
 	private int directioner;// the direction where the Robot should move
+	/** the degree to rotate */
 	private int degrees;// the dergree what to move
 	private int stepWide = 45;// the stepwide for stepwise rotating
 
@@ -32,7 +35,7 @@ public class DirectionManager implements Manager{
 	 */
 	public void rotateInDirection(int deg, Direction dir) {
 		robot.setModeRotate();
-		rotate = true;
+		isrotating = true;
 		startDirection = (int) robot.compassSensor.getDegrees();
 		if (dir == Direction.RIGHT) {
 			robot.leftMotor.forward();
@@ -48,7 +51,7 @@ public class DirectionManager implements Manager{
 
 			@Override
 			public void run() {
-				while (rotate == true) {
+				while (isrotating == true) {
 					directioner = (int) robot.compassSensor.getDegrees();
 					int targetdirection = (startDirection + degrees)%360;
 					if(targetdirection<0){
@@ -56,7 +59,7 @@ public class DirectionManager implements Manager{
 					}
 					System.out.println(targetdirection);
 					if (directioner ==targetdirection) {
-						rotate = false;
+						isrotating = false;
 					}
 				}
 
@@ -82,14 +85,14 @@ public class DirectionManager implements Manager{
 	}
 
 	public boolean isRotating() {
-		return rotate;
+		return isrotating;
 	}
 
 	@Override
 	public void stop() {
 		robot.leftMotor.stop(true);
 		robot.rightMotor.stop();
-		rotate = false;
+		isrotating = false;
 		
 		Delay.msDelay(1000);
 	}
