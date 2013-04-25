@@ -13,6 +13,7 @@ import lejos.robotics.navigation.Pose;
 import de.fh.zwickau.mindstorms.brick.PickerRobot;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.WorkerRobot;
+import de.fh.zwickau.mindstorms.brick.communication.ConnectionManager;
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
 import de.fh.zwickau.mindstorms.brick.sensors.SensorManager;
 
@@ -85,11 +86,12 @@ public class Initializer {
 			// robot.driveTranslation = 38;
 		}
 		
-		// TODO establish connection to the server
+		// establish connection to the server
+		ConnectionManager connectionManager = new ConnectionManager(robot);
 		
 		// obstacle detection test
 		Button.ENTER.waitForPress();
-		new PositionManager(new Pose(0,0,0), robot);
+		new PositionManager(new Pose(0,0,0), robot, connectionManager);
 		new SensorManager(robot);
 		Button.ESCAPE.waitForPress();
 	}

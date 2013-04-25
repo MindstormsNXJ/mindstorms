@@ -1,6 +1,7 @@
 package de.fh.zwickau.mindstorms.brick.navigation;
 
 import de.fh.zwickau.mindstorms.brick.Robot;
+import de.fh.zwickau.mindstorms.brick.communication.ConnectionManager;
 import de.fh.zwickau.mindstorms.brick.util.Manager;
 import lejos.robotics.navigation.Pose;
 
@@ -10,10 +11,12 @@ public class PositionManager implements Manager {
 	private Robot robot;
 	private DirectionManager directionManager;
 	private MovementManager movementManager;
+	private ConnectionManager connectionManager;
 
-	public PositionManager(Pose pose, Robot robot) {
+	public PositionManager(Pose pose, Robot robot, ConnectionManager connectionManager) {
 		this.pose = pose;
 		this.robot = robot;
+		this.connectionManager = connectionManager;
 		this.directionManager = new DirectionManager(robot);
 		this.movementManager = new MovementManager(robot);
 		robot.positionManager = this;
