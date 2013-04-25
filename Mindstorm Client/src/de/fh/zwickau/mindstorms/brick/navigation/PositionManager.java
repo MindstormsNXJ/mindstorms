@@ -15,7 +15,7 @@ public class PositionManager implements Manager {
 		this.pose = pose;
 		this.robot = robot;
 		this.directionManager = new DirectionManager(robot);
-		this.movementManager = new MovementManager(robot);
+		this.movementManager = new MovementManager(robot,this);
 		robot.positionManager = this;
 	}
 
