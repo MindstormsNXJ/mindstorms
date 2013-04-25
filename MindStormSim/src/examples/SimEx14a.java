@@ -3,7 +3,6 @@ package examples;
 // Event driven ultrasonic sensor
 
 import ch.aplu.nxtsim.*;
-import java.awt.Color;
 import java.awt.Point;
 
 public class SimEx14a implements UltrasonicListener

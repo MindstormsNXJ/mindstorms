@@ -3,9 +3,15 @@ package test;
 import lejos.nxt.*;
 import lejos.nxt.addon.*;
 import lejos.nxt.comm.LCPBTResponder;
+import lejos.robotics.RangeReading;
+import lejos.robotics.RangeReadings;
+import lejos.robotics.objectdetection.*;
+import lejos.util.Delay;
 
-public class DrivingTest extends Thread implements ButtonListener {
+public class ObjectDetection extends Thread implements ButtonListener,
+		FeatureListener {
 
+	boolean run = true;
 	NXTRegulatedMotor left = Motor.B; // right
 	NXTRegulatedMotor right = Motor.C; // left
 	CompassHTSensor com = new CompassHTSensor(SensorPort.S1);
@@ -15,15 +21,15 @@ public class DrivingTest extends Thread implements ButtonListener {
 	int rotationspeed = 100;
 	int drift = 2;
 	int ticks;
-	boolean run = true;
+	private int count = 0;
 
-	public DrivingTest() {
+	public ObjectDetection() {
 		System.out.println("Initialize");
 		initialize();
 		Button.ESCAPE.addButtonListener(this);
-		calibrate();
+		// calibrate();
 		System.out.println("Enter to Start");
-//		Button.ENTER.waitForPressAndRelease();
+		Button.ENTER.waitForPressAndRelease();
 		this.start();
 	}
 
@@ -31,10 +37,25 @@ public class DrivingTest extends Thread implements ButtonListener {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new DrivingTest();
+		new ObjectDetection();
+	}
+
+	public void run() {
+		while (true) {
+			count++;
+			int i = 0;
+			Sound.beep();
+			float[] reads = son.getRanges();
+			for (float read : reads) {
+				System.out.println(count + "  " + ++i + "  " + (int) read);
+			}
+			Delay.msDelay(1000);
+			LCD.clear();
+		}
 	}
 
 	public void initialize() {
+		Sound.setVolume(30);
 		left.setAcceleration(4000);
 		right.setAcceleration(4000);
 		// Escape Funktion
@@ -43,13 +64,17 @@ public class DrivingTest extends Thread implements ButtonListener {
 		LCPBTResponder lcpThread = new LCPBTResponder();
 		lcpThread.setDaemon(true);
 		lcpThread.start();
+		// new
+		RangeFeatureDetector objectDetector = new RangeFeatureDetector(son, 50,
+				2000);
+		// objectDetector.addListener(this);
 	}
 
 	public void calibrate() {
 		System.out.println("Calibrate");
 		right(50);
 		com.startCalibration();
-		sleep(14100); //Time for one rotaion
+		sleep(14100); // Time for one rotaion
 		com.stopCalibration();
 		System.out.println("Calibrated");
 		stopMotor();
@@ -58,7 +83,7 @@ public class DrivingTest extends Thread implements ButtonListener {
 	public void right(int rotationspeed) {
 		setSpeed(rotationspeed);
 		left.forward();
-		right.backward();		
+		right.backward();
 	}
 
 	public void right() {
@@ -68,25 +93,11 @@ public class DrivingTest extends Thread implements ButtonListener {
 	public void left() {
 		left(rotationspeed);
 	}
+
 	public void left(int rotationspeed) {
 		setSpeed(rotationspeed);
 		left.backward();
 		right.forward();
-	}
-
-	public void run() {
-		for (ticks = 0; run; ticks++) {
-			wayDirection = getDegrees();
-			if (son.getDistance() < 30) {
-				stepRight();
-			} else {
-				forward();
-			}
-		}
-		stopMotor();
-		System.out.println("Ticks: " + ticks);
-		System.out.println("Enter for Exit");
-//		Button.ENTER.waitForPressAndRelease();
 	}
 
 	public void stopMotor() {
@@ -165,5 +176,21 @@ public class DrivingTest extends Thread implements ButtonListener {
 
 	public int getDegrees() {
 		return (int) com.getDegrees();
+	}
+
+	@Override
+	public void featureDetected(Feature feature, FeatureDetector detector) {
+		LCD.clear();
+		RangeReadings reads = feature.getRangeReadings();
+		Sound.beep();
+
+		int i = 0;
+		++count;
+		for (RangeReading read : reads) {
+			int range = (int) read.getRange();
+			int angel = (int) read.getAngle();
+			System.out
+					.println(count + "  " + ++i + "  " + angel + "  " + range);
+		}
 	}
 }
