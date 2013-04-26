@@ -15,15 +15,15 @@ public class PositionManager implements Manager {
 		this.pose = pose;
 		this.robot = robot;
 		this.directionManager = new DirectionManager(robot);
-		this.movementManager = new MovementManager(robot, this);
+		this.movementManager = new MovementManager(robot,this);
 		robot.positionManager = this;
 	}
 
 	public Pose getPose() {
 		return pose;
 	}
-
-	public boolean isPositioning() {
+	
+	public boolean isPositioning(){
 		return directionManager.isRotating() || movementManager.isMoving();
 	}
 
@@ -34,17 +34,16 @@ public class PositionManager implements Manager {
 	 */
 	public void rotateTo(int deg) {
 		int startdegrees = (int) robot.compassSensor.getDegrees();
-		int toRotate = Math.abs(angelCorrection(startdegrees, deg));
-		boolean left = false;
-		if (angelCorrection(startdegrees, deg) <= 0) {
+		int toRotate=Math.abs(angelCorrection(startdegrees, deg));
+		if (angelCorrection(startdegrees, deg)<=0) {
 			directionManager.rotateInDirection(toRotate, Direction.LEFT);
 		}
-		if ((angelCorrection(startdegrees, deg)) > 0) {
+		if ((angelCorrection(startdegrees, deg))>0) {
 			directionManager.rotateInDirection(toRotate, Direction.RIGHT);
 		}
 	}
-
-	public void rotate(int degree, Direction direction) {
+	
+	public void rotate(int degree, Direction direction){
 		directionManager.rotateInDirection(degree, direction);
 	}
 
@@ -53,26 +52,14 @@ public class PositionManager implements Manager {
 	 * 
 	 * @param steps
 	 * @param direction
-	 * @param stepWide
-	 *            , default stepWide should be 45
+	 * @param stepWide, default stepWide should be 45
 	 */
 	public void rotateStepwise(int steps, Direction direction, int stepWide) {
 		directionManager.rotateInDirection(steps * stepWide, direction);
 	}
-
-	private void updateRotation(int i) {
-		pose.setHeading(pose.getHeading() + i);
-	}
-
-	public void move(int distance) {
+	
+	public void move(int distance){
 		movementManager.move(distance);
-		updatePosition(distance);
-	}
-
-	private void updatePosition(int distance) {
-		float x = (float) (Math.cos(pose.getHeading()) * distance);
-		float y = (float) (Math.sin(pose.getHeading()) * distance);
-		pose.setLocation(x, y);
 	}
 
 	@Override
@@ -81,15 +68,15 @@ public class PositionManager implements Manager {
 		directionManager.stop();
 	}
 
-	int angelCorrection(int currentDegree, int newDegree) {
-		int c = newDegree - currentDegree;
-		if (c >= 180) {
-			c = c - 360;
+	int angelCorrection(int currentDegree,int newDegree){
+		int c =newDegree-currentDegree;
+		if(c>=180){
+			c=c-360;
 		}
-		if (c < -180) {
-			c = c + 360;
+		if(c<-180){
+			c=c+360;
 		}
 		return c;
-
+		
 	}
 }
