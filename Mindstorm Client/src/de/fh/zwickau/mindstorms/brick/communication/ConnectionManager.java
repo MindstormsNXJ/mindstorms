@@ -57,11 +57,13 @@ public class ConnectionManager {
 	private void parseCommand(String command) {
 		String operation = "", value = "";
 		int index = 0;
+		//get the operation (fw, bw, left or right)
 		while (!Character.isDigit(command.charAt(index))) {
 			operation += command.charAt(index);
 			++index;
 		}
-		while (index < command.length()) {
+		//get the parameter (distance or degrees)
+		while (index < command.length() && Character.isDigit(command.charAt(index))) {
 			value += command.charAt(index);
 			++index;
 		}
@@ -72,6 +74,7 @@ public class ConnectionManager {
 			System.err.println("No parameter was send with command");
 			return;
 		}
+		//process command
 		switch (operation) {
 		case "fw":
 			robot.positionManager.move(valueAsInt);
