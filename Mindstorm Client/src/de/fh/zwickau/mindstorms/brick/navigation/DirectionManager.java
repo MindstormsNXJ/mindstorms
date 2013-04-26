@@ -1,5 +1,6 @@
 package de.fh.zwickau.mindstorms.brick.navigation;
 
+import lejos.nxt.NXTRegulatedMotor;
 import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.util.Manager;
@@ -37,16 +38,8 @@ public class DirectionManager implements Manager {
 		robot.setModeRotate();
 		isrotating = true;
 		startDirection = (int) robot.compassSensor.getDegrees();
-		if (dir == Direction.RIGHT) {
-			robot.leftMotor.forward();
-			robot.rightMotor.backward();
-			degrees = deg;
-		}
-		if (dir == Direction.LEFT) {
-			robot.leftMotor.backward();
-			robot.rightMotor.forward();
-			degrees = -deg;
-		}
+		checkMotors(deg, dir);
+
 		Thread check = new Thread(new Runnable() {
 
 			@Override
@@ -71,6 +64,22 @@ public class DirectionManager implements Manager {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void checkMotors(int degree, Direction direction) {
+		NXTRegulatedMotor forwardMotor;
+		NXTRegulatedMotor backwardMotor;
+		if (direction == Direction.RIGHT) {
+			forwardMotor = robot.leftMotor;
+			backwardMotor = robot.rightMotor;
+			degrees = degree;
+		} else {
+			forwardMotor = robot.rightMotor;
+			backwardMotor = robot.leftMotor;
+			degrees = -degree;
+		}
+		forwardMotor.forward();
+		backwardMotor.backward();
 	}
 
 	public void setStepWide(int stepWide) {
