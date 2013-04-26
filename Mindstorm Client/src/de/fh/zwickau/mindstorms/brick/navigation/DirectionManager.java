@@ -6,10 +6,11 @@ import de.fh.zwickau.mindstorms.brick.util.Manager;
 
 public class DirectionManager implements Manager{
 
-	int motSpeed = 200;
 	/** speed how fast the robot should rotate */
-	private Robot robot;
+	int motSpeed = 200;
 	/** robot which is rotating */
+	private Robot robot;
+	/** if the robot currently rotates */
 	private boolean isrotating;
 	/** the direction the robot stands at start */
 	private int startDirection;
@@ -95,7 +96,7 @@ public class DirectionManager implements Manager{
 		isrotating = false;
 		
 		Delay.msDelay(1000);
-		return 0; // get the current heading from the compasssensor
+		return degrees;
 	}
 	
 	
