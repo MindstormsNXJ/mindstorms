@@ -17,7 +17,6 @@ public class DirectionManager implements Manager {
 	private int startDirection;
 	/** the degree to rotate */
 	private int degrees;
-	private int stepWide = 45;// the stepwide for stepwise rotating
 
 	/**
 	 * 
@@ -80,14 +79,6 @@ public class DirectionManager implements Manager {
 		}
 		forwardMotor.forward();
 		backwardMotor.backward();
-	}
-
-	public void setStepWide(int stepWide) {
-		this.stepWide = stepWide;
-	}
-
-	public int getStepWide() {
-		return stepWide;
 	}
 
 	public boolean isRotating() {
