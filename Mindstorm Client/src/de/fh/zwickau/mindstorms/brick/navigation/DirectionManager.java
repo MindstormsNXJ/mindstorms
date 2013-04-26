@@ -4,7 +4,7 @@ import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.util.Manager;
 
-public class DirectionManager implements Manager{
+public class DirectionManager implements Manager {
 
 	/** speed how fast the robot should rotate */
 	int motSpeed = 200;
@@ -53,20 +53,17 @@ public class DirectionManager implements Manager{
 			public void run() {
 				while (isrotating == true) {
 					int directioner = (int) robot.compassSensor.getDegrees();
-					int targetdirection = (startDirection + degrees)%360;
-					if(targetdirection<0){
-						targetdirection=360+targetdirection;
+					int targetdirection = (startDirection + degrees) % 360;
+					if (targetdirection < 0) {
+						targetdirection = 360 + targetdirection;
 					}
 					System.out.println(targetdirection);
-					if (directioner ==targetdirection) {
+					if (directioner == targetdirection) {
 						isrotating = false;
 					}
 				}
-
-			
 				stop();
 			}
-
 		});
 		check.start();
 		try {
@@ -93,11 +90,8 @@ public class DirectionManager implements Manager{
 		robot.leftMotor.stop(true);
 		robot.rightMotor.stop();
 		isrotating = false;
-		
+
 		Delay.msDelay(1000);
 		return degrees;
 	}
-	
-	
-
 }
