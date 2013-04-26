@@ -66,7 +66,7 @@ public class PositionManager implements Manager {
 
 	public void move(int distance) {
 		movementManager.move(distance);
-		updatePosition(distance);
+		// updatePosition(distance);
 	}
 
 	private void updatePosition(int distance) {
@@ -77,8 +77,10 @@ public class PositionManager implements Manager {
 
 	@Override
 	public int stop() {
-		movementManager.stop();
+		int distance = movementManager.stop();
+		updatePosition(distance);
 		directionManager.stop();
+		updateRotation((int) robot.compassSensor.getDegrees());
 		return 0;
 	}
 

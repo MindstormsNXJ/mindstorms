@@ -95,7 +95,7 @@ public class DirectionManager implements Manager{
 		isrotating = false;
 		
 		Delay.msDelay(1000);
-		return degrees;
+		return 0; // get the current heading from the compasssensor
 	}
 	
 	
