@@ -86,12 +86,11 @@ public class DirectionManager implements Manager {
 	}
 
 	@Override
-	public int stop() {
+	public void stop() {
 		robot.leftMotor.stop(true);
 		robot.rightMotor.stop();
 		isRotating = false;
 
 		Delay.msDelay(1000);
-		return degrees;
 	}
 }

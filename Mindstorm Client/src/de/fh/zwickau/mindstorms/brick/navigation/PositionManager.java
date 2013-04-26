@@ -76,10 +76,9 @@ public class PositionManager implements Manager {
 	}
 
 	@Override
-	public int stop() {
+	public void stop() {
 		movementManager.stop();
 		directionManager.stop();
-		return 0;
 	}
 
 	int angelCorrection(int currentDegree, int newDegree) {

@@ -102,11 +102,10 @@ public class MovementManager implements Manager {
 	}
 
 	@Override
-	public int stop() {
+	public void stop() {
 		robot.rightMotor.stop(true);//also in direction + doku +arbeitspaketbericht
 		robot.leftMotor.stop(true);
 		driving = false;
-		return dist2;
 		
 
 	}
