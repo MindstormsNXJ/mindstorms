@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTConnector;
 import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
@@ -19,7 +20,7 @@ public class ConnectionManager {
 	public ConnectionManager(Mapper mapper) {
 		this.mapper = mapper;
 		if (establishConnection())
-			receivePoses();
+			receiveAndProcessPoses();
 		else {
 			System.err.println("Connection failed, please check your configuration");
 			return;
@@ -37,7 +38,7 @@ public class ConnectionManager {
 	
 	private boolean establishConnection() {
 		NXTConnector connector = new NXTConnector();
-		boolean success = connector.connectTo();
+		boolean success = connector.connectTo(null, null, NXTCommFactory.BLUETOOTH);
 		if (success) {
 			commandSender = new DataOutputStream(connector.getOutputStream());
 			poseReceiver = new DataInputStream(connector.getInputStream());
@@ -47,7 +48,7 @@ public class ConnectionManager {
 		return success;
 	}
 	
-	private void receivePoses() {
+	private void receiveAndProcessPoses() {
 		new Thread(new Runnable() {
 			
 			@Override
