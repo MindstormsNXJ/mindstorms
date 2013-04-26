@@ -20,9 +20,11 @@ public class ConnectionManager {
 	public ConnectionManager(Robot robot) {
 		this.robot = robot;
 		establishConnection();
-		sendPose(new Pose(10,20,45));
-		Button.ENTER.waitForPress();
-//		waitForCommands();
+		waitForCommands();
+		
+		//TODO test commands - remove them when successful
+//		sendPose(new Pose(10,20,45));
+//		Button.ENTER.waitForPress();
 	}
 	
 	private void establishConnection() {

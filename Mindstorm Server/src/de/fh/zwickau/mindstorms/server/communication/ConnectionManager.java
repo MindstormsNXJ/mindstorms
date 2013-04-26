@@ -26,7 +26,7 @@ public class ConnectionManager {
 			return;
 		}
 		
-//		//TODO test commands - remove them when successful
+		//TODO test commands - remove them when successful
 //		System.out.println("Sending test commands...");
 //		System.out.println("+forward");
 //		sendForwardCommand(10);
@@ -62,8 +62,6 @@ public class ConnectionManager {
 				while (true) {
 					try {
 						System.out.println("Waiting to receive Pose...");
-						while (poseReceiver.available() == 0)
-							Delay.msDelay(100);
 						String pose = poseReceiver.readUTF();
 						System.out.println("Pose received: " + pose);
 						decodePose(pose);
@@ -105,7 +103,6 @@ public class ConnectionManager {
 	private void sendCommand(String command) {
 		try {
 			commandSender.writeUTF(command);
-//			commandSender.write(command.getBytes());
 			commandSender.flush();
 		} catch (IOException ex) {
 			ex.printStackTrace();
