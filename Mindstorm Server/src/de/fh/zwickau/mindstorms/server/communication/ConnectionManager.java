@@ -20,6 +20,11 @@ public class ConnectionManager {
 		this.mapper = mapper;
 		establishConnection();
 		receivePoses();
+		
+		//TODO test commands - remove them when successful
+		sendForwardCommand(10);
+		sendTurnLeftCommand(90);
+		sendBackwardCommand(10);
 	}
 	
 	private void establishConnection() {
@@ -70,8 +75,37 @@ public class ConnectionManager {
 			dir += poseString.charAt(index);
 			++index;
 		}
-		Pose pose = new Pose(Integer.parseInt(xPos), Integer.parseInt(yPos), Integer.parseInt(dir));
-		//TODO
+		try {
+			Pose pose = new Pose(Integer.parseInt(xPos), Integer.parseInt(yPos), Integer.parseInt(dir));
+			//TODO process pose to mapper and react to new position
+		} catch (NumberFormatException ex) {
+			System.err.println("Could not parse received pose");
+			ex.printStackTrace();
+		}
+	}
+	
+	private void sendCommand(String command) {
+		try {
+			commandSender.writeUTF(command);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	private void sendForwardCommand(int dist) {
+		sendCommand("fw" + dist);
+	}
+	
+	private void sendBackwardCommand(int dist) {
+		sendCommand("bw" + dist);
+	}
+	
+	private void sendTurnLeftCommand(int degrees) {
+		sendCommand("left" + degrees);
+	}
+	
+	private void sendTurnRIghtCommand(int degrees) {
+		sendCommand("right" + degrees);
 	}
 	
 }

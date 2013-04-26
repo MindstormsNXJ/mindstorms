@@ -10,6 +10,7 @@ import lejos.nxt.comm.USB;
 import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
+import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 
 public class ConnectionManager {
 	
@@ -52,7 +53,33 @@ public class ConnectionManager {
 	}
 	
 	private void parseCommand(String command) {
-		//TODO
+		String operation = "", value = "";
+		int index = 0;
+		while (!Character.isDigit(command.charAt(index))) {
+			operation += command.charAt(index);
+			++index;
+		}
+		while (index < command.length()) {
+			value += command.charAt(index);
+			++index;
+		}
+		int valueAsInt = Integer.parseInt(value);
+		switch (operation) {
+		case "fw":
+			robot.positionManager.move(valueAsInt);
+			break;
+		case "bw":
+			robot.positionManager.move(-valueAsInt);
+			break;
+		case "left":
+			robot.positionManager.rotate(valueAsInt, Direction.LEFT);
+			break;
+		case "right":
+			robot.positionManager.rotate(valueAsInt, Direction.RIGHT);
+			break;
+		default:
+			System.err.println("Could not decode received command");
+		}
 	}
 	
 	public boolean sendPose(Pose pose) {
