@@ -34,12 +34,12 @@ public class PositionManager implements Manager {
 	 */
 	public void rotateTo(int deg) {
 		int startdegrees = (int) robot.compassSensor.getDegrees();
-		int toRotate = Math.abs(angelCorrection(startdegrees, deg));
+		int toRotate = Math.abs(angleCorrection(startdegrees, deg));
 		boolean left = false;
-		if (angelCorrection(startdegrees, deg) <= 0) {
+		if (angleCorrection(startdegrees, deg) <= 0) {
 			directionManager.rotateInDirection(toRotate, Direction.LEFT);
 		}
-		if ((angelCorrection(startdegrees, deg)) > 0) {
+		if ((angleCorrection(startdegrees, deg)) > 0) {
 			directionManager.rotateInDirection(toRotate, Direction.RIGHT);
 		}
 	}
@@ -84,7 +84,7 @@ public class PositionManager implements Manager {
 		return 0;
 	}
 
-	int angelCorrection(int currentDegree, int newDegree) {
+	private int angleCorrection(int currentDegree, int newDegree) {
 		int c = newDegree - currentDegree;
 		if (c >= 180) {
 			c = c - 360;
