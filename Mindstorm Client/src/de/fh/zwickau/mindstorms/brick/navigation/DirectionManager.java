@@ -14,7 +14,6 @@ public class DirectionManager implements Manager{
 	private boolean isrotating;
 	/** the direction the robot stands at start */
 	private int startDirection;
-	private int directioner;// the direction where the Robot should move
 	/** the degree to rotate */
 	private int degrees;// the dergree what to move
 	private int stepWide = 45;// the stepwide for stepwise rotating
@@ -53,7 +52,7 @@ public class DirectionManager implements Manager{
 			@Override
 			public void run() {
 				while (isrotating == true) {
-					directioner = (int) robot.compassSensor.getDegrees();
+					int directioner = (int) robot.compassSensor.getDegrees();
 					int targetdirection = (startDirection + degrees)%360;
 					if(targetdirection<0){
 						targetdirection=360+targetdirection;
