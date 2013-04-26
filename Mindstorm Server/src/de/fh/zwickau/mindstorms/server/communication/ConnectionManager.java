@@ -18,17 +18,24 @@ public class ConnectionManager {
 	
 	public ConnectionManager(Mapper mapper) {
 		this.mapper = mapper;
-		establishConnection();
-		receivePoses();
+		if (establishConnection())
+			receivePoses();
+		else {
+			System.err.println("Connection failed, please check your configuration");
+			return;
+		}
 		
 		//TODO test commands - remove them when successful
 		sendForwardCommand(10);
+		Delay.msDelay(10000);
 		sendTurnLeftCommand(90);
+		Delay.msDelay(50000);
 		sendBackwardCommand(10);
+		Delay.msDelay(10000);
 		sendTurnRightCommand(180);
 	}
 	
-	private void establishConnection() {
+	private boolean establishConnection() {
 		NXTConnector connector = new NXTConnector();
 		boolean success = connector.connectTo();
 		if (success) {
@@ -37,6 +44,7 @@ public class ConnectionManager {
 		} else {
 			System.err.println("Could not establish connection to NXT");
 		}
+		return success;
 	}
 	
 	private void receivePoses() {
