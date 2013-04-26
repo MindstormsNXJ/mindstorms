@@ -4,13 +4,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import lejos.nxt.Button;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
-import lejos.nxt.comm.USB;
 import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
-import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 
 public class ConnectionManager {
 	
@@ -21,12 +20,15 @@ public class ConnectionManager {
 	public ConnectionManager(Robot robot) {
 		this.robot = robot;
 		establishConnection();
-		waitForCommands();
+		sendPose(new Pose(10,20,45));
+		Button.ENTER.waitForPress();
+//		waitForCommands();
 	}
 	
 	private void establishConnection() {
-//		NXTConnection connection = USB.waitForConnection();
+		System.out.println("Waiting for bluetooth connection...");
 		NXTConnection connection = Bluetooth.waitForConnection();
+		System.out.println("Connection established via bluetooth");
 		
 		positionSender = connection.openDataOutputStream();
 		commandReceiver = connection.openDataInputStream();
@@ -39,15 +41,18 @@ public class ConnectionManager {
 			public void run() {
 				while (true) {
 					try {
+						System.out.println("Waiting for commands...");
 						while (commandReceiver.available() == 0)
 							Delay.msDelay(100);
 						String command = commandReceiver.readUTF();
-						System.out.println(command); //TODO debug
+						System.out.println("Command received: " + command);
 						parseCommand(command);
-						Pose pose = robot.positionManager.getPose();
-						sendPose(pose);
+						//TODO insert these lines as soon as the pose is calculated correct
+//						Pose pose = robot.positionManager.getPose();
+//						System.out.println("Sending pose: " + parsePose(pose));
+//						sendPose(pose);
 					} catch (IOException e) {
-						
+						e.printStackTrace();
 					}
 				}
 			}
@@ -76,18 +81,39 @@ public class ConnectionManager {
 			return;
 		}
 		//process command
+//		switch (operation) {
+//		case "fw":
+//			robot.positionManager.move(valueAsInt);
+//			break;
+//		case "bw":
+//			robot.positionManager.move(-valueAsInt);
+//			break;
+//		case "left":
+//			robot.positionManager.rotate(valueAsInt, Direction.LEFT);
+//			break;
+//		case "right":
+//			robot.positionManager.rotate(valueAsInt, Direction.RIGHT);
+//			break;
+//		default:
+//			System.err.println("The received command is unknown");
+//		}
+		//TODO replace this code with the one above as soon as PositionManager is ready
 		switch (operation) {
 		case "fw":
-			robot.positionManager.move(valueAsInt);
+			robot.leftMotor.forward();
+			robot.rightMotor.forward();
 			break;
 		case "bw":
-			robot.positionManager.move(-valueAsInt);
+			robot.leftMotor.backward();
+			robot.rightMotor.backward();
 			break;
 		case "left":
-			robot.positionManager.rotate(valueAsInt, Direction.LEFT);
+			robot.leftMotor.backward();
+			robot.rightMotor.forward();
 			break;
 		case "right":
-			robot.positionManager.rotate(valueAsInt, Direction.RIGHT);
+			robot.leftMotor.forward();
+			robot.rightMotor.backward();
 			break;
 		default:
 			System.err.println("The received command is unknown");
@@ -97,9 +123,12 @@ public class ConnectionManager {
 	private boolean sendPose(Pose pose) {
 		boolean success = false;
 		String parsedPose = parsePose(pose);
+		System.out.println("Sending pose: " + parsedPose);
 		try {
 			positionSender.writeUTF(parsedPose);
+			positionSender.flush();
 			success = true;
+			System.out.println("Pose sent");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

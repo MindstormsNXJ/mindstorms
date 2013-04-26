@@ -26,20 +26,26 @@ public class ConnectionManager {
 			return;
 		}
 		
-		//TODO test commands - remove them when successful
-		sendForwardCommand(10);
-		Delay.msDelay(10000);
-		sendTurnLeftCommand(90);
-		Delay.msDelay(50000);
-		sendBackwardCommand(10);
-		Delay.msDelay(10000);
-		sendTurnRightCommand(180);
+//		//TODO test commands - remove them when successful
+//		System.out.println("Sending test commands...");
+//		System.out.println("+forward");
+//		sendForwardCommand(10);
+//		Delay.msDelay(10000);
+//		System.out.println("+left");
+//		sendTurnLeftCommand(90);
+//		Delay.msDelay(5000);
+//		System.out.println("+backward");
+//		sendBackwardCommand(10);
+//		Delay.msDelay(10000);
+//		System.out.println("+right");
+//		sendTurnRightCommand(180);
 	}
 	
 	private boolean establishConnection() {
 		NXTConnector connector = new NXTConnector();
 		boolean success = connector.connectTo(null, null, NXTCommFactory.BLUETOOTH);
 		if (success) {
+			System.out.println("Connection established via bluetooth");
 			commandSender = new DataOutputStream(connector.getOutputStream());
 			poseReceiver = new DataInputStream(connector.getInputStream());
 		} else {
@@ -55,9 +61,11 @@ public class ConnectionManager {
 			public void run() {
 				while (true) {
 					try {
+						System.out.println("Waiting to receive Pose...");
 						while (poseReceiver.available() == 0)
 							Delay.msDelay(100);
 						String pose = poseReceiver.readUTF();
+						System.out.println("Pose received: " + pose);
 						decodePose(pose);
 					} catch (IOException ex) {
 						ex.printStackTrace();
@@ -97,6 +105,8 @@ public class ConnectionManager {
 	private void sendCommand(String command) {
 		try {
 			commandSender.writeUTF(command);
+//			commandSender.write(command.getBytes());
+			commandSender.flush();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
