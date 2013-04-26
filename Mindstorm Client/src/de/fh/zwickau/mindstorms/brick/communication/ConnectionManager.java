@@ -51,7 +51,6 @@ public class ConnectionManager {
 						parseCommand(command);
 						//TODO insert these lines as soon as the pose is calculated correct
 //						Pose pose = robot.positionManager.getPose();
-//						System.out.println("Sending pose: " + parsePose(pose));
 //						sendPose(pose);
 					} catch (IOException e) {
 						e.printStackTrace();
