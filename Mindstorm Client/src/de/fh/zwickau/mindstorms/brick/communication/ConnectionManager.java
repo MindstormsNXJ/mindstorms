@@ -25,8 +25,8 @@ public class ConnectionManager {
 	}
 	
 	private void establishConnection() {
-		NXTConnection connection = USB.waitForConnection();
-//		NXTConnection connection = Bluetooth.waitForConnection();
+//		NXTConnection connection = USB.waitForConnection();
+		NXTConnection connection = Bluetooth.waitForConnection();
 		
 		positionSender = connection.openDataOutputStream();
 		commandReceiver = connection.openDataInputStream();
@@ -42,6 +42,7 @@ public class ConnectionManager {
 						while (commandReceiver.available() == 0)
 							Delay.msDelay(100);
 						String command = commandReceiver.readUTF();
+						System.out.println(command); //TODO debug
 						parseCommand(command);
 						Pose pose = robot.positionManager.getPose();
 						sendPose(pose);
