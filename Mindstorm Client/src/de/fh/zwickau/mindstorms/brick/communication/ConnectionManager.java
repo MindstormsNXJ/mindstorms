@@ -43,6 +43,8 @@ public class ConnectionManager {
 							Delay.msDelay(100);
 						String command = commandReceiver.readUTF();
 						parseCommand(command);
+						Pose pose = robot.positionManager.getPose();
+						sendPose(pose);
 					} catch (IOException e) {
 						
 					}
@@ -63,7 +65,13 @@ public class ConnectionManager {
 			value += command.charAt(index);
 			++index;
 		}
-		int valueAsInt = Integer.parseInt(value);
+		int valueAsInt;
+		try {
+			valueAsInt = Integer.parseInt(value);
+		} catch (NumberFormatException ex) {
+			System.err.println("No parameter was send with command");
+			return;
+		}
 		switch (operation) {
 		case "fw":
 			robot.positionManager.move(valueAsInt);
@@ -78,11 +86,11 @@ public class ConnectionManager {
 			robot.positionManager.rotate(valueAsInt, Direction.RIGHT);
 			break;
 		default:
-			System.err.println("Could not decode received command");
+			System.err.println("The received command is unknown");
 		}
 	}
 	
-	public boolean sendPose(Pose pose) {
+	private boolean sendPose(Pose pose) {
 		boolean success = false;
 		String parsedPose = parsePose(pose);
 		try {

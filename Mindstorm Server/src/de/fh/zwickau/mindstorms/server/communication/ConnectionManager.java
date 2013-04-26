@@ -25,6 +25,7 @@ public class ConnectionManager {
 		sendForwardCommand(10);
 		sendTurnLeftCommand(90);
 		sendBackwardCommand(10);
+		sendTurnRightCommand(180);
 	}
 	
 	private void establishConnection() {
@@ -104,7 +105,7 @@ public class ConnectionManager {
 		sendCommand("left" + degrees);
 	}
 	
-	private void sendTurnRIghtCommand(int degrees) {
+	private void sendTurnRightCommand(int degrees) {
 		sendCommand("right" + degrees);
 	}
 	
