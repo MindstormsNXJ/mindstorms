@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
-import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
 
@@ -20,7 +19,7 @@ import de.fh.zwickau.mindstorms.brick.Robot;
  */
 public class ConnectionManager {
 	
-	private Robot robot;
+	private Parser parser;
 	private DataOutputStream positionSender;
 	private DataInputStream commandReceiver;
 	
@@ -31,12 +30,13 @@ public class ConnectionManager {
 	 * @param robot the robot which established the connection 
 	 */
 	public ConnectionManager(Robot robot) {
-		this.robot = robot;
+		parser = new Parser(robot);
 		establishConnection();
-		sendStartPosition();
+		//TODO insert this line as soon as the pose is calculated correctly
+//		sendPose();
 		waitForCommands();
 		
-		//TODO test commands - remove them when successful
+		//TODO test commands - remove them for final version
 //		sendPose(new Pose(10,20,45));
 	}
 	
@@ -50,16 +50,6 @@ public class ConnectionManager {
 		
 		positionSender = connection.openDataOutputStream();
 		commandReceiver = connection.openDataInputStream();
-	}
-	
-	/**
-	 * Sends the initial start position to the server, which is needed there
-	 * to decide what has to be done first.
-	 */
-	private void sendStartPosition() {
-		//TODO insert these lines as soon as the pose is calculated correctly
-//		Pose pose = robot.positionManager.getPose();
-//		sendPose(pose);
 	}
 	
 	/**
@@ -77,10 +67,9 @@ public class ConnectionManager {
 							Delay.msDelay(100);
 						String command = commandReceiver.readUTF();
 						System.out.println("Command received: " + command);
-						parseCommand(command);
-						//TODO insert these lines as soon as the pose is calculated correctly
-//						Pose pose = robot.positionManager.getPose();
-//						sendPose(pose);
+						parser.parseCommand(command);
+						//TODO insert this line as soon as the pose is calculated correctly
+//						sendPose();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -90,69 +79,14 @@ public class ConnectionManager {
 		}).start();
 	}
 	
-	private void parseCommand(String command) {
-		String operation = "", value = "";
-		int index = 0;
-		//get the operation (fw, bw, left or right)
-		while (!Character.isDigit(command.charAt(index))) {
-			operation += command.charAt(index);
-			++index;
-		}
-		//get the parameter (distance or degrees)
-		while (index < command.length() && Character.isDigit(command.charAt(index))) {
-			value += command.charAt(index);
-			++index;
-		}
-		int valueAsInt;
-		try {
-			valueAsInt = Integer.parseInt(value);
-		} catch (NumberFormatException ex) {
-			System.err.println("No parameter was send with command");
-			return;
-		}
-		//process command
-//		switch (operation) {
-//		case "fw":
-//			robot.positionManager.move(valueAsInt);
-//			break;
-//		case "bw":
-//			robot.positionManager.move(-valueAsInt);
-//			break;
-//		case "left":
-//			robot.positionManager.rotate(valueAsInt, Direction.LEFT);
-//			break;
-//		case "right":
-//			robot.positionManager.rotate(valueAsInt, Direction.RIGHT);
-//			break;
-//		default:
-//			System.err.println("The received command is unknown");
-//		}
-		//TODO replace this code with the one above as soon as PositionManager is ready
-		switch (operation) {
-		case "fw":
-			robot.leftMotor.forward();
-			robot.rightMotor.forward();
-			break;
-		case "bw":
-			robot.leftMotor.backward();
-			robot.rightMotor.backward();
-			break;
-		case "left":
-			robot.leftMotor.backward();
-			robot.rightMotor.forward();
-			break;
-		case "right":
-			robot.leftMotor.forward();
-			robot.rightMotor.backward();
-			break;
-		default:
-			System.err.println("The received command is unknown");
-		}
-	}
-	
-	private boolean sendPose(Pose pose) {
+	/**
+	 * Gets the robot's current Pose and sends it to the server.
+	 * 
+	 * @return true if pose was sent successful
+	 */
+	private boolean sendPose() {
 		boolean success = false;
-		String parsedPose = parsePose(pose);
+		String parsedPose = parser.getParsedPose();
 		System.out.println("Sending pose: " + parsedPose);
 		try {
 			positionSender.writeUTF(parsedPose);
@@ -163,18 +97,6 @@ public class ConnectionManager {
 			e.printStackTrace();
 		}
 		return success;
-	}
-	
-	private String parsePose(Pose poseToParse) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("x");
-		builder.append((int) poseToParse.getX());
-		builder.append("y");
-		builder.append((int) poseToParse.getY());
-		builder.append("dir");
-		builder.append((int) poseToParse.getHeading());
-		builder.append("end");
-		return builder.toString();
 	}
 	
 }
