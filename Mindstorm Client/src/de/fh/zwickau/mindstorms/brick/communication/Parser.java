@@ -25,6 +25,7 @@ public class Parser {
 	
 	/**
 	 * Parses a received command and starts it's execution.
+	 * The command has to finish with a number in order to parse it correctly.
 	 * 
 	 * @param command the command to parse and execute
 	 */

@@ -2,6 +2,7 @@ package de.fh.zwickau.mindstorms.server.communication;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 
 import lejos.pc.comm.NXTCommFactory;
@@ -52,6 +53,9 @@ public class ConnectionManager {
 //		Delay.msDelay(10000);
 //		System.out.println("+right");
 //		sendTurnRightCommand(180);
+		Delay.msDelay(5000);
+		System.out.println("+pick");
+		sendPickCommand();
 	}
 	
 	/**
@@ -86,6 +90,9 @@ public class ConnectionManager {
 						String pose = poseReceiver.readUTF();
 						System.out.println("Pose received: " + pose);
 						decodePose(pose);
+					} catch (EOFException ex) {
+						System.err.println("Connection terminated by NXT");
+						break;
 					} catch (IOException ex) {
 						ex.printStackTrace();
 					}
@@ -175,7 +182,7 @@ public class ConnectionManager {
 	 * Sends a pick-command.
 	 */
 	private void sendPickCommand() {
-		sendCommand("pick");
+		sendCommand("pick0");
 	}
 	
 }
