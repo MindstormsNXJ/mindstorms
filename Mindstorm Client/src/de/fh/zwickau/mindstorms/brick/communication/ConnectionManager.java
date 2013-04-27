@@ -4,29 +4,45 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import lejos.nxt.Button;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
 import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
 
+/**
+ * This connection manager is responsible for establishing a connection to the server.
+ * Afterwards, it will send it's initial Pose to it, and wait for further commands.
+ * After a command is processed, it sends it's new Pose to the server again.
+ * 
+ * @author Tobias Schießl
+ * @version 1.0
+ */
 public class ConnectionManager {
 	
 	private Robot robot;
 	private DataOutputStream positionSender;
 	private DataInputStream commandReceiver;
 	
+	/**
+	 * Initialises a ConnectionManager, including the connection itself and 
+	 * the Thread that listens for commands to execute.
+	 * 
+	 * @param robot the robot which established the connection 
+	 */
 	public ConnectionManager(Robot robot) {
 		this.robot = robot;
 		establishConnection();
+		sendStartPosition();
 		waitForCommands();
 		
 		//TODO test commands - remove them when successful
 //		sendPose(new Pose(10,20,45));
-//		Button.ENTER.waitForPress();
 	}
 	
+	/**
+	 * Establishes the connection.
+	 */
 	private void establishConnection() {
 		System.out.println("Waiting for bluetooth connection...");
 		NXTConnection connection = Bluetooth.waitForConnection();
@@ -36,6 +52,19 @@ public class ConnectionManager {
 		commandReceiver = connection.openDataInputStream();
 	}
 	
+	/**
+	 * Sends the initial start position to the server, which is needed there
+	 * to decide what has to be done first.
+	 */
+	private void sendStartPosition() {
+		//TODO insert these lines as soon as the pose is calculated correctly
+//		Pose pose = robot.positionManager.getPose();
+//		sendPose(pose);
+	}
+	
+	/**
+	 * Starts the Thread that will wait for commands to execute.
+	 */
 	private void waitForCommands() {
 		new Thread(new Runnable() {
 			
@@ -49,7 +78,7 @@ public class ConnectionManager {
 						String command = commandReceiver.readUTF();
 						System.out.println("Command received: " + command);
 						parseCommand(command);
-						//TODO insert these lines as soon as the pose is calculated correct
+						//TODO insert these lines as soon as the pose is calculated correctly
 //						Pose pose = robot.positionManager.getPose();
 //						sendPose(pose);
 					} catch (IOException e) {
