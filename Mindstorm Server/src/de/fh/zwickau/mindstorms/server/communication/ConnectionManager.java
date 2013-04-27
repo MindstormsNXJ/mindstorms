@@ -11,12 +11,25 @@ import lejos.util.Delay;
 
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 
+/**
+ * The ConnectionManager is responsible for establishing the connection to the
+ * NXT, receiving it's position as a Pose and sending commands to it.
+ * 
+ * @author Tobias Schießl
+ * @version 1.0
+ */
 public class ConnectionManager {
 
 	private Mapper mapper;
 	private DataOutputStream commandSender;
 	private DataInputStream poseReceiver;
 	
+	/**
+	 * Initialises a ConnectionManager, including the connection itself as well as
+	 * the Thread that will process the received Poses.
+	 * 
+	 * @param mapper the mapper that gets notified about the robot's current Pose
+	 */
 	public ConnectionManager(Mapper mapper) {
 		this.mapper = mapper;
 		if (establishConnection())
@@ -26,7 +39,7 @@ public class ConnectionManager {
 			return;
 		}
 		
-		//TODO test commands - remove them when successful
+		//TODO test commands - remove them for final version
 //		System.out.println("Sending test commands...");
 //		System.out.println("+forward");
 //		sendForwardCommand(10);
@@ -41,6 +54,11 @@ public class ConnectionManager {
 //		sendTurnRightCommand(180);
 	}
 	
+	/**
+	 * Establishes the connection to the NXT.
+	 * 
+	 * @return true if connection was successful established
+	 */
 	private boolean establishConnection() {
 		NXTConnector connector = new NXTConnector();
 		boolean success = connector.connectTo(null, null, NXTCommFactory.BLUETOOTH);
@@ -54,6 +72,9 @@ public class ConnectionManager {
 		return success;
 	}
 	
+	/**
+	 * Starts the Thread that will listen for received Poses and process them afterwards.
+	 */
 	private void receiveAndProcessPoses() {
 		new Thread(new Runnable() {
 			
@@ -100,6 +121,11 @@ public class ConnectionManager {
 		}
 	}
 	
+	/**
+	 * Sends a command to the NXT.
+	 * 
+	 * @param command the command to send
+	 */
 	private void sendCommand(String command) {
 		try {
 			commandSender.writeUTF(command);
@@ -109,20 +135,47 @@ public class ConnectionManager {
 		}
 	}
 	
+	/**
+	 * Sends a drive-forward-command.
+	 * 
+	 * @param dist the distance to drive
+	 */
 	private void sendForwardCommand(int dist) {
 		sendCommand("fw" + dist);
 	}
 	
+	/**
+	 * Sends a drive-backward-command.
+	 * 
+	 * @param dist the distance to drive
+	 */
 	private void sendBackwardCommand(int dist) {
 		sendCommand("bw" + dist);
 	}
 	
+	/**
+	 * Sends a turn-left-command.
+	 * 
+	 * @param degrees the degrees to turn
+	 */
 	private void sendTurnLeftCommand(int degrees) {
 		sendCommand("left" + degrees);
 	}
 	
+	/**
+	 * Sends a turn-right-command.
+	 * 
+	 * @param degrees the degrees to turn
+	 */
 	private void sendTurnRightCommand(int degrees) {
 		sendCommand("right" + degrees);
+	}
+	
+	/**
+	 * Sends a pick-command.
+	 */
+	private void sendPickCommand() {
+		sendCommand("pick");
 	}
 	
 }

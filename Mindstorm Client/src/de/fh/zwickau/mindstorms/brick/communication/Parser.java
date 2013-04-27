@@ -62,6 +62,9 @@ public class Parser {
 //		case "right":
 //			robot.positionManager.rotate(valueAsInt, Direction.RIGHT);
 //			break;
+//		case "pick":
+//			//TODO pick up the ball
+//			break;
 //		default:
 //			System.err.println("The received command is unknown");
 //		}
@@ -82,6 +85,9 @@ public class Parser {
 		case "right":
 			robot.leftMotor.forward();
 			robot.rightMotor.backward();
+			break;
+		case "pick":
+			System.out.println("Picking up the ball...");
 			break;
 		default:
 			System.err.println("The received command is unknown");
