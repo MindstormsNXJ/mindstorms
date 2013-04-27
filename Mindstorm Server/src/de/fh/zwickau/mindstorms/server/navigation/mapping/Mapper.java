@@ -1,6 +1,7 @@
 package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
 import de.fh.zwickau.mindstorms.server.view.View;
+import lejos.pc.comm.NXTInfo;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
 
@@ -14,6 +15,7 @@ import lejos.robotics.navigation.Pose;
  */
 public class Mapper {
 	private View observer;
+	private RobotTracer tracer;
 	private MapGrid mapGrid;
 	private LineMap lineMap;
 
@@ -26,8 +28,13 @@ public class Mapper {
 		lineMap = new LineMap();
 	}
 
-	public void addPose(Pose pose/* , ID id */) {
-
+	/**
+	 * Add a Pose to trace the position for a robot.
+	 * @param pose
+	 * @param robotInfo
+	 */
+	public void addPose(Pose pose, NXTInfo robotInfo) {
+		tracer.trace(robotInfo.name, pose);
 	}
 
 	/**
