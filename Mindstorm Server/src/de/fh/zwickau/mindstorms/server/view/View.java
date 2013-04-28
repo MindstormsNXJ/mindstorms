@@ -121,9 +121,9 @@ public class View extends Thread {
 		for (int x = 0; x < g_size; x++) {
 			for (int y = 0; y < g_size; y++) {
 				if ((strength = (float)grid.get(x, y)) > 0) {
-					tileColors[++c] = 4.0f * strength / 4.0f; 		// red
+					tileColors[++c] = 4.0f * strength / 4.0f;        // red
 					tileColors[++c] = 1.0f -  1.0f *strength/ 3.0f; // green
-					tileColors[++c] = 0.0f; 						// blue
+					tileColors[++c] = 0.0f;                         // blue
 				} else {
 					tileColors[++c] = 1.0f; // red
 					tileColors[++c] = 1.0f; // green
@@ -172,7 +172,7 @@ public class View extends Thread {
 			glBegin(GL_POINTS);                                                //Begin to draw Points
 			while (i < size) {
 				glColor3f(tileColors[++c], tileColors[++c], tileColors[++c]);  //set pixel color
-				glVertex2f(tileVertices[++i], tileVertices[++i]); 			   //make a point
+				glVertex2f(tileVertices[++i], tileVertices[++i]);              //make a point
 			}
 			glEnd();                                                           //End with tile draw
 		}
