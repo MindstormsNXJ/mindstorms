@@ -31,10 +31,10 @@ public class Mapper {
 	/**
 	 * Add a Pose to trace the position for a robot.
 	 * @param pose
-	 * @param robotInfo
+	 * @param robotName
 	 */
-	public void addPose(Pose pose, NXTInfo robotInfo) {
-		tracer.trace(robotInfo.name, pose);
+	public void addPose(Pose pose, String robotName) {
+		tracer.trace(robotName, pose);
 	}
 
 	/**
