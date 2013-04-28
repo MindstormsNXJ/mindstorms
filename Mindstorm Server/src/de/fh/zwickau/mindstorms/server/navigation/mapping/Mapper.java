@@ -1,7 +1,6 @@
 package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
 import de.fh.zwickau.mindstorms.server.view.View;
-import lejos.pc.comm.NXTInfo;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
 
@@ -20,7 +19,7 @@ public class Mapper {
 	private LineMap lineMap;
 
 	/**
-	 * New Instace of Mapper
+	 * New Instance of Mapper
 	 * @param tileSize tile size for grid
 	 */
 	public Mapper(float tileSize) {
@@ -62,7 +61,8 @@ public class Mapper {
 	 * @param pos position
 	 */
 	private void addObstacle(float[] pos){
-		addObstacle((int)(pos[0]/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2,(int)(pos[1]/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2);
+		addObstacle((int)(pos[0]/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2,
+		            (int)(pos[1]/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2);
 	}
 	
 	/**

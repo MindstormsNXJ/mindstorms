@@ -26,7 +26,7 @@ public class ConnectionManager {
 	private DataInputStream poseReceiver;
 	
 	/**
-	 * Initialises a ConnectionManager, including the connection itself as well as
+	 * Initializes a ConnectionManager, including the connection itself as well as
 	 * the Thread that will process the received Poses.
 	 * 
 	 * @param mapper the mapper that gets notified about the robot's current Pose
