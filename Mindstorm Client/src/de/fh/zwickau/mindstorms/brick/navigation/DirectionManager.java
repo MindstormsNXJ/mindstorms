@@ -1,6 +1,5 @@
-package de.fh.zwickau.mindstorms.brick.navigation;
+	package de.fh.zwickau.mindstorms.brick.navigation;
 
-import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.util.Manager;
 
@@ -100,7 +99,4 @@ public class DirectionManager implements Manager{
 		robot.rightMotor.stop();
 		isRotating = false;
 	}
-	
-	
-
 }
