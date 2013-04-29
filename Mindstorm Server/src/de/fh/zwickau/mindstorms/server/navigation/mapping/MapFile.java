@@ -5,8 +5,21 @@ import java.io.*;
 public class MapFile {
     static private String fileName = "mapfile.bm"; 
     
-    public MapGrid load(){
-        return null;
+    public void load(MapGrid mapGrid){
+        File file = new File(fileName);
+        byte[][] grid = mapGrid.getByteGrid();
+        
+        try{
+            FileInputStream fis = new FileInputStream(file);
+            
+            for(int i = 0; i < grid.length; i++){
+                fis.read(grid[i]);
+            }
+            fis.close();
+            
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
     
     public void save(byte[][] grid){

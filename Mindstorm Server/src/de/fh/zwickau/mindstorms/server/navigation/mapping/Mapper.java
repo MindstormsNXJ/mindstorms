@@ -25,6 +25,7 @@ public class Mapper {
 	public Mapper(float tileSize) {
 		mapGrid = new MapGrid(tileSize);
 		lineMap = new LineMap();
+		loadMap();
 	}
 
 	/**
@@ -103,6 +104,11 @@ public class Mapper {
 		lineMap = Converter.gridToLineMap(mapGrid);
 	}
 
+	public void loadMap(){
+	    MapFile file = new MapFile();
+	    file.load(mapGrid);
+	}
+	
 	public void saveMap(){
 	    MapFile file = new MapFile();
 	    file.save(mapGrid.getByteGrid());

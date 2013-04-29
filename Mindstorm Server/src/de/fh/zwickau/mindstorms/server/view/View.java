@@ -134,14 +134,16 @@ public class View extends Thread {
 		}
 		
 		//Rebuild Line vertices
-		Line[] lines = mapper.getLineMap().getLines();
-		lineVertices = new float[lines.length * 4];
-		int j = -1;
-		for (int i = 0; i < lines.length; i++){
-			lineVertices[++j] = lines[i].x1 / gstsh;
-			lineVertices[++j] = lines[i].y1 / gstsh;
-			lineVertices[++j] = lines[i].x2 / gstsh;
-			lineVertices[++j] = lines[i].y2 / gstsh;
+		Line[] lines;
+		if((lines = mapper.getLineMap().getLines()) != null){
+    		lineVertices = new float[lines.length * 4];
+    		int j = -1;
+    		for (int i = 0; i < lines.length; i++){
+    			lineVertices[++j] = lines[i].x1 / gstsh;
+    			lineVertices[++j] = lines[i].y1 / gstsh;
+    			lineVertices[++j] = lines[i].x2 / gstsh;
+    			lineVertices[++j] = lines[i].y2 / gstsh;
+    		}
 		}
 	}
 
@@ -178,18 +180,21 @@ public class View extends Thread {
 			glEnd();                                                           //End with tile draw
 		}
 		
-		size = lineVertices.length -1;
-		i = -1;
-		
-		if(drawLine){                                                          
-			glColor3f(0.0f, 0.5f, 1.0f);
-			glBegin(GL_LINES);                                                 //Begin to draw Points
-			while(i < size){
-				glVertex2f(lineVertices[++i], lineVertices[++i]);              //Set new LinePoint
-			}
-			glEnd();                                                           //End with Line draw
+		if(lineVertices != null){
+    		size = lineVertices.length -1;
+    		i = -1;
+    		
+    		if(drawLine){                                                          
+    			glColor3f(0.0f, 0.5f, 1.0f);
+    			glBegin(GL_LINES);                                                 //Begin to draw Points
+    			while(i < size){
+    				glVertex2f(lineVertices[++i], lineVertices[++i]);              //Set new LinePoint
+    			}
+    			glEnd();                                                           //End with Line draw
+    		}
+    		                                                     
 		}
-		Display.update();                                                      // Bring it to the screen.
+		Display.update();                                                          // Bring it to the screen.
 	}
 
 	/**
