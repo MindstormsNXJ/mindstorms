@@ -148,12 +148,7 @@ public class ConnectionManager {
 			return;
 		}
 		mapper.addPose(pose, connector.getNXTInfo().name);
-		//TODO process pose to PathFinder and react to new position
-		try {
-			pathFinder.nextAction(pose, this);
-		} catch (DestinationUnreachableException e) {
-			//error message will be printed in PathFinder
-		}
+		pathFinder.nextAction(pose, this);
 	}
 	
 	/**

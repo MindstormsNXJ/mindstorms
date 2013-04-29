@@ -49,13 +49,13 @@ public class PathFinder {
 	 * @param manager the ConnectionManager which will send the command
 	 * @throws DestinationUnreachableException if the destination is unreachable
 	 */
-	public void nextAction(Pose currentPose, ConnectionManager manager) throws DestinationUnreachableException {
+	public void nextAction(Pose currentPose, ConnectionManager manager) {
 		Path path = null;
 		try {
 			path = finder.findRoute(currentPose, currentTarget);
 		} catch (DestinationUnreachableException e) {
 			System.err.println("Error in finding path: destination is unreachable");
-			throw e;
+			return;
 		}
 		if (path.size() == 1) {
 			System.out.println("Current target has been reached");
