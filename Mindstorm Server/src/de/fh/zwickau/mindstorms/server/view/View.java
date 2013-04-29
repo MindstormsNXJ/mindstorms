@@ -50,6 +50,7 @@ public class View extends Thread {
 			draw();
 		}
 
+		mapper.saveMap();
 		Display.destroy();
 	}
 

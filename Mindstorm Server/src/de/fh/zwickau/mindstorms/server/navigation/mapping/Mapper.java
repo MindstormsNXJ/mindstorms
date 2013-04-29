@@ -103,6 +103,11 @@ public class Mapper {
 		lineMap = Converter.gridToLineMap(mapGrid);
 	}
 
+	public void saveMap(){
+	    MapFile file = new MapFile();
+	    file.save(mapGrid.getByteGrid());
+	}
+	
 	public MapGrid getGrid() {
 		return mapGrid;
 	}

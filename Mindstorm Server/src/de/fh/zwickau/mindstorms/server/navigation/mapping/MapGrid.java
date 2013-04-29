@@ -37,4 +37,8 @@ public class MapGrid {
 	public float getTileSize(){
 		return tileSize;
 	}
+	
+	public byte[][] getByteGrid(){
+	    return grid;
+	}
 }
