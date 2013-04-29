@@ -1,6 +1,7 @@
 package de.fh.zwickau.mindstorms.server.navigation;
 
 import de.fh.zwickau.mindstorms.server.communication.ConnectionManager;
+import lejos.geom.Point;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.DestinationUnreachableException;
 import lejos.robotics.navigation.Pose;
@@ -17,8 +18,8 @@ public class PathFinder {
 		finder = new DijkstraPathFinder(map);
 	}
 	
-	public void setCurrentTarget(Pose targetPose) {
-		currentTarget = new Waypoint(targetPose);
+	public void setCurrentTarget(int x, int y) {
+		currentTarget = new Waypoint(new Point(x, y));
 	}
 	
 	public void nextAction(Pose currentPose, ConnectionManager manager) {
@@ -29,17 +30,25 @@ public class PathFinder {
 			System.err.println("Destination is unreachable");
 			return;
 		}
-		Waypoint nextWaypoint = path.get(0);
+		Waypoint nextWaypoint = path.get(1);
 		int xDiv = (int) (nextWaypoint.x - currentPose.getX());
 		int yDiv = (int) (nextWaypoint.y - currentPose.getY());
 		int dir = (int) Math.atan(xDiv/yDiv);
 		int deltaDiv = (int) (dir - currentPose.getHeading());
-		if (deltaDiv > 2) //turn robot
-			;
-		else { //move robot fw
-			
+		if (deltaDiv > 2) {//turn robot
+			if (dir > currentPose.getHeading()) {//turn right
+				manager.sendTurnRightCommand(deltaDiv);
+				System.out.println("Sending turn right command - degrees: " + deltaDiv);
+			} else { //turn left
+				manager.sendTurnLeftCommand(deltaDiv);
+				System.out.println("Sending turn l commaeftnd - degrees: " + deltaDiv);
+			}
 		}
-		//TODO call methods on ConnectionManager to move robot
+		else { //move robot fw
+			int distanceToMove = (int) Math.sqrt(xDiv * xDiv + yDiv * yDiv);
+			manager.sendForwardCommand(distanceToMove);
+			System.out.println("Sending forward command - distance: " + distanceToMove);
+		}
 	}
 	
 }

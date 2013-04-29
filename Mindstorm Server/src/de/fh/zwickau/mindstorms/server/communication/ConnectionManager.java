@@ -10,6 +10,8 @@ import lejos.pc.comm.NXTConnector;
 import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
 
+import de.fh.zwickau.mindstorms.server.navigation.PathFinder;
+import de.fh.zwickau.mindstorms.server.navigation.mapping.Converter;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 
 /**
@@ -34,12 +36,16 @@ public class ConnectionManager {
 	 */
 	public ConnectionManager(Mapper mapper) {
 		this.mapper = mapper;
-		if (establishConnection())
-			receiveAndProcessPoses();
-		else {
-			System.err.println("Connection failed, please check your configuration");
-			return;
-		}
+		//TODO enable again
+//		if (establishConnection())
+//			receiveAndProcessPoses();
+//		else {
+//			System.err.println("Connection failed, please check your configuration");
+//			return;
+//		}
+		PathFinder finder = new PathFinder(Converter.gridToLineMap(mapper.getGrid()));
+		finder.setCurrentTarget(10, 10);
+		finder.nextAction(new Pose(0,0,0), this);
 		
 		//TODO test commands - remove them for final version
 //		System.out.println("Sending test commands...");
@@ -54,9 +60,9 @@ public class ConnectionManager {
 //		Delay.msDelay(10000);
 //		System.out.println("+right");
 //		sendTurnRightCommand(180);
-		Delay.msDelay(5000);
-		System.out.println("+pick");
-		sendPickCommand();
+//		Delay.msDelay(5000);
+//		System.out.println("+pick");
+//		sendPickCommand();
 	}
 	
 	/**
@@ -136,12 +142,13 @@ public class ConnectionManager {
 	 * @param command the command to send
 	 */
 	private void sendCommand(String command) {
-		try {
-			commandSender.writeUTF(command);
-			commandSender.flush();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
+		//TODO enable again
+//		try {
+//			commandSender.writeUTF(command);
+//			commandSender.flush();
+//		} catch (IOException ex) {
+//			ex.printStackTrace();
+//		}
 	}
 	
 	/**
