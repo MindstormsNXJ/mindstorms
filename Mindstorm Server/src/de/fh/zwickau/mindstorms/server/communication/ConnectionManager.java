@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 
+import lejos.geom.Point;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTConnector;
 import lejos.robotics.navigation.DestinationUnreachableException;
@@ -12,7 +13,6 @@ import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
 
 import de.fh.zwickau.mindstorms.server.navigation.PathFinder;
-import de.fh.zwickau.mindstorms.server.navigation.mapping.Converter;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 
 /**
@@ -20,7 +20,7 @@ import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
  * NXT, receiving it's position as a Pose and sending commands to it.
  * 
  * @author Tobias Schießl
- * @version 1.0
+ * @version 1.1
  */
 public class ConnectionManager {
 
@@ -30,15 +30,20 @@ public class ConnectionManager {
 	private DataOutputStream commandSender;
 	private DataInputStream poseReceiver;
 	
+	//TODO replace this with points in the mapper if possible
+	private Point ballPos = new Point(35,25);
+	private Point targetPos = new Point(75,10);
+	
 	/**
-	 * Initializes a ConnectionManager, including the connection itself as well as
+	 * Initialises a ConnectionManager, including the connection itself as well as
 	 * the Thread that will process the received Poses.
 	 * 
 	 * @param mapper the mapper that gets notified about the robot's current Pose
 	 */
 	public ConnectionManager(Mapper mapper) {
 		this.mapper = mapper;
-		this.pathFinder = new PathFinder(Converter.gridToLineMap(mapper.getGrid()));
+		pathFinder = new PathFinder(mapper.getLineMap());
+		pathFinder.setCurrentTarget((int) ballPos.x, (int) ballPos.y);
 		if (establishConnection())
 			receiveAndProcessPoses();
 		else {
@@ -134,13 +139,21 @@ public class ConnectionManager {
 			dir += poseString.charAt(index);
 			++index;
 		}
+		Pose pose = null;
 		try {
-			Pose pose = new Pose(Integer.parseInt(xPos), Integer.parseInt(yPos), Integer.parseInt(dir));
-			mapper.addPose(pose, connector.getNXTInfo().name);
-			//TODO process pose to PathFinder and react to new position
+			pose = new Pose(Integer.parseInt(xPos), Integer.parseInt(yPos), Integer.parseInt(dir));
 		} catch (NumberFormatException ex) {
 			System.err.println("Could not parse received pose");
-			ex.printStackTrace();
+			System.err.println("Received String: " + poseString);
+			return;
+		}
+		mapper.addPose(pose, connector.getNXTInfo().name);
+		//TODO process pose to PathFinder and react to new position
+		try {
+			boolean targetReached = pathFinder.nextAction(pose, this);
+			
+		} catch (DestinationUnreachableException e) {
+			//error message will be printed in PathFinder
 		}
 	}
 	
@@ -195,10 +208,27 @@ public class ConnectionManager {
 	}
 	
 	/**
-	 * Sends a pick-command.
+	 * Sends a pick-command. We assume that the robot has the ball after
+	 * sending this command, at least he should.
 	 */
 	public void sendPickCommand() {
 		sendCommand("pick0");
+		pathFinder.setCurrentTarget((int) targetPos.x, (int) targetPos.y);
+	}
+	
+	/**
+	 * Sends a drop-ball-command.
+	 */
+	public void sendDropCommand() {
+		sendCommand("drop0");
+	}
+	
+	/**
+	 * Terminates the whole server.
+	 */
+	public void finish() {
+		System.out.println("Ball will be dropped now, server is shutting down");
+		System.exit(0); //TODO there should be a smarter way to do this
 	}
 	
 }

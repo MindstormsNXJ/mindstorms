@@ -20,6 +20,7 @@ public class PathFinder {
 	
 	private DijkstraPathFinder finder;
 	private Waypoint currentTarget;
+	private boolean robotHasBall = false;
 	
 	/**
 	 * Initialises a PathFinder with the LineMap to use from now on.
@@ -59,6 +60,13 @@ public class PathFinder {
 		}
 		if (path.size() == 1) {
 			System.out.println("Current target has been reached");
+			if (!robotHasBall) {
+				robotHasBall = true;
+				manager.sendPickCommand();
+			} else {
+				manager.sendDropCommand();
+				manager.finish();
+			}
 			return true;
 		}
 		Waypoint nextWaypoint = path.get(1); //0 is the current position
