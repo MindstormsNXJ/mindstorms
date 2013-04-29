@@ -25,6 +25,7 @@ public class ConnectionManager {
 
 	private NXTConnector connector;
 	private Mapper mapper;
+	private PathFinder pathFinder;
 	private DataOutputStream commandSender;
 	private DataInputStream poseReceiver;
 	
@@ -36,16 +37,13 @@ public class ConnectionManager {
 	 */
 	public ConnectionManager(Mapper mapper) {
 		this.mapper = mapper;
-		//TODO enable again
-//		if (establishConnection())
-//			receiveAndProcessPoses();
-//		else {
-//			System.err.println("Connection failed, please check your configuration");
-//			return;
-//		}
-		PathFinder finder = new PathFinder(Converter.gridToLineMap(mapper.getGrid()));
-		finder.setCurrentTarget(10, 10);
-		finder.nextAction(new Pose(0,0,0), this);
+		this.pathFinder = new PathFinder(Converter.gridToLineMap(mapper.getGrid()));
+		if (establishConnection())
+			receiveAndProcessPoses();
+		else {
+			System.err.println("Connection failed, please check your configuration");
+			return;
+		}
 		
 		//TODO test commands - remove them for final version
 //		System.out.println("Sending test commands...");
@@ -63,6 +61,10 @@ public class ConnectionManager {
 //		Delay.msDelay(5000);
 //		System.out.println("+pick");
 //		sendPickCommand();
+		
+//		pathFinder.setCurrentTarget(10, 10);
+//		pathFinder.nextAction(new Pose(0,0,0), this);
+//		pathFinder.nextAction(new Pose(0,0,45), this);
 	}
 	
 	/**
@@ -142,13 +144,12 @@ public class ConnectionManager {
 	 * @param command the command to send
 	 */
 	private void sendCommand(String command) {
-		//TODO enable again
-//		try {
-//			commandSender.writeUTF(command);
-//			commandSender.flush();
-//		} catch (IOException ex) {
-//			ex.printStackTrace();
-//		}
+		try {
+			commandSender.writeUTF(command);
+			commandSender.flush();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 	/**

@@ -9,33 +9,63 @@ import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.DijkstraPathFinder;
 import lejos.robotics.pathfinding.Path;
 
+/**
+ * This PathFinder class decides which command has to be send next by
+ * finding to path to it's current target using a Dijkstra algorithm.
+ * 
+ * @author Tobias Schießl
+ * @version 1.0
+ */
 public class PathFinder {
 	
 	private DijkstraPathFinder finder;
 	private Waypoint currentTarget;
 	
+	/**
+	 * Initialises a PathFinder with the LineMap to use from now on.
+	 * 
+	 * @param map the map to use
+	 */
 	public PathFinder(LineMap map) {
 		finder = new DijkstraPathFinder(map);
 	}
 	
+	/**
+	 * Set's the current target which has to be reached.
+	 * 
+	 * @param x the target's x coordinate
+	 * @param y the target's y coordinate
+	 */
 	public void setCurrentTarget(int x, int y) {
 		currentTarget = new Waypoint(new Point(x, y));
 	}
 	
-	public void nextAction(Pose currentPose, ConnectionManager manager) {
+	/**
+	 * Finds the next action to perform and tells the ConnectionManager
+	 * to send the right command.
+	 * 
+	 * @param currentPose the robot's current pose
+	 * @param manager the ConnectionManager which will send the command
+	 * @return true if the target has been reached
+	 * @throws DestinationUnreachableException if the destination is unreachable
+	 */
+	public boolean nextAction(Pose currentPose, ConnectionManager manager) throws DestinationUnreachableException {
 		Path path = null;
 		try {
 			path = finder.findRoute(currentPose, currentTarget);
 		} catch (DestinationUnreachableException e) {
-			System.err.println("Destination is unreachable");
-			return;
+			System.err.println("Error in finding path: destination is unreachable");
+			throw e;
 		}
-		Waypoint nextWaypoint = path.get(1);
+		if (path.size() == 1) {
+			System.out.println("Current target has been reached");
+			return true;
+		}
+		Waypoint nextWaypoint = path.get(1); //0 is the current position
 		int xDiv = (int) (nextWaypoint.x - currentPose.getX());
 		int yDiv = (int) (nextWaypoint.y - currentPose.getY());
 		int dir = (int) Math.toDegrees(Math.atan(xDiv/yDiv));
 		int deltaDir = (int) (dir - currentPose.getHeading());
-		System.out.println(dir + " " + deltaDir);
 		if (deltaDir > 2) {//turn robot
 			if (dir > currentPose.getHeading()) {//turn right
 				manager.sendTurnRightCommand(deltaDir);
@@ -50,6 +80,7 @@ public class PathFinder {
 			manager.sendForwardCommand(distanceToMove);
 			System.out.println("Sending forward command - distance: " + distanceToMove);
 		}
+		return false;
 	}
 	
 }
