@@ -18,7 +18,7 @@ public class MapFile {
             fis.close();
             
         } catch (IOException e){
-            e.printStackTrace();
+            System.out.println("Could not find the MapFile.bm , A new one will be created.");
         }
     }
     
