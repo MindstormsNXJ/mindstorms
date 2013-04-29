@@ -149,7 +149,7 @@ public class ConnectionManager {
 	 * 
 	 * @param dist the distance to drive
 	 */
-	private void sendForwardCommand(int dist) {
+	public void sendForwardCommand(int dist) {
 		sendCommand("fw" + dist);
 	}
 	
@@ -158,7 +158,7 @@ public class ConnectionManager {
 	 * 
 	 * @param dist the distance to drive
 	 */
-	private void sendBackwardCommand(int dist) {
+	public void sendBackwardCommand(int dist) {
 		sendCommand("bw" + dist);
 	}
 	
@@ -167,7 +167,7 @@ public class ConnectionManager {
 	 * 
 	 * @param degrees the degrees to turn
 	 */
-	private void sendTurnLeftCommand(int degrees) {
+	public void sendTurnLeftCommand(int degrees) {
 		sendCommand("left" + degrees);
 	}
 	
@@ -176,14 +176,14 @@ public class ConnectionManager {
 	 * 
 	 * @param degrees the degrees to turn
 	 */
-	private void sendTurnRightCommand(int degrees) {
+	public void sendTurnRightCommand(int degrees) {
 		sendCommand("right" + degrees);
 	}
 	
 	/**
 	 * Sends a pick-command.
 	 */
-	private void sendPickCommand() {
+	public void sendPickCommand() {
 		sendCommand("pick0");
 	}
 	
