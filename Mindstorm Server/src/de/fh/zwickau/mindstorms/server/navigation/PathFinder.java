@@ -47,10 +47,9 @@ public class PathFinder {
 	 * 
 	 * @param currentPose the robot's current pose
 	 * @param manager the ConnectionManager which will send the command
-	 * @return true if the target has been reached
 	 * @throws DestinationUnreachableException if the destination is unreachable
 	 */
-	public boolean nextAction(Pose currentPose, ConnectionManager manager) throws DestinationUnreachableException {
+	public void nextAction(Pose currentPose, ConnectionManager manager) throws DestinationUnreachableException {
 		Path path = null;
 		try {
 			path = finder.findRoute(currentPose, currentTarget);
@@ -65,9 +64,9 @@ public class PathFinder {
 				manager.sendPickCommand();
 			} else {
 				manager.sendDropCommand();
-				manager.finish();
+				manager.terminate();
 			}
-			return true;
+			return;
 		}
 		Waypoint nextWaypoint = path.get(1); //0 is the current position
 		int xDiv = (int) (nextWaypoint.x - currentPose.getX());
@@ -88,7 +87,6 @@ public class PathFinder {
 			manager.sendForwardCommand(distanceToMove);
 			System.out.println("Sending forward command - distance: " + distanceToMove);
 		}
-		return false;
 	}
 	
 }

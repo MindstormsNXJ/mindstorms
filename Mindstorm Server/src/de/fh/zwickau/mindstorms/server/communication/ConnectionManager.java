@@ -150,8 +150,7 @@ public class ConnectionManager {
 		mapper.addPose(pose, connector.getNXTInfo().name);
 		//TODO process pose to PathFinder and react to new position
 		try {
-			boolean targetReached = pathFinder.nextAction(pose, this);
-			
+			pathFinder.nextAction(pose, this);
 		} catch (DestinationUnreachableException e) {
 			//error message will be printed in PathFinder
 		}
@@ -226,7 +225,7 @@ public class ConnectionManager {
 	/**
 	 * Terminates the whole server.
 	 */
-	public void finish() {
+	public void terminate() {
 		System.out.println("Ball will be dropped now, server is shutting down");
 		System.exit(0); //TODO there should be a smarter way to do this
 	}
