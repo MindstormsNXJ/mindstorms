@@ -33,15 +33,16 @@ public class PathFinder {
 		Waypoint nextWaypoint = path.get(1);
 		int xDiv = (int) (nextWaypoint.x - currentPose.getX());
 		int yDiv = (int) (nextWaypoint.y - currentPose.getY());
-		int dir = (int) Math.atan(xDiv/yDiv);
-		int deltaDiv = (int) (dir - currentPose.getHeading());
-		if (deltaDiv > 2) {//turn robot
+		int dir = (int) Math.toDegrees(Math.atan(xDiv/yDiv));
+		int deltaDir = (int) (dir - currentPose.getHeading());
+		System.out.println(dir + " " + deltaDir);
+		if (deltaDir > 2) {//turn robot
 			if (dir > currentPose.getHeading()) {//turn right
-				manager.sendTurnRightCommand(deltaDiv);
-				System.out.println("Sending turn right command - degrees: " + deltaDiv);
+				manager.sendTurnRightCommand(deltaDir);
+				System.out.println("Sending turn right command - degrees: " + deltaDir);
 			} else { //turn left
-				manager.sendTurnLeftCommand(deltaDiv);
-				System.out.println("Sending turn l commaeftnd - degrees: " + deltaDiv);
+				manager.sendTurnLeftCommand(deltaDir);
+				System.out.println("Sending turn l commaeftnd - degrees: " + deltaDir);
 			}
 		}
 		else { //move robot fw
