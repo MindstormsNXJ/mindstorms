@@ -66,6 +66,9 @@ public class Parser {
 //		case "pick":
 //			//TODO pick up the ball
 //			break;
+//		case "drop":
+//			//TODO drop the ball
+//			break;
 //		default:
 //			System.err.println("The received command is unknown");
 //		}
@@ -89,6 +92,9 @@ public class Parser {
 			break;
 		case "pick":
 			System.out.println("Picking up the ball...");
+			break;
+		case "drop":
+			System.out.println("Dropping the ball...");
 			break;
 		default:
 			System.err.println("The received command is unknown");
