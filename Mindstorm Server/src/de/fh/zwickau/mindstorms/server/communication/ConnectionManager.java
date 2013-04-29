@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTConnector;
+import lejos.robotics.navigation.DestinationUnreachableException;
 import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
 
@@ -63,8 +64,13 @@ public class ConnectionManager {
 //		sendPickCommand();
 		
 //		pathFinder.setCurrentTarget(10, 10);
-//		pathFinder.nextAction(new Pose(0,0,0), this);
-//		pathFinder.nextAction(new Pose(0,0,45), this);
+//		try {
+//			pathFinder.nextAction(new Pose(0,0,0), this);
+//			pathFinder.nextAction(new Pose(0,0,45), this);
+//			pathFinder.nextAction(new Pose(10,10,45), this);
+//		} catch (DestinationUnreachableException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	/**
