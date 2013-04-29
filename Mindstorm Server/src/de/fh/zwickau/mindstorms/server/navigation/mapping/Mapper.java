@@ -26,6 +26,7 @@ public class Mapper {
 		mapGrid = new MapGrid(tileSize);
 		lineMap = new LineMap();
 		loadMap();
+		buildLineMap();
 	}
 
 	/**
