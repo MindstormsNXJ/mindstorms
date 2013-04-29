@@ -21,6 +21,7 @@ import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
  */
 public class ConnectionManager {
 
+	private NXTConnector connector;
 	private Mapper mapper;
 	private DataOutputStream commandSender;
 	private DataInputStream poseReceiver;
@@ -64,7 +65,7 @@ public class ConnectionManager {
 	 * @return true if connection was successful established
 	 */
 	private boolean establishConnection() {
-		NXTConnector connector = new NXTConnector();
+		connector = new NXTConnector();
 		boolean success = connector.connectTo(null, null, NXTCommFactory.BLUETOOTH);
 		if (success) {
 			System.out.println("Connection established via bluetooth");
@@ -121,7 +122,8 @@ public class ConnectionManager {
 		}
 		try {
 			Pose pose = new Pose(Integer.parseInt(xPos), Integer.parseInt(yPos), Integer.parseInt(dir));
-			//TODO process pose to mapper and react to new position
+			mapper.addPose(pose, connector.getNXTInfo().name);
+			//TODO process pose to PathFinder and react to new position
 		} catch (NumberFormatException ex) {
 			System.err.println("Could not parse received pose");
 			ex.printStackTrace();
