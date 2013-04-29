@@ -35,9 +35,6 @@ public class ConnectionManager {
 		//TODO insert this line as soon as the pose is calculated correctly
 //		sendPose();
 		waitForCommands();
-		
-		//TODO test commands - remove them for final version
-//		sendPose(new Pose(10,20,45));
 	}
 	
 	/**
@@ -81,22 +78,19 @@ public class ConnectionManager {
 	
 	/**
 	 * Gets the robot's current Pose and sends it to the server.
-	 * 
-	 * @return true if pose was sent successful
 	 */
-	private boolean sendPose() {
-		boolean success = false;
+	private void sendPose() {
 		String parsedPose = parser.getParsedPose();
 		System.out.println("Sending pose: " + parsedPose);
 		try {
 			positionSender.writeUTF(parsedPose);
 			positionSender.flush();
-			success = true;
 			System.out.println("Pose sent");
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("Error sending pose, retrying...");
+			Delay.msDelay(1000);
+			sendPose();
 		}
-		return success;
 	}
 	
 }
