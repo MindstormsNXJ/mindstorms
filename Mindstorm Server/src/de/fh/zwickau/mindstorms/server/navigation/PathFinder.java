@@ -69,6 +69,7 @@ public class PathFinder {
 			return;
 		}
 		Waypoint nextWaypoint = path.get(1); //0 is the current position
+		System.out.println("Next Waypoint: (" + nextWaypoint.x + ", " + nextWaypoint.y + ")");
 		int xDiv = (int) (nextWaypoint.x - currentPose.getX());
 		int yDiv = (int) (nextWaypoint.y - currentPose.getY());
 		int dir = (int) Math.toDegrees(Math.atan(xDiv/yDiv));
@@ -87,6 +88,7 @@ public class PathFinder {
 			manager.sendForwardCommand(distanceToMove);
 			System.out.println("Sending forward command - distance: " + distanceToMove);
 		}
+		System.out.println();
 	}
 	
 }
