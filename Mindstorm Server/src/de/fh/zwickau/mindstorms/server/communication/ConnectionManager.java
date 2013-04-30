@@ -8,7 +8,6 @@ import java.io.IOException;
 import lejos.geom.Point;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTConnector;
-import lejos.robotics.navigation.DestinationUnreachableException;
 import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
 
@@ -31,8 +30,8 @@ public class ConnectionManager {
 	private DataInputStream poseReceiver;
 	
 	//TODO replace this with points in the mapper if possible
-	private Point ballPos = new Point(35,25);
-	private Point targetPos = new Point(75,10);
+	private Point ballPos = new Point(10,10);
+	private Point targetPos = new Point(0,0);
 	
 	/**
 	 * Initialises a ConnectionManager, including the connection itself as well as
