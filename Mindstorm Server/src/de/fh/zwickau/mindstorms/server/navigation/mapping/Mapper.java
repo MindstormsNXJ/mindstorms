@@ -25,6 +25,7 @@ public class Mapper {
 	public Mapper(float tileSize) {
 		mapGrid = new MapGrid(tileSize);
 		lineMap = new LineMap();
+		tracer = new RobotTracer();
 		loadMap();
 		buildLineMap();
 	}
