@@ -32,8 +32,7 @@ public class ConnectionManager {
 	public ConnectionManager(Robot robot) {
 		parser = new Parser(robot);
 		establishConnection();
-		//TODO insert this line as soon as the pose is calculated correctly
-//		sendPose();
+		sendPose();
 		waitForCommands();
 	}
 	
@@ -65,8 +64,7 @@ public class ConnectionManager {
 						String command = commandReceiver.readUTF();
 						System.out.println("Command received: " + command);
 						parser.parseCommand(command);
-						//TODO insert this line as soon as the pose is calculated correctly
-//						sendPose();
+						sendPose();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
