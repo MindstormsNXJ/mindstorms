@@ -29,13 +29,12 @@ public class PositionManager implements Manager {
 	public Pose getPose() {
 		return pose;
 	}
-
 	/**
 	 * Returns true if the robot is rotating or moving.
 	 * 
 	 * @return
 	 */
-	public boolean isPositioning() {
+	public boolean isPositioning(){
 		return directionManager.isRotating() || movementManager.isMoving();
 	}
 
@@ -72,8 +71,7 @@ public class PositionManager implements Manager {
 	 * 
 	 * @param steps
 	 * @param direction
-	 * @param stepWide
-	 *            , default stepWide should be 45
+	 * @param stepWide, default stepWide should be 45
 	 */
 	public void rotateStepwise(int steps, Direction direction, int stepWide) {
 		directionManager.rotateInDirection(steps * stepWide, direction);
@@ -90,23 +88,14 @@ public class PositionManager implements Manager {
 	 * @param distance
 	 *            the distance to move in cm
 	 */
-	public void move(int distance) {
+	public void move(int distance){
 		movementManager.move(distance);
-		// updatePosition(distance);
-	}
-
-	private void updatePosition(int distance) {
-		float x = (float) (Math.cos(pose.getHeading()) * distance);
-		float y = (float) (Math.sin(pose.getHeading()) * distance);
-		pose.setLocation(x, y);
 	}
 
 	@Override
 	public int stop() {
-		int distance = movementManager.stop();
-		updatePosition(distance);
+		movementManager.stop();
 		directionManager.stop();
-		updateRotation((int) robot.compassSensor.getDegrees());
 		return 0;
 	}
 

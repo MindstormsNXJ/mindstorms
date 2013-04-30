@@ -1,5 +1,6 @@
 package de.fh.zwickau.mindstorms.brick.navigation;
 
+import lejos.nxt.NXTRegulatedMotor;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.util.Manager;
 
@@ -14,11 +15,15 @@ import de.fh.zwickau.mindstorms.brick.util.Manager;
 public class DirectionManager implements Manager {
 
 	// int motorSpeed = 200; i think this isn't needed
+	/** robot which is rotating */
 	private Robot robot;
+	/** if the robot currently rotates */
 	private boolean isRotating;
-	private int startDirection; // direction when robot starts rotation
-	private int endDirection; // the direction the robot should rotate to
-	private int degrees; // the degrees to rotate
+	/** the direction the robot stands at start */
+	private int startDirection;
+	/** the degree to rotate */
+	private int degrees;
+
 	// private int stepWide = 45;// the stepwide for stepwise rotating i think
 	// this isn't needed
 
@@ -34,33 +39,23 @@ public class DirectionManager implements Manager {
 	/**
 	 * rotate with an angle in a specific direction
 	 * 
-	 * @param deg
+	 * @param degree
 	 *            the angle in degrees
-	 * @param dir
-	 *            the direction, left or right
+	 * @param direction
+	 *            left or right (@see {@link Direction})
 	 */
-	public void rotateInDirection(int deg, Direction dir) {
+	public void rotateInDirection(int degree, Direction direction) {
 		robot.setModeRotate();
 		isRotating = true;
 		startDirection = (int) robot.compassSensor.getDegrees();
-		if (dir == Direction.RIGHT) {
-			robot.leftMotor.forward();
-			robot.rightMotor.backward();
-			degrees = deg;
-		}
-		if (dir == Direction.LEFT) {
-			robot.leftMotor.backward();
-			robot.rightMotor.forward();
-			degrees = -deg;
-		}
-
+		checkMotors(degree, direction);
 		// check when the target angle is reached and stop rotating
 		Thread check = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				while (isRotating == true) {
-					endDirection = (int) robot.compassSensor.getDegrees();
+					int endDirection = (int) robot.compassSensor.getDegrees();
 					int targetdirection = (startDirection + degrees) % 360;
 					if (targetdirection < 0) {
 						targetdirection = 360 + targetdirection;
@@ -73,7 +68,6 @@ public class DirectionManager implements Manager {
 				}
 				stop();
 			}
-
 		});
 		check.start();
 		try {
@@ -81,6 +75,22 @@ public class DirectionManager implements Manager {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void checkMotors(int degree, Direction direction) {
+		NXTRegulatedMotor forwardMotor;
+		NXTRegulatedMotor backwardMotor;
+		if (direction == Direction.RIGHT) {
+			forwardMotor = robot.leftMotor;
+			backwardMotor = robot.rightMotor;
+			degrees = degree;
+		} else {
+			forwardMotor = robot.rightMotor;
+			backwardMotor = robot.leftMotor;
+			degrees = -degree;
+		}
+		forwardMotor.forward();
+		backwardMotor.backward();
 	}
 
 	// i don't know if stepWide is important, because it's never used
@@ -102,7 +112,6 @@ public class DirectionManager implements Manager {
 		robot.leftMotor.stop(true);
 		robot.rightMotor.stop();
 		isRotating = false;
-
 		return 0; // get the current heading from the compasssensor
 	}
 }
