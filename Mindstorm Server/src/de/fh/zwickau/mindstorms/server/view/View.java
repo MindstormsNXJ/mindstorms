@@ -59,6 +59,7 @@ public class View extends Thread {
 	 */
 	private void createWindow() {
 		try {
+			Display.setTitle("Mindsorm Map");
 			Display.setDisplayMode(new DisplayMode(512 + 1, 512 + 1));
 			Display.create();
 		} catch (LWJGLException e) {
