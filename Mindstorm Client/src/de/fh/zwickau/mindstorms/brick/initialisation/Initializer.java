@@ -47,8 +47,8 @@ public class Initializer implements ButtonListener {
 		rightMotor = Motor.B;
 		robot.rightMotor = rightMotor;
 //		grabberMotor = Motor.C;
-//		compassSensor = new CompassHTSensor(SensorPort.S2);
-//		robot.compassSensor = compassSensor;
+		compassSensor = new CompassHTSensor(SensorPort.S2);
+		robot.compassSensor = compassSensor;
 		robot.ultrasonicSensor = ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
 		touchSensor = new TouchSensor(SensorPort.S3);
 		initialize();
@@ -65,6 +65,8 @@ public class Initializer implements ButtonListener {
 		calibrate();
 
 		// establish connection to the server
+		robot.positionManager = new PositionManager(new Pose(0,0,0), robot);
+		robot.positionManager.rotateTo(0);
 		new ConnectionManager(robot);
 
 		// obstacle detection test
