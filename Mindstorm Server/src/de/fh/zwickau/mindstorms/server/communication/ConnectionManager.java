@@ -46,35 +46,10 @@ public class ConnectionManager {
 		if (establishConnection())
 			receiveAndProcessPoses();
 		else {
-			System.err.println("Connection failed, please check your configuration");
-			return;
-		}
-		
-		//TODO test commands - remove them for final version
-//		System.out.println("Sending test commands...");
-//		System.out.println("+forward");
-//		sendForwardCommand(10);
-//		Delay.msDelay(10000);
-//		System.out.println("+left");
-//		sendTurnLeftCommand(90);
-//		Delay.msDelay(5000);
-//		System.out.println("+backward");
-//		sendBackwardCommand(10);
-//		Delay.msDelay(10000);
-//		System.out.println("+right");
-//		sendTurnRightCommand(180);
-//		Delay.msDelay(5000);
-//		System.out.println("+pick");
-//		sendPickCommand();
-		
-//		pathFinder.setCurrentTarget(10, 10);
-//		try {
-//			pathFinder.nextAction(new Pose(0,0,0), this);
-//			pathFinder.nextAction(new Pose(0,0,45), this);
-//			pathFinder.nextAction(new Pose(10,10,45), this);
-//		} catch (DestinationUnreachableException e) {
-//			e.printStackTrace();
-//		}
+			System.err.println("Connection failed, will retry now...");
+			Delay.msDelay(10000);
+			new ConnectionManager(mapper);
+		} 
 	}
 	
 	/**
