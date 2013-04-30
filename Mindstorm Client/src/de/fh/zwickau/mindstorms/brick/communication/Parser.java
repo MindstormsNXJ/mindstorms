@@ -2,6 +2,7 @@ package de.fh.zwickau.mindstorms.brick.communication;
 
 import lejos.robotics.navigation.Pose;
 import de.fh.zwickau.mindstorms.brick.Robot;
+import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 
 /**
  * A simple Parser that is able to parse received commands (and starts the execution
@@ -50,51 +51,24 @@ public class Parser {
 			return;
 		}
 		//process command
-//		switch (operation) {
-//		case "fw":
-//			robot.positionManager.move(valueAsInt);
-//			break;
-//		case "bw":
-//			robot.positionManager.move(-valueAsInt);
-//			break;
-//		case "left":
-//			robot.positionManager.rotate(valueAsInt, Direction.LEFT);
-//			break;
-//		case "right":
-//			robot.positionManager.rotate(valueAsInt, Direction.RIGHT);
-//			break;
-//		case "pick":
-//			//TODO pick up the ball
-//			break;
-//		case "drop":
-//			//TODO drop the ball
-//			break;
-//		default:
-//			System.err.println("The received command is unknown");
-//		}
-		//TODO replace this code with the one above as soon as PositionManager is ready
 		switch (operation) {
 		case "fw":
-			robot.leftMotor.forward();
-			robot.rightMotor.forward();
+			robot.positionManager.move(valueAsInt);
 			break;
 		case "bw":
-			robot.leftMotor.backward();
-			robot.rightMotor.backward();
+			robot.positionManager.move(-valueAsInt);
 			break;
 		case "left":
-			robot.leftMotor.backward();
-			robot.rightMotor.forward();
+			robot.positionManager.rotate(valueAsInt, Direction.LEFT);
 			break;
 		case "right":
-			robot.leftMotor.forward();
-			robot.rightMotor.backward();
+			robot.positionManager.rotate(valueAsInt, Direction.RIGHT);
 			break;
 		case "pick":
-			System.out.println("Picking up the ball...");
+			//TODO pick up the ball
 			break;
 		case "drop":
-			System.out.println("Dropping the ball...");
+			//TODO drop the ball
 			break;
 		default:
 			System.err.println("The received command is unknown");
