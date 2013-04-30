@@ -90,8 +90,8 @@ public class PositionManager implements Manager {
 
 	public void updatePosition(int distance) {
 		if (!isPositioning()) {
-			float x = (float) (Math.cos(Math.toRadians(pose.getHeading())) * distance);
-			float y = (float) (Math.sin(Math.toRadians(pose.getHeading())) * distance);
+			float x = (float) (Math.sin(Math.toRadians(pose.getHeading())) * distance);
+			float y = (float) (Math.cos(Math.toRadians(pose.getHeading())) * distance);
 			pose.setLocation(pose.getX() + x, pose.getY() + y);
 		}
 	}

@@ -59,6 +59,7 @@ public class PathFinder {
 		}
 		if (path.size() == 1) {
 			System.out.println("Current target has been reached");
+			System.out.println();
 			if (!robotHasBall) {
 				robotHasBall = true;
 				manager.sendPickCommand();
@@ -72,25 +73,25 @@ public class PathFinder {
 		System.out.println("Next Waypoint: (" + nextWaypoint.x + ", " + nextWaypoint.y + ")");
 		int xDiv = (int) (nextWaypoint.x - currentPose.getX());
 		int yDiv = (int) (nextWaypoint.y - currentPose.getY());
-		int dir;
+		int targetDir;
 		if (yDiv != 0 && xDiv != 0)
-			dir = (int) Math.toDegrees(Math.atan(xDiv/yDiv));
+			targetDir = (int) Math.toDegrees(Math.atan(xDiv/yDiv));
 		else {
 			if (yDiv == 0) {
 				if (nextWaypoint.x > currentPose.getX())
-					dir = 90;
+					targetDir = 90;
 				else
-					dir = 270;
+					targetDir = 270;
 			} else {
 				if (nextWaypoint.y > currentPose.getY())
-					dir = 0;
+					targetDir = 0;
 				else
-					dir = 180;
+					targetDir = 180;
 			}
 		}
-		int deltaDir = (int) (dir - currentPose.getHeading());
+		int deltaDir = (int) (targetDir - currentPose.getHeading());
 		if (deltaDir > 2) {//turn robot
-			if (dir > currentPose.getHeading()) {//turn right
+			if (targetDir > currentPose.getHeading()) {//turn right
 				manager.sendTurnRightCommand(deltaDir);
 				System.out.println("Sending turn right command - degrees: " + deltaDir);
 			} else { //turn left
