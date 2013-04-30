@@ -75,7 +75,7 @@ public class PositionManager implements Manager {
 	 * @param steps
 	 * @param direction
 	 * @param stepWide
-	 *            , default stepWide should be 45
+	 *            default stepWide should be 45
 	 */
 	public void rotateStepwise(int steps, Direction direction, int stepWide) {
 		directionManager.rotateInDirection(steps * stepWide, direction);
@@ -84,14 +84,16 @@ public class PositionManager implements Manager {
 
 	private void updateRotation() {
 		if (!isPositioning()) {
-			pose.setHeading(directionManager.getEndDirection());
+			pose.setHeading(robot.compassSensor.getDegrees());
 		}
 	}
 
-	private void updatePosition(int distance) {
-		float x = (float) (Math.cos(pose.getHeading()) * distance);
-		float y = (float) (Math.sin(pose.getHeading()) * distance);
-		pose.setLocation(x, y);
+	public void updatePosition(int distance) {
+		if (!isPositioning()) {
+			float x = (float) (Math.cos(Math.toRadians(pose.getHeading())) * distance);
+			float y = (float) (Math.sin(Math.toRadians(pose.getHeading())) * distance);
+			pose.setLocation(pose.getX() + x, pose.getY() + y);
+		}
 	}
 
 	/**
