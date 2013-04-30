@@ -73,13 +73,20 @@ public class PathFinder {
 		int xDiv = (int) (nextWaypoint.x - currentPose.getX());
 		int yDiv = (int) (nextWaypoint.y - currentPose.getY());
 		int dir;
-		if (yDiv != 0)
+		if (yDiv != 0 && xDiv != 0)
 			dir = (int) Math.toDegrees(Math.atan(xDiv/yDiv));
 		else {
-			if (nextWaypoint.x > currentPose.getX())
-				dir = 90;
-			else
-				dir = 270;
+			if (yDiv == 0) {
+				if (nextWaypoint.x > currentPose.getX())
+					dir = 90;
+				else
+					dir = 270;
+			} else {
+				if (nextWaypoint.y > currentPose.getY())
+					dir = 0;
+				else
+					dir = 180;
+			}
 		}
 		int deltaDir = (int) (dir - currentPose.getHeading());
 		if (deltaDir > 2) {//turn robot
