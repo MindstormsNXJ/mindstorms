@@ -9,3 +9,6 @@
 *.nxj
 *.log
 *.DS_Store
+
+# MapFile
+*.bm

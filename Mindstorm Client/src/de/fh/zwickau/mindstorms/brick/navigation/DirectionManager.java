@@ -1,14 +1,20 @@
 package de.fh.zwickau.mindstorms.brick.navigation;
 
 import lejos.nxt.NXTRegulatedMotor;
-import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.util.Manager;
 
+/**
+ * The DirectionManager implements the rotation of the robot by an angle in a
+ * specific direction.
+ * 
+ * @author Martin Petzold
+ * 
+ */
+
 public class DirectionManager implements Manager {
 
-	/** speed how fast the robot should rotate */
-	int motSpeed = 200;
+	// int motorSpeed = 200; i think this isn't needed
 	/** robot which is rotating */
 	private Robot robot;
 	/** if the robot currently rotates */
@@ -17,6 +23,9 @@ public class DirectionManager implements Manager {
 	private int startDirection;
 	/** the degree to rotate */
 	private int degrees;
+
+	// private int stepWide = 45;// the stepwide for stepwise rotating i think
+	// this isn't needed
 
 	/**
 	 * 
@@ -31,26 +40,29 @@ public class DirectionManager implements Manager {
 	 * rotate with an angle in a specific direction
 	 * 
 	 * @param degree
+	 *            the angle in degrees
 	 * @param direction
+	 *            - left or right (@see {@link Direction})
 	 */
 	public void rotateInDirection(int degree, Direction direction) {
 		robot.setModeRotate();
 		isRotating = true;
 		startDirection = (int) robot.compassSensor.getDegrees();
 		checkMotors(degree, direction);
-
+		// check when the target angle is reached and stop rotating
 		Thread check = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				while (isRotating == true) {
-					int directioner = (int) robot.compassSensor.getDegrees();
+					int endDirection = (int) robot.compassSensor.getDegrees();
 					int targetdirection = (startDirection + degrees) % 360;
 					if (targetdirection < 0) {
 						targetdirection = 360 + targetdirection;
 					}
-					System.out.println(targetdirection);
-					if (directioner == targetdirection) {
+					// System.out.println(targetdirection); // just for
+					// debugging
+					if (endDirection == targetdirection) {
 						isRotating = false;
 					}
 				}
@@ -81,6 +93,16 @@ public class DirectionManager implements Manager {
 		backwardMotor.backward();
 	}
 
+	// i don't know if stepWide is important, because it's never used
+
+	// public void setStepWide(int stepWide) {
+	// this.stepWide = stepWide;
+	// }
+	//
+	// public int getStepWide() {
+	// return stepWide;
+	// }
+
 	public boolean isRotating() {
 		return isRotating;
 	}
@@ -90,7 +112,5 @@ public class DirectionManager implements Manager {
 		robot.leftMotor.stop(true);
 		robot.rightMotor.stop();
 		isRotating = false;
-
-		Delay.msDelay(1000);
 	}
 }
