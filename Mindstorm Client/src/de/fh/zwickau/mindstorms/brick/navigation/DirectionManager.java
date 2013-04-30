@@ -1,25 +1,33 @@
-	package de.fh.zwickau.mindstorms.brick.navigation;
+package de.fh.zwickau.mindstorms.brick.navigation;
 
+import lejos.nxt.NXTRegulatedMotor;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.util.Manager;
 
 /**
- * The DirectionManager implements the rotation of the robot by an angle
- * in a specific direction.
+ * The DirectionManager implements the rotation of the robot by an angle in a
+ * specific direction.
  * 
  * @author Martin Petzold
- *
+ * 
  */
 
-public class DirectionManager implements Manager{
+public class DirectionManager implements Manager {
 
-//	int motorSpeed = 200;				i think this isn't needed
+	// int motorSpeed = 200; i think this isn't needed
+	/** robot which is rotating */
 	private Robot robot;
+	/** if the robot currently rotates */
 	private boolean isRotating;
-	private int startDirection;			// direction when robot starts rotation
-	private int endDirection; 			// the direction the robot should rotate to
-	private int degrees;				// the degrees to rotate
-//	private int stepWide = 45;// the stepwide for stepwise rotating		i think this isn't needed
+	/** the direction the robot stands at start */
+	private int startDirection;
+	/** the direction where the robot should head to at the end */
+	private int endDirection;
+	/** the degree to rotate */
+	private int degrees;
+
+	// private int stepWide = 45;// the stepwide for stepwise rotating i think
+	// this isn't needed
 
 	/**
 	 * 
@@ -33,24 +41,16 @@ public class DirectionManager implements Manager{
 	/**
 	 * rotate with an angle in a specific direction
 	 * 
-	 * @param deg the angle in degrees
-	 * @param dir the direction, left or right
+	 * @param degree
+	 *            the angle in degrees
+	 * @param direction
+	 *            left or right (@see {@link Direction})
 	 */
-	public void rotateInDirection(int deg, Direction dir) {
+	public void rotateInDirection(int degree, Direction direction) {
 		robot.setModeRotate();
 		isRotating = true;
 		startDirection = (int) robot.compassSensor.getDegrees();
-		if (dir == Direction.RIGHT) {
-			robot.leftMotor.forward();
-			robot.rightMotor.backward();
-			degrees = deg;
-		}
-		if (dir == Direction.LEFT) {
-			robot.leftMotor.backward();
-			robot.rightMotor.forward();
-			degrees = -deg;
-		}
-		
+		checkMotors(degree, direction);
 		// check when the target angle is reached and stop rotating
 		Thread check = new Thread(new Runnable() {
 
@@ -58,18 +58,18 @@ public class DirectionManager implements Manager{
 			public void run() {
 				while (isRotating == true) {
 					endDirection = (int) robot.compassSensor.getDegrees();
-					int targetdirection = (startDirection + degrees) %360;
-					if(targetdirection < 0) {
+					int targetdirection = (startDirection + degrees) % 360;
+					if (targetdirection < 0) {
 						targetdirection = 360 + targetdirection;
 					}
-//					System.out.println(targetdirection); 	// just for debugging
+					// System.out.println(targetdirection); // just for
+					// debugging
 					if (endDirection == targetdirection) {
 						isRotating = false;
 					}
 				}
 				stop();
 			}
-
 		});
 		check.start();
 		try {
@@ -79,24 +79,45 @@ public class DirectionManager implements Manager{
 		}
 	}
 
-//	i don't know if stepWide is important, because it's never used
-	
-//	public void setStepWide(int stepWide) {
-//		this.stepWide = stepWide;
-//	}
-//
-//	public int getStepWide() {
-//		return stepWide;
-//	}
+	private void checkMotors(int degree, Direction direction) {
+		NXTRegulatedMotor forwardMotor;
+		NXTRegulatedMotor backwardMotor;
+		if (direction == Direction.RIGHT) {
+			forwardMotor = robot.leftMotor;
+			backwardMotor = robot.rightMotor;
+			degrees = degree;
+		} else {
+			forwardMotor = robot.rightMotor;
+			backwardMotor = robot.leftMotor;
+			degrees = -degree;
+		}
+		forwardMotor.forward();
+		backwardMotor.backward();
+	}
+
+	// i don't know if stepWide is important, because it's never used
+
+	// public void setStepWide(int stepWide) {
+	// this.stepWide = stepWide;
+	// }
+	//
+	// public int getStepWide() {
+	// return stepWide;
+	// }
 
 	public boolean isRotating() {
 		return isRotating;
 	}
 
+	public int getEndDirection() {
+		return endDirection;
+	}
+
 	@Override
-	public void stop() {
+	public int stop() {
 		robot.leftMotor.stop(true);
 		robot.rightMotor.stop();
 		isRotating = false;
+		return 0; // get the current heading from the compasssensor
 	}
 }

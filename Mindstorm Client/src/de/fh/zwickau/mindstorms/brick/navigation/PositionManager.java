@@ -5,10 +5,11 @@ import de.fh.zwickau.mindstorms.brick.util.Manager;
 import lejos.robotics.navigation.Pose;
 
 /**
- * With the PositionManager the position of the robot can be changed.
- * It's responsible for moving and rotating.
+ * With the PositionManager the position of the robot can be changed. It's
+ * responsible for moving and rotating.
+ * 
  * @author
- *
+ * 
  */
 public class PositionManager implements Manager {
 
@@ -28,19 +29,21 @@ public class PositionManager implements Manager {
 	public Pose getPose() {
 		return pose;
 	}
-	
+
 	/**
-	 * Returns true if the robot is rotating or moving. 
+	 * Returns true if the robot is rotating or moving.
+	 * 
 	 * @return
 	 */
-	public boolean isPositioning(){
+	public boolean isPositioning() {
 		return directionManager.isRotating() || movementManager.isMoving();
 	}
 
 	/**
 	 * Rotates the robot to a absolute direction in degrees.
 	 * 
-	 * @param deg the direction to rotate to
+	 * @param deg
+	 *            the direction to rotate to
 	 */
 	public void rotateTo(int deg) {
 		int startdegrees = (int) robot.compassSensor.getDegrees();
@@ -51,17 +54,19 @@ public class PositionManager implements Manager {
 		if ((calculateAngle(startdegrees, deg)) > 0) {
 			directionManager.rotateInDirection(toRotate, Direction.RIGHT);
 		}
+		updateRotation();
 	}
-	
+
 	/**
-	 * Rotates the robot by a given amount in degrees and a direction,
-	 * starting by the robots current direction.
+	 * Rotates the robot by a given amount in degrees and a direction, starting
+	 * by the robots current direction.
 	 * 
 	 * @param degree
 	 * @param direction
 	 */
-	public void rotate(int degree, Direction direction){
+	public void rotate(int degree, Direction direction) {
 		directionManager.rotateInDirection(degree, direction);
+		updateRotation();
 	}
 
 	/**
@@ -69,25 +74,45 @@ public class PositionManager implements Manager {
 	 * 
 	 * @param steps
 	 * @param direction
-	 * @param stepWide, default stepWide should be 45
+	 * @param stepWide
+	 *            default stepWide should be 45
 	 */
 	public void rotateStepwise(int steps, Direction direction, int stepWide) {
 		directionManager.rotateInDirection(steps * stepWide, direction);
+		updateRotation();
 	}
-	
+
+	private void updateRotation() {
+		if (!isPositioning()) {
+			pose.setHeading(robot.compassSensor.getDegrees());
+		}
+	}
+
+	public void updatePosition(int distance) {
+		if (!isPositioning()) {
+			float x = (float) (Math.cos(Math.toRadians(pose.getHeading())) * distance);
+			float y = (float) (Math.sin(Math.toRadians(pose.getHeading())) * distance);
+			pose.setLocation(pose.getX() + x, pose.getY() + y);
+		}
+	}
+
 	/**
-	 * Moves the robot in straight direction forward (positive values) or backwards (negative values)
-	 *
-	 * @param distance the distance to move in cm
+	 * Moves the robot in straight direction forward (positive values) or
+	 * backwards (negative values)
+	 * 
+	 * @param distance
+	 *            the distance to move in cm
 	 */
-	public void move(int distance){
+	public void move(int distance) {
 		movementManager.move(distance);
+		updatePosition(distance);
 	}
 
 	@Override
-	public void stop() {
+	public int stop() {
 		movementManager.stop();
 		directionManager.stop();
+		return 0;
 	}
 
 	/**
@@ -97,15 +122,14 @@ public class PositionManager implements Manager {
 	 * @param targetDegree
 	 * @return the angle to rotate (positive for right, negative for left)
 	 */
-	private int calculateAngle(int currentDegree, int targetDegree){
+	private int calculateAngle(int currentDegree, int targetDegree) {
 		int angleDiff = targetDegree - currentDegree;
-		if(angleDiff >= 180){
+		if (angleDiff >= 180) {
 			angleDiff = angleDiff - 360;
 		}
-		if(angleDiff < -180){
+		if (angleDiff < -180) {
 			angleDiff = angleDiff + 360;
 		}
 		return angleDiff;
-		
 	}
 }
