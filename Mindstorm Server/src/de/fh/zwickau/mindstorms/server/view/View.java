@@ -50,6 +50,7 @@ public class View extends Thread {
 			draw();
 		}
 
+		mapper.saveMap();
 		Display.destroy();
 	}
 
@@ -121,9 +122,9 @@ public class View extends Thread {
 		for (int x = 0; x < g_size; x++) {
 			for (int y = 0; y < g_size; y++) {
 				if ((strength = (float)grid.get(x, y)) > 0) {
-					tileColors[++c] = 4.0f * strength / 4.0f; 		// red
+					tileColors[++c] = 4.0f * strength / 4.0f;        // red
 					tileColors[++c] = 1.0f -  1.0f *strength/ 3.0f; // green
-					tileColors[++c] = 0.0f; 						// blue
+					tileColors[++c] = 0.0f;                         // blue
 				} else {
 					tileColors[++c] = 1.0f; // red
 					tileColors[++c] = 1.0f; // green
@@ -133,14 +134,16 @@ public class View extends Thread {
 		}
 		
 		//Rebuild Line vertices
-		Line[] lines = mapper.getLineMap().getLines();
-		lineVertices = new float[lines.length * 4];
-		int j = -1;
-		for (int i = 0; i < lines.length; i++){
-			lineVertices[++j] = lines[i].x1 / gstsh;
-			lineVertices[++j] = lines[i].y1 / gstsh;
-			lineVertices[++j] = lines[i].x2 / gstsh;
-			lineVertices[++j] = lines[i].y2 / gstsh;
+		Line[] lines;
+		if((lines = mapper.getLineMap().getLines()) != null){
+    		lineVertices = new float[lines.length * 4];
+    		int j = -1;
+    		for (int i = 0; i < lines.length; i++){
+    			lineVertices[++j] = lines[i].x1 / gstsh;
+    			lineVertices[++j] = lines[i].y1 / gstsh;
+    			lineVertices[++j] = lines[i].x2 / gstsh;
+    			lineVertices[++j] = lines[i].y2 / gstsh;
+    		}
 		}
 	}
 
@@ -172,23 +175,26 @@ public class View extends Thread {
 			glBegin(GL_POINTS);                                                //Begin to draw Points
 			while (i < size) {
 				glColor3f(tileColors[++c], tileColors[++c], tileColors[++c]);  //set pixel color
-				glVertex2f(tileVertices[++i], tileVertices[++i]); 			   //make a point
+				glVertex2f(tileVertices[++i], tileVertices[++i]);              //make a point
 			}
 			glEnd();                                                           //End with tile draw
 		}
 		
-		size = lineVertices.length -1;
-		i = -1;
-		
-		if(drawLine){                                                          
-			glColor3f(0.0f, 0.5f, 1.0f);
-			glBegin(GL_LINES);                                                 //Begin to draw Points
-			while(i < size){
-				glVertex2f(lineVertices[++i], lineVertices[++i]);              //Set new LinePoint
-			}
-			glEnd();                                                           //End with Line draw
+		if(lineVertices != null){
+    		size = lineVertices.length -1;
+    		i = -1;
+    		
+    		if(drawLine){                                                          
+    			glColor3f(0.0f, 0.5f, 1.0f);
+    			glBegin(GL_LINES);                                                 //Begin to draw Points
+    			while(i < size){
+    				glVertex2f(lineVertices[++i], lineVertices[++i]);              //Set new LinePoint
+    			}
+    			glEnd();                                                           //End with Line draw
+    		}
+    		                                                     
 		}
-		Display.update();                                                      // Bring it to the screen.
+		Display.update();                                                          // Bring it to the screen.
 	}
 
 	/**

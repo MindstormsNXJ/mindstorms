@@ -14,20 +14,28 @@ import lejos.robotics.navigation.Pose;
  */
 public class Mapper {
 	private View observer;
+	private RobotTracer tracer;
 	private MapGrid mapGrid;
 	private LineMap lineMap;
 
 	/**
-	 * New Instace of Mapper
+	 * New Instance of Mapper
 	 * @param tileSize tile size for grid
 	 */
 	public Mapper(float tileSize) {
 		mapGrid = new MapGrid(tileSize);
 		lineMap = new LineMap();
+		loadMap();
+		buildLineMap();
 	}
 
-	public void addPose(Pose pose/* , ID id */) {
-
+	/**
+	 * Add a Pose to trace the position for a robot.
+	 * @param pose
+	 * @param robotName
+	 */
+	public void addPose(Pose pose, String robotName) {
+		tracer.trace(robotName, pose);
 	}
 
 	/**
@@ -55,7 +63,8 @@ public class Mapper {
 	 * @param pos position
 	 */
 	private void addObstacle(float[] pos){
-		addObstacle((int)(pos[0]/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2,(int)(pos[1]/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2);
+		addObstacle((int)(pos[0]/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2,
+		            (int)(pos[1]/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2);
 	}
 	
 	/**
@@ -96,6 +105,16 @@ public class Mapper {
 		lineMap = Converter.gridToLineMap(mapGrid);
 	}
 
+	public void loadMap(){
+	    MapFile file = new MapFile();
+	    file.load(mapGrid);
+	}
+	
+	public void saveMap(){
+	    MapFile file = new MapFile();
+	    file.save(mapGrid.getByteGrid());
+	}
+	
 	public MapGrid getGrid() {
 		return mapGrid;
 	}

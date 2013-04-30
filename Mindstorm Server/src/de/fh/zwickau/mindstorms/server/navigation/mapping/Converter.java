@@ -34,7 +34,7 @@ public class Converter {
 	}
 	
 	/**
-	 * Convert a MapGrid to a Linemap
+	 * Convert a MapGrid to a LineMap
 	 * 
 	 * @return LineMap
 	 */

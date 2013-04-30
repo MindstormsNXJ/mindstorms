@@ -1,47 +1,70 @@
 package de.fh.zwickau.mindstorms.brick.navigation;
 
-import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.util.Manager;
 
+/**
+ * The MovementManager implements the movement of the robot by cm
+ * back an forward
+ * 
+ * @author Martin Petzold
+ *
+ */
+
+
 public class MovementManager implements Manager {
 
-	double driveTranslation;
+	/** The robot who be moved */
 	Robot robot;
+	/**The Factor who take Degrees into centimeter*/
+	double driveTranslation;
+	/**the Angle where the Robot  stands at Start*/
 	private int startdegrees;
-	private int robotspeed=200;
+	/**the Boolean who shows that the robot is driving*/
 	private boolean driving;
+	/**the Tachocounts from the Motors on the Start of the Moving Process*/
+	private int tachoLeft;
 	private int tachoRight;
+	/**the angle which is the robot driving in real*/
 	private double rotToDriveRight;
 	private double rotToDriveLeft;
-	private int tachoLeft;
+	/**the boolean who shows if the Robot drives for- or backward*/
 	private boolean forward;
-	private double translationLeft;
-	private double translationRight;
-	private int dist2;
-	private PositionManager pm;
+	/**the distance which the Robot had to drive*/
+	private int distance;
+	/**the intern Position Manager for correcting the Driving angle*/
+	private PositionManager positionManager;
 	
 
+	/**
+	 * The Konstruktor of the MovementManager
+	 * @param robot the robot which has to move
+	 * @param pm the Position Manager for position corrections
+	 */
 	public MovementManager(Robot robot, PositionManager pm) {
-		this.pm=pm;
+		this.positionManager=pm;
 		this.robot = robot;
 		this.driveTranslation = robot.driveTranslation;
 	}
 
+	/**
+	 * The Method who drives the Robot 
+	 * @param dist distance in cm which is to drive positive = drive forward, negative = drive backward
+	 */
 	public void move(int dist) {
 		startdegrees = (int) robot.compassSensor.getDegrees();
 		robot.setModeDrive();
-		robotspeed=robot.driveSpeed;
-		this.dist2=dist;
-		driving = true;
-		translationRight=translationLeft=driveTranslation;
-		
+		this.distance=dist;
+		driving = true;		
 		tachoRight=robot.rightMotor.getTachoCount();
 		tachoLeft=robot.leftMotor.getTachoCount();
 		rotToDriveRight=(int) (dist*driveTranslation)+tachoRight;
 		rotToDriveLeft=(int) (dist*driveTranslation)+tachoLeft;
 		
 		driving(dist);
+		/**
+		 * the intern Thread for stopping the Moving and correcting the Angle
+		 */
 		Thread check = new Thread(new Runnable() {
 
 			
@@ -49,28 +72,25 @@ public class MovementManager implements Manager {
 			@Override
 			public void run() {
 				/**
-				 * Angelcorrection
+				 * Corects the drive Angle
 				 */
 				while(driving==true){
 					if(Math.abs(angelCorrection(startdegrees, (int) robot.compassSensor.getDegrees()))>5){
-						double newrtdl = rotToDriveLeft-robot.leftMotor.getTachoCount();
-						double newrtdr = rotToDriveRight-robot.rightMotor.getTachoCount();
-						System.out.println("start"+startdegrees);
-						System.out.println("aktuall"+(int) robot.compassSensor.getDegrees());
 						robot.rightMotor.stop(true);
 						robot.leftMotor.stop(true);
-						pm.rotateTo(startdegrees);
+						double newrtdl = rotToDriveLeft-robot.leftMotor.getTachoCount();
+						double newrtdr = rotToDriveRight-robot.rightMotor.getTachoCount();
+						/**the doubles Saving the distance who is drived before correcting the angle in rotatedegrees*/
+						positionManager.rotateTo(startdegrees);
+						/**reinitiale the restdistance in rotateangles*/
 						rotToDriveLeft=robot.leftMotor.getTachoCount()+newrtdl;
 						rotToDriveRight=robot.rightMotor.getTachoCount()+newrtdr;
-						driving(dist2);
-						System.out.println("start"+startdegrees);
-						System.out.println("aktuall"+(int) robot.compassSensor.getDegrees());
-						
+						driving(distance);						
 					}
 					
 					
 			/**
-			 * endcausal
+			 * stops the moving when the right Tachocount  is reached
 			 */
 			if(forward){
 					if(rotToDriveRight<=robot.rightMotor.getTachoCount()||
@@ -101,6 +121,9 @@ public class MovementManager implements Manager {
 		
 	}
 
+	/**
+	 * the Method for stopping the movement
+	 */
 	@Override
 	public int stop() {
 		robot.rightMotor.stop(true);//also in direction + doku +arbeitspaketbericht
@@ -115,8 +138,14 @@ public class MovementManager implements Manager {
 		return driving;
 	}
 
-	 int angelCorrection(int a,int n){
-			int c =n-a;
+	/**
+	 * the correction of the angle for finding the shortest way to rotate to a specific angle
+	 * @param currentAngle angle where you are
+	 * @param newAngle angle who wantet
+	 * @return degrees where to move
+	 */
+	 int angelCorrection(int currentAngle,int newAngle){
+			int c =newAngle-currentAngle;
 			if(c>180){
 				c=c-360;
 			}
@@ -126,6 +155,10 @@ public class MovementManager implements Manager {
 			return c;
 			
 		}
+	 /**
+	  * the method who starts driving and decides if for ore backward
+	  * @param dist distance who to drive, positive forward negativ backward
+	  */
 	 void driving(int dist){
 		 robot.setModeDrive();
 		 if(dist>=0){
