@@ -59,14 +59,17 @@ public class PathFinder {
 		}
 		if (path.size() == 1) {
 			System.out.println("Current target has been reached");
-			System.out.println();
 			if (!robotHasBall) {
 				robotHasBall = true;
 				manager.sendPickCommand();
+				System.out.println("Sending pick command");
 			} else {
 				manager.sendDropCommand();
+				System.out.println("Sending drop command");
 				manager.terminate();
+				System.out.println("Terminating server");
 			}
+			System.out.println();
 			return;
 		}
 		Waypoint nextWaypoint = path.get(1); //0 is the current position
@@ -74,8 +77,18 @@ public class PathFinder {
 		int xDiv = (int) (nextWaypoint.x - currentPose.getX());
 		int yDiv = (int) (nextWaypoint.y - currentPose.getY());
 		int targetDir;
-		if (yDiv != 0 && xDiv != 0)
+		if (yDiv != 0 && xDiv != 0) {
 			targetDir = (int) Math.toDegrees(Math.atan(xDiv/yDiv));
+			if (yDiv > 0) {
+				if (targetDir < 0)
+					targetDir = 360 + targetDir;
+			} else {
+				if (targetDir < 0)
+					targetDir = 180 - targetDir;
+				else
+					targetDir = 180 + targetDir;
+			}
+		}
 		else {
 			if (yDiv == 0) {
 				if (nextWaypoint.x > currentPose.getX())
@@ -99,7 +112,7 @@ public class PathFinder {
 				System.out.println("Sending turn l commaeftnd - degrees: " + deltaDir);
 			}
 		}
-		else { //move robot fw
+		else { //move robot forward
 			int distanceToMove = (int) Math.sqrt(xDiv * xDiv + yDiv * yDiv);
 			manager.sendForwardCommand(distanceToMove);
 			System.out.println("Sending forward command - distance: " + distanceToMove);
