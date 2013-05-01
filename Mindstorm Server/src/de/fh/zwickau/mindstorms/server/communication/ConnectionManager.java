@@ -19,7 +19,7 @@ import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
  * NXT, receiving it's position as a Pose and sending commands to it.
  * 
  * @author Tobias Schießl
- * @version 1.1
+ * @version 1.2
  */
 public class ConnectionManager {
 
@@ -44,13 +44,11 @@ public class ConnectionManager {
 		pathFinder = new PathFinder(mapper.getLineMap(), targetManager);
 		pathFinder.setCurrentTarget(targetManager.getCurrentTarget());
 		
-		if (establishConnection())
-			receiveAndProcessPoses();
-		else {
+		while (!establishConnection()) {
 			System.err.println("Connection failed, will retry in 10 seconds...");
 			Delay.msDelay(10000);
-			new ConnectionManager(mapper, targetManager);
-		} 
+		}
+		receiveAndProcessPoses();
 	}
 	
 	/**
@@ -87,8 +85,10 @@ public class ConnectionManager {
 						decodePose(pose);
 					} catch (EOFException ex) {
 						System.err.println("Connection terminated by NXT");
-						if (targetManager.hasMoreTargets())
+						if (targetManager.hasMoreTargets()) {
 							new ConnectionManager(mapper, targetManager);
+							System.out.println("Resetting connection");
+						}
 						break;
 					} catch (IOException ex) {
 						if (ex.getMessage().contains("Failed to read"))

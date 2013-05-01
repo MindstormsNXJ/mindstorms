@@ -42,7 +42,7 @@ public class TargetManager {
 	 * @return true if there are no more targets
 	 */
 	public boolean hasMoreTargets() {
-		return currentTargetNumber == targets.size();
+		return !(currentTargetNumber == targets.size());
 	}
 	
 	/**
