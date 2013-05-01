@@ -27,6 +27,7 @@ public class TargetManager {
 	
 	/**
 	 * Initialises all targets, which are represented by Points.
+	 * Currently, there are only two targets: the ball and the final target.
 	 */
 	private void initTargets() {
 		Point ball = new Point(10, 10);

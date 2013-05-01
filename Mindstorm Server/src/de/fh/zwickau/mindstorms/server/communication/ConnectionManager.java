@@ -5,13 +5,13 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 
-import lejos.geom.Point;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTConnector;
 import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
 
 import de.fh.zwickau.mindstorms.server.navigation.PathFinder;
+import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 
 /**
@@ -25,30 +25,31 @@ public class ConnectionManager {
 
 	private NXTConnector connector;
 	private Mapper mapper;
+	private TargetManager targetManager;
 	private PathFinder pathFinder;
 	private DataOutputStream commandSender;
 	private DataInputStream poseReceiver;
-	
-	//TODO replace this with points in the mapper if possible
-	private Point ballPos = new Point(10,10);
-	private Point targetPos = new Point(0,0);
 	
 	/**
 	 * Initialises a ConnectionManager, including the connection itself as well as
 	 * the Thread that will process the received Poses.
 	 * 
 	 * @param mapper the mapper that gets notified about the robot's current Pose
+	 * @param targetManager the target manager which holds all targets to reach
 	 */
-	public ConnectionManager(Mapper mapper) {
+	public ConnectionManager(Mapper mapper, TargetManager targetManager) {
 		this.mapper = mapper;
-		pathFinder = new PathFinder(mapper.getLineMap());
-		pathFinder.setCurrentTarget((int) ballPos.x, (int) ballPos.y);
+		this.targetManager = targetManager;
+		
+		pathFinder = new PathFinder(mapper.getLineMap(), targetManager);
+		pathFinder.setCurrentTarget(targetManager.getCurrentTarget());
+		
 		if (establishConnection())
 			receiveAndProcessPoses();
 		else {
 			System.err.println("Connection failed, will retry in 10 seconds...");
 			Delay.msDelay(10000);
-			new ConnectionManager(mapper);
+			new ConnectionManager(mapper, targetManager);
 		} 
 	}
 	
@@ -86,6 +87,8 @@ public class ConnectionManager {
 						decodePose(pose);
 					} catch (EOFException ex) {
 						System.err.println("Connection terminated by NXT");
+						if (targetManager.hasMoreTargets())
+							new ConnectionManager(mapper, targetManager);
 						break;
 					} catch (IOException ex) {
 						if (ex.getMessage().contains("Failed to read"))
@@ -184,7 +187,6 @@ public class ConnectionManager {
 	 */
 	public void sendPickCommand() {
 		sendCommand("pick0");
-		pathFinder.setCurrentTarget((int) targetPos.x, (int) targetPos.y);
 	}
 	
 	/**

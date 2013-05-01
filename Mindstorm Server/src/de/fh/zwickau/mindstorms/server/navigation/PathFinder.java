@@ -19,6 +19,7 @@ import lejos.robotics.pathfinding.Path;
 public class PathFinder {
 	
 	private DijkstraPathFinder finder;
+	private TargetManager targetManager;
 	private Waypoint currentTarget;
 	private boolean robotHasBall = false;
 	
@@ -26,9 +27,11 @@ public class PathFinder {
 	 * Initialises a PathFinder with the LineMap to use from now on.
 	 * 
 	 * @param map the map to use
+	 * @param targetManager the targetManager to update the current target
 	 */
-	public PathFinder(LineMap map) {
+	public PathFinder(LineMap map, TargetManager targetManager) {
 		finder = new DijkstraPathFinder(map);
+		this.targetManager = targetManager;
 	}
 	
 	/**
@@ -68,10 +71,12 @@ public class PathFinder {
 		}
 		if (path.size() == 1) {
 			System.out.println("Current target has been reached");
+			targetManager.targetReached();
 			if (!robotHasBall) {
 				robotHasBall = true;
 				manager.sendPickCommand();
 				System.out.println("Sending pick command");
+				setCurrentTarget(targetManager.getCurrentTarget());
 			} else {
 				manager.sendDropCommand();
 				System.out.println("Sending drop command");
