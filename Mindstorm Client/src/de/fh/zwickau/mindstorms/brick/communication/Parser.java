@@ -1,5 +1,6 @@
 package de.fh.zwickau.mindstorms.brick.communication;
 
+import lejos.nxt.NXT;
 import lejos.robotics.navigation.Pose;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.navigation.Direction;
@@ -69,6 +70,9 @@ public class Parser {
 			break;
 		case "drop":
 			//TODO drop the ball
+			break;
+		case "exit":
+			NXT.shutDown();
 			break;
 		default:
 			System.err.println("The received command is unknown");

@@ -202,7 +202,8 @@ public class ConnectionManager {
 	 * Terminates the whole server.
 	 */
 	public void terminate() {
-		System.out.println("Ball will be dropped now, server is shutting down");
+		sendCommand("exit0");
+		System.out.println("Server and NXT are shutting down");
 		System.exit(0); //TODO there should be a smarter way to do this
 	}
 	

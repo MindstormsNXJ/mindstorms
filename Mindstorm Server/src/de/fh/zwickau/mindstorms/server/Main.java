@@ -19,7 +19,7 @@ public class Main {
 	public static void main(String[] args) {
 		
 		View view = new View();
-		Mapper mapper = new Mapper(20);
+		Mapper mapper = new Mapper(1);
 		
 		//register for observer model
 		mapper.setObserverView(view);
@@ -27,8 +27,8 @@ public class Main {
 		
 		view.start();	// new Thread for view
 
-		TargetManager targetManaer = new TargetManager();
-		new ConnectionManager(mapper, targetManaer);
+		TargetManager targetManager = new TargetManager();
+		new ConnectionManager(mapper, targetManager);
 	}
 
 }
