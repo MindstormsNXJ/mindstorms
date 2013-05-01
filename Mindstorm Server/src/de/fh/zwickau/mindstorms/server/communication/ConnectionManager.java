@@ -46,7 +46,7 @@ public class ConnectionManager {
 		if (establishConnection())
 			receiveAndProcessPoses();
 		else {
-			System.err.println("Connection failed, will retry now...");
+			System.err.println("Connection failed, will retry in 10 seconds...");
 			Delay.msDelay(10000);
 			new ConnectionManager(mapper);
 		} 
@@ -88,7 +88,10 @@ public class ConnectionManager {
 						System.err.println("Connection terminated by NXT");
 						break;
 					} catch (IOException ex) {
-						ex.printStackTrace();
+						if (ex.getMessage().contains("Failed to read"))
+							System.err.println("Timeout while receiving pose");
+						else
+							ex.printStackTrace();
 					}
 				}
 			}
