@@ -1,7 +1,6 @@
 package de.fh.zwickau.mindstorms.server.navigation;
 
 import de.fh.zwickau.mindstorms.server.communication.ConnectionManager;
-import lejos.geom.Point;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.DestinationUnreachableException;
 import lejos.robotics.navigation.Pose;
@@ -14,7 +13,7 @@ import lejos.robotics.pathfinding.Path;
  * finding to path to it's current target using a Dijkstra algorithm.
  * 
  * @author Tobias Schießl
- * @version 1.0
+ * @version 1.1
  */
 public class PathFinder {
 	
