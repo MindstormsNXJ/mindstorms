@@ -32,13 +32,22 @@ public class PathFinder {
 	}
 	
 	/**
-	 * Set's the current target which has to be reached.
+	 * Sets the current target which has to be reached.
 	 * 
 	 * @param x the target's x coordinate
 	 * @param y the target's y coordinate
 	 */
 	public void setCurrentTarget(int x, int y) {
 		currentTarget = new Waypoint(new Point(x, y));
+	}
+	
+	/**
+	 * Sets the current target as a point.
+	 * 
+	 * @param point the target point
+	 */
+	public void setCurrentTarget(Point point) {
+		currentTarget = new Waypoint(point);
 	}
 	
 	/**

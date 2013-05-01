@@ -1,6 +1,7 @@
 package de.fh.zwickau.mindstorms.server;
 
 import de.fh.zwickau.mindstorms.server.communication.ConnectionManager;
+import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 import de.fh.zwickau.mindstorms.server.view.View;
 
@@ -26,7 +27,8 @@ public class Main {
 		
 		view.start();	// new Thread for view
 
-		new ConnectionManager(mapper);
+		TargetManager targetManaer = new TargetManager();
+		new ConnectionManager(mapper, targetManaer);
 	}
 
 }
