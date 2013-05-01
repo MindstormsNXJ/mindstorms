@@ -20,7 +20,6 @@ public class PathFinder {
 	
 	private DijkstraPathFinder finder;
 	private TargetManager targetManager;
-	private Waypoint currentTarget;
 	private boolean robotHasBall = false;
 	
 	/**
@@ -35,25 +34,6 @@ public class PathFinder {
 	}
 	
 	/**
-	 * Sets the current target which has to be reached.
-	 * 
-	 * @param x the target's x coordinate
-	 * @param y the target's y coordinate
-	 */
-	public void setCurrentTarget(int x, int y) {
-		currentTarget = new Waypoint(new Point(x, y));
-	}
-	
-	/**
-	 * Sets the current target as a point.
-	 * 
-	 * @param point the target point
-	 */
-	public void setCurrentTarget(Point point) {
-		currentTarget = new Waypoint(point);
-	}
-	
-	/**
 	 * Finds the next action to perform and tells the ConnectionManager
 	 * to send the right command.
 	 * 
@@ -62,6 +42,7 @@ public class PathFinder {
 	 * @throws DestinationUnreachableException if the destination is unreachable
 	 */
 	public void nextAction(Pose currentPose, ConnectionManager manager) {
+		Waypoint currentTarget = new Waypoint(targetManager.getCurrentTarget());
 		Path path = null;
 		try {
 			path = finder.findRoute(currentPose, currentTarget);
@@ -76,7 +57,6 @@ public class PathFinder {
 				robotHasBall = true;
 				manager.sendPickCommand();
 				System.out.println("Sending pick command");
-				setCurrentTarget(targetManager.getCurrentTarget());
 			} else {
 				manager.sendDropCommand();
 				System.out.println("Sending drop command");

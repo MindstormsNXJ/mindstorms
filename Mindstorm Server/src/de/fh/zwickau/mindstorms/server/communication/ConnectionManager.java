@@ -42,7 +42,6 @@ public class ConnectionManager {
 		this.targetManager = targetManager;
 		
 		pathFinder = new PathFinder(mapper.getLineMap(), targetManager);
-		pathFinder.setCurrentTarget(targetManager.getCurrentTarget());
 		
 		while (!establishConnection()) {
 			System.err.println("Connection failed, will retry in 10 seconds...");
@@ -86,10 +85,13 @@ public class ConnectionManager {
 					} catch (EOFException ex) {
 						System.err.println("Connection terminated by NXT");
 						if (targetManager.hasMoreTargets()) {
-							new ConnectionManager(mapper, targetManager);
 							System.out.println("Resetting connection");
+							while (!establishConnection())
+								Delay.msDelay(2000);
+						} else {
+							terminate();
+							break;
 						}
-						break;
 					} catch (IOException ex) {
 						if (ex.getMessage().contains("Failed to read"))
 							System.err.println("Timeout while receiving pose");
