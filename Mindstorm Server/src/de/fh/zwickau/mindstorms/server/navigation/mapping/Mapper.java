@@ -119,6 +119,10 @@ public class Mapper {
 	public MapGrid getGrid() {
 		return mapGrid;
 	}
+	
+	public RobotTracer getTracer(){
+	    return tracer;
+	}
 
 	public LineMap getLineMap() {
 		return lineMap;

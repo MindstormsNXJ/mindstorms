@@ -1,5 +1,6 @@
 package de.fh.zwickau.mindstorms.server;
 
+import lejos.robotics.navigation.Pose;
 import de.fh.zwickau.mindstorms.server.communication.ConnectionManager;
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
@@ -26,9 +27,10 @@ public class Main {
 		view.registerMapper(mapper);
 		
 		view.start();	// new Thread for view
-
+		
 		TargetManager targetManager = new TargetManager();
 		new ConnectionManager(mapper, targetManager);
+		
 	}
 
 }
