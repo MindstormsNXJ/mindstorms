@@ -28,7 +28,7 @@ public class Main {
 		view.registerMapper(mapper);
 		
 		view.start();	// new Thread for view
-
+		
 		TargetManager targetManager = new TargetManager();
 		new ConnectionManager(mapper, targetManager);
 		
