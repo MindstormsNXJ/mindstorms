@@ -80,7 +80,7 @@ public class PathFinder {
 			targetDir = (int) Math.toDegrees(Math.atan(xDiv/yDiv));
 			if (yDiv > 0 && targetDir < 0) {
 				targetDir = 360 + targetDir;
-			} else {
+			} else if (yDiv < 0) {
 				targetDir = 180 + targetDir;
 			}
 		}

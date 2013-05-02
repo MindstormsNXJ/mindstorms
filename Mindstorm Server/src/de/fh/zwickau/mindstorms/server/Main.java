@@ -30,21 +30,21 @@ public class Main {
 		view.start();	// new Thread for view
 
 		TargetManager targetManager = new TargetManager();
-//		new ConnectionManager(mapper, targetManager);
+		new ConnectionManager(mapper, targetManager);
 		
-		//TODO TEST
-		PathFinder finder = new PathFinder(mapper.getLineMap(), targetManager);
+		//TODO TEST - remove if commands are calculated correctly now
+//		PathFinder finder = new PathFinder(mapper.getLineMap(), targetManager);
 //		finder.nextAction(new Pose(0,0,0), null);
 //		finder.nextAction(new Pose(0,0,45), null);
 //		finder.nextAction(new Pose(29,30,45), null);
 //		finder.nextAction(new Pose(29,30,90), null);
 //		finder.nextAction(new Pose(30,30,90), null);
-		targetManager.targetReached();
 //		finder.nextAction(new Pose(30,30,90), null);
 //		finder.nextAction(new Pose(30,30,225), null);
-		finder.nextAction(new Pose(-1,0,225), null);
-		
-		System.exit(0);
+//		finder.nextAction(new Pose(0,-1,225), null);
+//		finder.nextAction(new Pose(0,-1,0), null);
+//		finder.nextAction(new Pose(0,0,0), null);
+//		System.exit(0);
 	}
 
 }
