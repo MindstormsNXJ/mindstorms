@@ -126,8 +126,7 @@ public class PositionManager implements Manager {
 		int angleDiff = targetDegree - currentDegree;
 		if (angleDiff >= 180) {
 			angleDiff = angleDiff - 360;
-		}
-		if (angleDiff < -180) {
+		}else if (angleDiff < -180) {
 			angleDiff = angleDiff + 360;
 		}
 		return angleDiff;
