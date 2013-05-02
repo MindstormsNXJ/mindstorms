@@ -2,9 +2,19 @@ package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
 import java.io.*;
 
+/**
+ * Class to save and load the current GridMap in a .bm-file
+ * 
+ * @author Patrick Rosenkranz, Andre Furchner
+ *
+ */
 public class MapFile {
     static private String fileName = "mapfile.bm"; 
     
+    /**
+     * Load the current grid in mapfile.bm
+     * @param mapGrid
+     */
     public void load(MapGrid mapGrid){
         File file = new File(fileName);
         byte[][] grid = mapGrid.getByteGrid();
@@ -22,6 +32,10 @@ public class MapFile {
         }
     }
     
+    /**
+     * Saves the current MapGrid
+     * @param grid 
+     */
     public void save(byte[][] grid){
         File file = new File(fileName);
         try{
@@ -37,4 +51,4 @@ public class MapFile {
             e.printStackTrace();
         }
     }
-}
+} 
