@@ -29,8 +29,8 @@ public class PathFinder {
 	 * @param targetManager the targetManager to update the current target
 	 */
 	public PathFinder(LineMap map, TargetManager targetManager) {
-//		finder = new DijkstraPathFinder(map);
-		finder = new ShortestPathFinder(map);
+		finder = new DijkstraPathFinder(map);
+//		finder = new ShortestPathFinder(map);
 		this.targetManager = targetManager;
 	}
 	
@@ -60,12 +60,12 @@ public class PathFinder {
 			targetManager.targetReached();
 			if (!robotHasBall) {
 				robotHasBall = true;
-				manager.sendPickCommand();
+//				manager.sendPickCommand();
 				System.out.println("Sending pick command");
 			} else {
-				manager.sendDropCommand();
+//				manager.sendDropCommand();
 				System.out.println("Sending drop command");
-				manager.terminate();
+//				manager.terminate();
 				System.out.println("Terminating server");
 			}
 			System.out.println();
@@ -78,14 +78,10 @@ public class PathFinder {
 		int targetDir;
 		if (yDiv != 0 && xDiv != 0) {
 			targetDir = (int) Math.toDegrees(Math.atan(xDiv/yDiv));
-			if (yDiv > 0) {
-				if (targetDir < 0)
-					targetDir = 360 + targetDir;
+			if (yDiv > 0 && targetDir < 0) {
+				targetDir = 360 + targetDir;
 			} else {
-				if (targetDir < 0)
-					targetDir = 180 - targetDir;
-				else
-					targetDir = 180 + targetDir;
+				targetDir = 180 + targetDir;
 			}
 		}
 		else {
@@ -101,19 +97,19 @@ public class PathFinder {
 					targetDir = 180;
 			}
 		}
-		int deltaDir = (int) (targetDir - currentPose.getHeading());
+		int deltaDir = (int) Math.abs(targetDir - currentPose.getHeading());
 		if (deltaDir > 2) {//turn robot
 			if (targetDir > currentPose.getHeading()) {//turn right
-				manager.sendTurnRightCommand(deltaDir);
+//				manager.sendTurnRightCommand(deltaDir);
 				System.out.println("Sending turn right command - degrees: " + deltaDir);
 			} else { //turn left
-				manager.sendTurnLeftCommand(deltaDir);
-				System.out.println("Sending turn l commaeftnd - degrees: " + deltaDir);
+//				manager.sendTurnLeftCommand(deltaDir);
+				System.out.println("Sending turn left command - degrees: " + deltaDir);
 			}
 		}
 		else { //move robot forward
 			int distanceToMove = (int) Math.sqrt(xDiv * xDiv + yDiv * yDiv);
-			manager.sendForwardCommand(distanceToMove);
+//			manager.sendForwardCommand(distanceToMove);
 			System.out.println("Sending forward command - distance: " + distanceToMove);
 		}
 		System.out.println();
