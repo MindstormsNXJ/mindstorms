@@ -76,9 +76,8 @@ public class View extends Thread {
 		final int size = mapper.getGrid().getGridSize();
 		
 		// GL initialize
-		glLineWidth(3.0f);
-		glPointSize(Display.getWidth() / mapper.getGrid().getGridSize()+0.51f);
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glPointSize(Display.getWidth() / mapper.getGrid().getGridSize() - 0.51f);
+		glClearColor(0.75f, 0.75f, 0.75f, 0.75f);
 		
 		
 		// initialize pixel grid
@@ -182,6 +181,7 @@ public class View extends Thread {
 		}
 		
 		if(lineVertices != null){
+		    glLineWidth(2.0f);
     		size = lineVertices.length -1;
     		i = -1;
     		
@@ -195,6 +195,16 @@ public class View extends Thread {
     		}
     		                                                     
 		}
+		
+		
+		glLineWidth(1.0f);
+	    glColor3f(0.8f, 0.4f, 0.3f);
+	    glBegin(GL_LINES);
+	    glVertex2f(-1.0f, 0.0f); glVertex2f(1.0f, 0.0f);
+	    glVertex2f(0.0f, -1.0f); glVertex2f(0.0f, 1.0f);
+	    glEnd();
+		
+		
 		Display.update();                                                          // Bring it to the screen.
 	}
 
