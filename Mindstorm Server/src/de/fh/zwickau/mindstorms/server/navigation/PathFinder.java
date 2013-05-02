@@ -60,12 +60,12 @@ public class PathFinder {
 			targetManager.targetReached();
 			if (!robotHasBall) {
 				robotHasBall = true;
-//				manager.sendPickCommand();
+				manager.sendPickCommand();
 				System.out.println("Sending pick command");
 			} else {
-//				manager.sendDropCommand();
+				manager.sendDropCommand();
 				System.out.println("Sending drop command");
-//				manager.terminate();
+				manager.terminate();
 				System.out.println("Terminating server");
 			}
 			System.out.println();
@@ -100,16 +100,16 @@ public class PathFinder {
 		int deltaDir = (int) Math.abs(targetDir - currentPose.getHeading());
 		if (deltaDir > 2) {//turn robot
 			if (targetDir > currentPose.getHeading()) {//turn right
-//				manager.sendTurnRightCommand(deltaDir);
+				manager.sendTurnRightCommand(deltaDir);
 				System.out.println("Sending turn right command - degrees: " + deltaDir);
 			} else { //turn left
-//				manager.sendTurnLeftCommand(deltaDir);
+				manager.sendTurnLeftCommand(deltaDir);
 				System.out.println("Sending turn left command - degrees: " + deltaDir);
 			}
 		}
 		else { //move robot forward
 			int distanceToMove = (int) Math.sqrt(xDiv * xDiv + yDiv * yDiv);
-//			manager.sendForwardCommand(distanceToMove);
+			manager.sendForwardCommand(distanceToMove);
 			System.out.println("Sending forward command - distance: " + distanceToMove);
 		}
 		System.out.println();
