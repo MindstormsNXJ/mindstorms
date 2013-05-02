@@ -7,6 +7,7 @@ import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.DijkstraPathFinder;
 import lejos.robotics.pathfinding.Path;
+import lejos.robotics.pathfinding.ShortestPathFinder;
 
 /**
  * This PathFinder class decides which command has to be send next by
@@ -17,7 +18,7 @@ import lejos.robotics.pathfinding.Path;
  */
 public class PathFinder {
 	
-	private DijkstraPathFinder finder;
+	private lejos.robotics.pathfinding.PathFinder finder;
 	private TargetManager targetManager;
 	private boolean robotHasBall = false;
 	
@@ -28,7 +29,8 @@ public class PathFinder {
 	 * @param targetManager the targetManager to update the current target
 	 */
 	public PathFinder(LineMap map, TargetManager targetManager) {
-		finder = new DijkstraPathFinder(map);
+//		finder = new DijkstraPathFinder(map);
+		finder = new ShortestPathFinder(map);
 		this.targetManager = targetManager;
 	}
 	
@@ -49,6 +51,10 @@ public class PathFinder {
 			System.err.println("Error in finding path: destination is unreachable");
 			return;
 		}
+		
+		for (int i = 0; i < path.size(); i++)
+			System.out.println("Waypoint" + i + ": (" + path.get(i).x + ", " + path.get(i).y + ")");
+		
 		if (path.size() == 1) {
 			System.out.println("Current target has been reached");
 			targetManager.targetReached();
