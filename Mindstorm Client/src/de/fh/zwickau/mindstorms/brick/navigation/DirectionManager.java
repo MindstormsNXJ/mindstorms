@@ -99,8 +99,7 @@ public class DirectionManager implements Manager {
 
 	@Override
 	public int stop() {
-		robot.leftMotor.stop(true);
-		robot.rightMotor.stop();
+		robot.stop();
 		isRotating = false;
 		return 0; // get the current heading from the compasssensor
 	}

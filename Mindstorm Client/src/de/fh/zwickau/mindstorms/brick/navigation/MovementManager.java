@@ -176,8 +176,7 @@ public class MovementManager implements Manager {
 			robot.leftMotor.forward();
 			robot.rightMotor.forward();
 			forward = true;
-		}
-		if (dist < 0) {
+		} else {
 			robot.leftMotor.backward();
 			robot.rightMotor.backward();
 			forward = false;
