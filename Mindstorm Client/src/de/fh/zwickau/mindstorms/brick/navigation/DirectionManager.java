@@ -93,16 +93,6 @@ public class DirectionManager implements Manager {
 		backwardMotor.backward();
 	}
 
-	// i don't know if stepWide is important, because it's never used
-
-	// public void setStepWide(int stepWide) {
-	// this.stepWide = stepWide;
-	// }
-	//
-	// public int getStepWide() {
-	// return stepWide;
-	// }
-
 	public boolean isRotating() {
 		return isRotating;
 	}
