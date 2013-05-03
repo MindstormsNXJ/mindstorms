@@ -30,7 +30,7 @@ public class TargetManager {
 	 * Currently, there are only two targets: the ball and the final target.
 	 */
 	private void initTargets() {
-		Point ball = new Point(30, 30);
+		Point ball = new Point(10, 10);
 		targets.add(ball);
 		Point target = new Point(0, 0);
 		targets.add(target);

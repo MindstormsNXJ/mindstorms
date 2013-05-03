@@ -15,9 +15,6 @@ import de.fh.zwickau.mindstorms.server.view.View;
  */
 public class Main {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		
 		View view = new View();
@@ -34,7 +31,7 @@ public class Main {
 		
 		//TODO TEST - remove if commands are calculated correctly now
 //		PathFinder finder = new PathFinder(mapper.getLineMap(), targetManager);
-//		finder.nextAction(new Pose(0,0,0), null);
+//		finder.nextAction(new Pose(0,0,0), null); //TODO algorithm does not work
 //		finder.nextAction(new Pose(0,0,45), null);
 //		finder.nextAction(new Pose(29,30,45), null);
 //		finder.nextAction(new Pose(29,30,90), null);

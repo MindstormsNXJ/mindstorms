@@ -7,14 +7,13 @@ import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.DijkstraPathFinder;
 import lejos.robotics.pathfinding.Path;
-import lejos.robotics.pathfinding.ShortestPathFinder;
 
 /**
  * This PathFinder class decides which command has to be send next by
  * finding to path to it's current target using a Dijkstra algorithm.
  * 
  * @author Tobias Schießl
- * @version 1.1
+ * @version 1.2
  */
 public class PathFinder {
 	
@@ -30,7 +29,6 @@ public class PathFinder {
 	 */
 	public PathFinder(LineMap map, TargetManager targetManager) {
 		finder = new DijkstraPathFinder(map);
-//		finder = new ShortestPathFinder(map);
 		this.targetManager = targetManager;
 	}
 	
@@ -40,7 +38,6 @@ public class PathFinder {
 	 * 
 	 * @param currentPose the robot's current pose
 	 * @param manager the ConnectionManager which will send the command
-	 * @throws DestinationUnreachableException if the destination is unreachable
 	 */
 	public void nextAction(Pose currentPose, ConnectionManager manager) {
 		Waypoint currentTarget = new Waypoint(targetManager.getCurrentTarget());
@@ -99,13 +96,8 @@ public class PathFinder {
 		}
 		int deltaDir = (int) Math.abs(targetDir - currentPose.getHeading());
 		if (deltaDir > 2) {//turn robot
-			if (targetDir > currentPose.getHeading()) {//turn right
-				manager.sendTurnRightCommand(deltaDir);
-				System.out.println("Sending turn right command - degrees: " + deltaDir);
-			} else { //turn left
-				manager.sendTurnLeftCommand(deltaDir);
-				System.out.println("Sending turn left command - degrees: " + deltaDir);
-			}
+			manager.sendTurnCommand(targetDir);
+			System.out.println("Sending turn command - degrees: " + targetDir);
 		}
 		else { //move robot forward
 			int distanceToMove = (int) Math.sqrt(xDiv * xDiv + yDiv * yDiv);

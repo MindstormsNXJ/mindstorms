@@ -166,21 +166,12 @@ public class ConnectionManager {
 	}
 	
 	/**
-	 * Sends a turn-left-command.
+	 * Sends a turn-command.
 	 * 
-	 * @param degrees the degrees to turn
+	 * @param degrees the degrees to turn to
 	 */
-	public void sendTurnLeftCommand(int degrees) {
-		sendCommand("left" + degrees);
-	}
-	
-	/**
-	 * Sends a turn-right-command.
-	 * 
-	 * @param degrees the degrees to turn
-	 */
-	public void sendTurnRightCommand(int degrees) {
-		sendCommand("right" + degrees);
+	public void sendTurnCommand(int degrees) {
+		sendCommand("turn" + degrees);
 	}
 	
 	/**

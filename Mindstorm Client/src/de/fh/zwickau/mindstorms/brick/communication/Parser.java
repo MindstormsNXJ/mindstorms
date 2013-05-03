@@ -3,7 +3,6 @@ package de.fh.zwickau.mindstorms.brick.communication;
 import lejos.nxt.NXT;
 import lejos.robotics.navigation.Pose;
 import de.fh.zwickau.mindstorms.brick.Robot;
-import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 
 /**
  * A simple Parser that is able to parse received commands (and starts the execution
@@ -59,11 +58,8 @@ public class Parser {
 		case "bw":
 			robot.positionManager.move(-valueAsInt);
 			break;
-		case "left":
-			robot.positionManager.rotate(valueAsInt, Direction.LEFT);
-			break;
-		case "right":
-			robot.positionManager.rotate(valueAsInt, Direction.RIGHT);
+		case "turn":
+			robot.positionManager.rotateTo(valueAsInt);
 			break;
 		case "pick":
 			//TODO pick up the ball
