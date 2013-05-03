@@ -47,11 +47,12 @@ public class PositionManager implements Manager {
 	 */
 	public void rotateTo(int deg) {
 		int startdegrees = (int) robot.compassSensor.getDegrees();
-		int toRotate = Math.abs(calculateAngle(startdegrees, deg)); //TODO: Rethink idea
-		if (calculateAngle(startdegrees, deg) <= 0) {
+		int calculatedAngle = calculateAngle(startdegrees, deg);
+		int toRotate = Math.abs(calculatedAngle);
+		// TODO: Rethink idea
+		if (calculatedAngle <= 0) {
 			rotate(toRotate, Direction.LEFT);
-		}
-		if ((calculateAngle(startdegrees, deg)) > 0) {
+		} else {
 			rotate(toRotate, Direction.RIGHT);
 		}
 	}
