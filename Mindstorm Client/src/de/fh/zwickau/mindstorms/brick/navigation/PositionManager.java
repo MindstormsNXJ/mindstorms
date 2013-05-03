@@ -47,14 +47,14 @@ public class PositionManager implements Manager {
 	 */
 	public void rotateTo(int deg) {
 		int startdegrees = (int) robot.compassSensor.getDegrees();
-		int toRotate = Math.abs(calculateAngle(startdegrees, deg));
-		if (calculateAngle(startdegrees, deg) <= 0) {
-			directionManager.rotateInDirection(toRotate, Direction.LEFT);
+		int calculatedAngle = calculateAngle(startdegrees, deg);
+		int toRotate = Math.abs(calculatedAngle);
+		// TODO: Rethink idea
+		if (calculatedAngle <= 0) {
+			rotate(toRotate, Direction.LEFT);
+		} else {
+			rotate(toRotate, Direction.RIGHT);
 		}
-		if ((calculateAngle(startdegrees, deg)) > 0) {
-			directionManager.rotateInDirection(toRotate, Direction.RIGHT);
-		}
-		updateRotation();
 	}
 
 	/**
@@ -69,22 +69,25 @@ public class PositionManager implements Manager {
 		updateRotation();
 	}
 
-	/**
-	 * Rotate in ...steps in an direction
-	 * 
-	 * @param steps
-	 * @param direction
-	 * @param stepWide
-	 *            default stepWide should be 45
-	 */
-	public void rotateStepwise(int steps, Direction direction, int stepWide) {
-		directionManager.rotateInDirection(steps * stepWide, direction);
-		updateRotation();
-	}
+	// /**
+	// * Rotate in ...steps in an direction
+	// *
+	// * @param steps
+	// * @param direction
+	// * @param stepWide
+	// * default stepWide should be 45
+	// */
+	// public void rotateStepwise(int steps, Direction direction, int stepWide)
+	// {
+	// rotate(steps * stepWide, direction);
+	// updateRotation();
+	// }
 
 	private void updateRotation() {
 		if (!isPositioning()) {
 			pose.setHeading(robot.compassSensor.getDegrees());
+		} else {
+			System.err.println("Still rotating... something went wrong!");
 		}
 	}
 
@@ -93,6 +96,8 @@ public class PositionManager implements Manager {
 			float x = (float) (Math.sin(Math.toRadians(pose.getHeading())) * distance);
 			float y = (float) (Math.cos(Math.toRadians(pose.getHeading())) * distance);
 			pose.setLocation(pose.getX() + x, pose.getY() + y);
+		} else {
+			System.err.println("Still moving... something went wrong!");
 		}
 	}
 
@@ -126,7 +131,7 @@ public class PositionManager implements Manager {
 		int angleDiff = targetDegree - currentDegree;
 		if (angleDiff >= 180) {
 			angleDiff = angleDiff - 360;
-		}else if (angleDiff < -180) {
+		} else if (angleDiff < -180) {
 			angleDiff = angleDiff + 360;
 		}
 		return angleDiff;
