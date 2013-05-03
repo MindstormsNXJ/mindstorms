@@ -19,10 +19,6 @@ public class DirectionManager implements Manager {
 	private Robot robot;
 	/** if the robot currently rotates */
 	private boolean isRotating;
-	/** the direction the robot stands at start */
-	private int startDirection;
-	/** the direction where the robot should head to at the end */
-	private int endDirection;
 	/** the degree to rotate */
 	private int degrees;
 
@@ -49,22 +45,24 @@ public class DirectionManager implements Manager {
 	public void rotateInDirection(int degree, Direction direction) {
 		robot.setModeRotate();
 		isRotating = true;
-		startDirection = (int) robot.compassSensor.getDegrees();
+		
 		checkMotors(degree, direction);
 		// check when the target angle is reached and stop rotating
 		Thread check = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
+				//the direction the robot stands at start
+				int startDirection = (int) robot.compassSensor.getDegrees();
+				//the direction where the robot should head to at the end
+				int targetdirection = (startDirection + degrees) % 360;
+				if (targetdirection < 0) {
+					targetdirection = 360 + targetdirection;
+				}
 				while (isRotating == true) {
-					endDirection = (int) robot.compassSensor.getDegrees();
-					int targetdirection = (startDirection + degrees) % 360;
-					if (targetdirection < 0) {
-						targetdirection = 360 + targetdirection;
-					}
-					// System.out.println(targetdirection); // just for
-					// debugging
-					if (endDirection == targetdirection) {
+					int currentDirection = (int) robot.compassSensor.getDegrees();
+					// System.out.println(targetdirection);
+					if (currentDirection == targetdirection) {
 						isRotating = false;
 					}
 				}
@@ -107,10 +105,6 @@ public class DirectionManager implements Manager {
 
 	public boolean isRotating() {
 		return isRotating;
-	}
-
-	public int getEndDirection() {
-		return endDirection;
 	}
 
 	@Override
