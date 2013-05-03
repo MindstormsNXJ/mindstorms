@@ -59,5 +59,10 @@ public class Robot {
 	public void setDriveTranslation(double driveTranslation) {
 		this.driveTranslation = driveTranslation;
 	}
+	
+	public void stop(){
+		rightMotor.stop(true);
+		leftMotor.stop(false);
+	}
 
 }
