@@ -1,9 +1,14 @@
 package de.fh.zwickau.mindstorms.brick.sensors;
 
+import lejos.robotics.RangeFinder;
+import lejos.robotics.objectdetection.Feature;
+import lejos.robotics.objectdetection.FeatureDetector;
+import lejos.robotics.objectdetection.FeatureListener;
+import lejos.robotics.objectdetection.RangeFeatureDetector;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 
-public class ObjectCentralisation {
+public class ObjectCentralisation implements FeatureListener {
 
 	private Robot robot;
 	private int distance;
@@ -11,6 +16,8 @@ public class ObjectCentralisation {
 
 	public ObjectCentralisation(Robot robot) {
 		this.robot = robot;
+		new RangeFeatureDetector(
+				robot.ultrasonicSensor, 50, 20).addListener(this);
 		int targetAngel = calcAngel(scanLeft(), scanRight());
 		System.out.println(targetAngel);
 		robot.positionManager.rotateTo(targetAngel);
@@ -45,5 +52,14 @@ public class ObjectCentralisation {
 			robot.positionManager.rotate(1, Direction.LEFT);
 		}
 		return (int) robot.compassSensor.getDegrees();
+	}
+
+	@Override
+	public void featureDetected(Feature feature, FeatureDetector detector) {
+		if (5 >(feature.getRangeReading().getRange()-distance)) {
+			isdetected = false;
+		} else {
+			isdetected = true;
+		}
 	}
 }
