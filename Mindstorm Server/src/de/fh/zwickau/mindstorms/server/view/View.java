@@ -28,7 +28,8 @@ import static org.lwjgl.opengl.GL11.*;
 public class View extends Thread {
 
 	private Mapper mapper;
-	private boolean mapChanged;
+	private Boolean mapChanged;
+	private Boolean targetChanged;
 	private Semaphore semaphore;
 	
 	// Draw Items
@@ -41,7 +42,8 @@ public class View extends Thread {
 	boolean drawTile = true;
 	
 	public View() {
-		this.mapChanged = true;
+		this.mapChanged = new Boolean(true);
+		this.targetChanged = new Boolean(true);
 		this.semaphore = new Semaphore(1);
 	}
 
@@ -109,13 +111,9 @@ public class View extends Thread {
 	 * Red = area with located obstacle.
 	 * 
 	 * And generate the new LineMap view.
-	 * 
-	 * @throws InterruptedException
 	 */
-	private void rebuildMap() throws InterruptedException {
-		semaphore.acquire();
-		mapChanged = false;
-		semaphore.release();
+	private void rebuildMap() {
+		setFalse(mapChanged);
 
 		MapGrid grid = mapper.getGrid();
 		final int g_size = grid.getGridSize();
@@ -155,15 +153,10 @@ public class View extends Thread {
 	private void update(){
 		//Map update if it was changed
 		if (mapChanged) {
-			try {
-				rebuildMap();
-			} catch (InterruptedException e) {
-				// then use the old one...
-			}
+			rebuildMap();
 		}
 		
-		input();
-		
+		input();	
 	}
 	
 	/**
@@ -319,15 +312,35 @@ public class View extends Thread {
 	 * Tells view that the map has changed (Thread safe)
 	 */
 	public void mapChanged() {
+		setTrue(mapChanged);
+	}
 
+	/**
+	 * Tells view that the Target has changed (Thread safe)
+	 */
+	public void targetChanged() {
+			setTrue(targetChanged);
+	}	
+	
+	private void setTrue(Boolean bool){
 		try {
 			semaphore.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		mapChanged = true;
+		bool = true;
 		semaphore.release();
 	}
 	
+	private void setFalse(Boolean bool){
+		try {
+			semaphore.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		bool = false;
+		semaphore.release();
+	}	
 }
