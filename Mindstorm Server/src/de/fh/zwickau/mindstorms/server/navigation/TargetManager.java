@@ -38,8 +38,6 @@ public class TargetManager {
 		targets.add(target);
 	}
 	
-
-	
 	/**
 	 * Says whether there are more targets or not.
 	 * 

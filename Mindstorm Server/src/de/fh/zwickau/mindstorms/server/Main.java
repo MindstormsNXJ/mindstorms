@@ -1,7 +1,11 @@
 package de.fh.zwickau.mindstorms.server;
 
+import lejos.robotics.navigation.DestinationUnreachableException;
 import lejos.robotics.navigation.Pose;
+import lejos.robotics.navigation.Waypoint;
+import lejos.robotics.pathfinding.Path;
 import de.fh.zwickau.mindstorms.server.communication.ConnectionManager;
+import de.fh.zwickau.mindstorms.server.navigation.MindstormPathFinder;
 import de.fh.zwickau.mindstorms.server.navigation.PathFinder;
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
@@ -27,13 +31,16 @@ public class Main {
 		
 		view.registerMapper(mapper);
 		view.registerTargetManager(targetManager);
-		
-		
-		
-		
+
 		view.start();	// new Thread for view
 		
 		new ConnectionManager(mapper, targetManager);
+		//TODO test of path finding
+//		try {
+//			Path path = new MindstormPathFinder(mapper).findRoute(new Pose(0, 0, 0), new Waypoint(10, 10));
+//		} catch (DestinationUnreachableException e) {
+//			//nothing
+//		}
 		
 		//TODO TEST - remove if commands are calculated correctly now
 //		PathFinder finder = new PathFinder(mapper.getLineMap(), targetManager);
