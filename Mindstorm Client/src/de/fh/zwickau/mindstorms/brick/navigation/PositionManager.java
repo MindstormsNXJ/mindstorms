@@ -67,6 +67,8 @@ public class PositionManager implements Manager {
 	public void rotate(int degree, Direction direction) {
 		directionManager.rotateInDirection(degree, direction);
 		updateRotation();
+		//FIME rotate() Nullpointer Exeption
+
 	}
 
 	// /**

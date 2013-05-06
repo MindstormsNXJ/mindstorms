@@ -1,5 +1,7 @@
 package de.fh.zwickau.mindstorms.brick.initialisation;
 
+import java.util.Enumeration;
+
 import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
 import lejos.nxt.Motor;
@@ -14,6 +16,7 @@ import lejos.robotics.navigation.Pose;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.communication.ConnectionManager;
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
+import de.fh.zwickau.mindstorms.brick.sensors.ObjectCentralisation;
 import de.fh.zwickau.mindstorms.brick.sensors.SensorManager;
 
 /**
@@ -26,6 +29,10 @@ import de.fh.zwickau.mindstorms.brick.sensors.SensorManager;
  */
 public class Initializer implements ButtonListener {
 
+	private enum Mode {
+		CENTRALISATION, SERVERMODE,TEST;
+	}
+
 	private Robot robot;
 	private NXTRegulatedMotor leftMotor;
 	private NXTRegulatedMotor rightMotor;
@@ -33,25 +40,47 @@ public class Initializer implements ButtonListener {
 	private TouchSensor touchSensor;
 	private CompassHTSensor compassSensor;
 	private UltrasonicSensor ultrasonicSensor;
-	private boolean hasToCalibrate = false;
 	private final double STD_DRIVE_TRANSLATION = 38.0;
+
+	// config Flags and Enums
+	private boolean hasToCalibrate = false;
+	private Mode mode= Mode.SERVERMODE;
 
 	/**
 	 * Initialises the NXT and adds a button listener to the escape button, that
 	 * will shut down the robot whenever it its pressed.
 	 */
 	public Initializer() {
+
 		robot = new Robot();
 		leftMotor = Motor.A;
-		robot.leftMotor = leftMotor;  
+		robot.leftMotor = leftMotor;
 		rightMotor = Motor.B;
 		robot.rightMotor = rightMotor;
-//		grabberMotor = Motor.C;
+		// grabberMotor = Motor.C;
 		compassSensor = new CompassHTSensor(SensorPort.S2);
 		robot.compassSensor = compassSensor;
-		robot.ultrasonicSensor = ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
+		robot.ultrasonicSensor = ultrasonicSensor = new UltrasonicSensor(
+				SensorPort.S1);
 		touchSensor = new TouchSensor(SensorPort.S3);
 		initialize();
+		// establish connection to the server
+		if (mode == Mode.SERVERMODE) {
+			robot.positionManager = new PositionManager(new Pose(0, 0, 0),
+					robot);
+			robot.positionManager.rotateTo(0);
+			new ConnectionManager(robot);
+		}
+		
+		// try to centralize the Object in  front of
+		if (mode == Mode.CENTRALISATION) {
+			new ObjectCentralisation(robot);
+		}
+		
+		// place testing here
+		if (mode == Mode.TEST) {
+			
+		}
 	}
 
 	@Override
@@ -64,16 +93,6 @@ public class Initializer implements ButtonListener {
 		Button.ESCAPE.addButtonListener(this);
 		calibrate();
 
-		// establish connection to the server
-		robot.positionManager = new PositionManager(new Pose(0,0,0), robot);
-		robot.positionManager.rotateTo(0);
-		new ConnectionManager(robot);
-
-		// obstacle detection test
-//		Button.ENTER.waitForPress();
-//		new PositionManager(new Pose(0, 0, 0), robot);
-//		new SensorManager(robot);
-//		Button.ESCAPE.waitForPress();
 	}
 
 	private void calibrate() {
@@ -95,7 +114,7 @@ public class Initializer implements ButtonListener {
 				System.out.println("calibrated");
 			} else {
 				System.out.println("not calibrated");
-				robot.driveTranslation= STD_DRIVE_TRANSLATION;
+				robot.driveTranslation = STD_DRIVE_TRANSLATION;
 			}
 			Sound.beep();
 		}
@@ -109,5 +128,5 @@ public class Initializer implements ButtonListener {
 	public void buttonReleased(Button b) {
 		// nothing
 	}
-	
+
 }
