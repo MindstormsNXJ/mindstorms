@@ -1,10 +1,13 @@
 package de.fh.zwickau.mindstorms.brick.sensors;
 
 import de.fh.zwickau.mindstorms.brick.Robot;
+import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 
 public class ObjectCentralisation {
 	
 	private Robot robot;
+	private int distance;
+	private boolean isdetected;
 
 	public ObjectCentralisation(Robot robot) {
 		this.robot=robot;
@@ -23,8 +26,11 @@ public class ObjectCentralisation {
 	}
 
 	private int scanRight() {
-		// TODO Auto-generated method stub	
-	return (int) robot.compassSensor.getDegrees();
+		distance= robot.ultrasonicSensor.getDistance();
+		while (isdetected) {
+		robot.positionManager.rotate(3, Direction.LEFT);
+		}
+		return (int) robot.compassSensor.getDegrees();
 		}
 
 	private int scanLeft() {
