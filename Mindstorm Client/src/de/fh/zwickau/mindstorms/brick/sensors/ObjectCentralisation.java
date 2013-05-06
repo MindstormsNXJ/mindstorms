@@ -1,10 +1,11 @@
 package de.fh.zwickau.mindstorms.brick.sensors;
 
-import lejos.robotics.RangeFinder;
+import lejos.nxt.Button;
 import lejos.robotics.objectdetection.Feature;
 import lejos.robotics.objectdetection.FeatureDetector;
 import lejos.robotics.objectdetection.FeatureListener;
 import lejos.robotics.objectdetection.RangeFeatureDetector;
+import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 
@@ -12,12 +13,17 @@ public class ObjectCentralisation implements FeatureListener {
 
 	private Robot robot;
 	private int distance;
-	private boolean isdetected;
+	private boolean isdetected=true;
+	private float maxDistance = 50;
+	private int interval = 50;
 
 	public ObjectCentralisation(Robot robot) {
 		this.robot = robot;
-		new RangeFeatureDetector(
-				robot.ultrasonicSensor, 50, 20).addListener(this);
+		new RangeFeatureDetector(robot.ultrasonicSensor, maxDistance, interval)
+				.addListener(this);
+		robot.positionManager.rotate(10,Direction.LEFT);
+		Button.ENTER.waitForPressAndRelease();
+		
 		int targetAngel = calcAngel(scanLeft(), scanRight());
 		System.out.println(targetAngel);
 		robot.positionManager.rotateTo(targetAngel);
@@ -56,7 +62,7 @@ public class ObjectCentralisation implements FeatureListener {
 
 	@Override
 	public void featureDetected(Feature feature, FeatureDetector detector) {
-		if (5 >(feature.getRangeReading().getRange()-distance)) {
+		if (5 > (feature.getRangeReading().getRange() - distance)) {
 			isdetected = false;
 		} else {
 			isdetected = true;
