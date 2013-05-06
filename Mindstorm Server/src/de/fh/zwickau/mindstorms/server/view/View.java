@@ -1,8 +1,10 @@
 package de.fh.zwickau.mindstorms.server.view;
 
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import lejos.geom.Line;
+import lejos.robotics.navigation.Pose;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -12,6 +14,9 @@ import org.lwjgl.opengl.DisplayMode;
 
 import de.fh.zwickau.mindstorms.server.navigation.mapping.MapGrid;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.toRadians;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -23,7 +28,8 @@ import static org.lwjgl.opengl.GL11.*;
 public class View extends Thread {
 
 	private Mapper mapper;
-	private boolean mapChanged;
+	private Boolean mapChanged;
+	private Boolean targetChanged;
 	private Semaphore semaphore;
 	
 	// Draw Items
@@ -36,7 +42,8 @@ public class View extends Thread {
 	boolean drawTile = true;
 	
 	public View() {
-		this.mapChanged = true;
+		this.mapChanged = new Boolean(true);
+		this.targetChanged = new Boolean(true);
 		this.semaphore = new Semaphore(1);
 	}
 
@@ -50,6 +57,7 @@ public class View extends Thread {
 			draw();
 		}
 
+		mapper.saveMap();
 		Display.destroy();
 	}
 
@@ -58,6 +66,7 @@ public class View extends Thread {
 	 */
 	private void createWindow() {
 		try {
+			Display.setTitle("Mindsorm Map");
 			Display.setDisplayMode(new DisplayMode(512 + 1, 512 + 1));
 			Display.create();
 		} catch (LWJGLException e) {
@@ -74,9 +83,8 @@ public class View extends Thread {
 		final int size = mapper.getGrid().getGridSize();
 		
 		// GL initialize
-		glLineWidth(3.0f);
-		glPointSize(Display.getWidth() / mapper.getGrid().getGridSize()+0.51f);
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glPointSize(Display.getWidth() / mapper.getGrid().getGridSize() - 0.51f);
+		glClearColor(0.75f, 0.75f, 0.75f, 0.75f);
 		
 		
 		// initialize pixel grid
@@ -103,13 +111,9 @@ public class View extends Thread {
 	 * Red = area with located obstacle.
 	 * 
 	 * And generate the new LineMap view.
-	 * 
-	 * @throws InterruptedException
 	 */
-	private void rebuildMap() throws InterruptedException {
-		semaphore.acquire();
-		mapChanged = false;
-		semaphore.release();
+	private void rebuildMap() {
+		setFalse(mapChanged);
 
 		MapGrid grid = mapper.getGrid();
 		final int g_size = grid.getGridSize();
@@ -121,9 +125,9 @@ public class View extends Thread {
 		for (int x = 0; x < g_size; x++) {
 			for (int y = 0; y < g_size; y++) {
 				if ((strength = (float)grid.get(x, y)) > 0) {
-					tileColors[++c] = 4.0f * strength / 4.0f; 		// red
+					tileColors[++c] = 4.0f * strength / 4.0f;        // red
 					tileColors[++c] = 1.0f -  1.0f *strength/ 3.0f; // green
-					tileColors[++c] = 0.0f; 						// blue
+					tileColors[++c] = 0.0f;                         // blue
 				} else {
 					tileColors[++c] = 1.0f; // red
 					tileColors[++c] = 1.0f; // green
@@ -133,29 +137,26 @@ public class View extends Thread {
 		}
 		
 		//Rebuild Line vertices
-		Line[] lines = mapper.getLineMap().getLines();
-		lineVertices = new float[lines.length * 4];
-		int j = -1;
-		for (int i = 0; i < lines.length; i++){
-			lineVertices[++j] = lines[i].x1 / gstsh;
-			lineVertices[++j] = lines[i].y1 / gstsh;
-			lineVertices[++j] = lines[i].x2 / gstsh;
-			lineVertices[++j] = lines[i].y2 / gstsh;
+		Line[] lines;
+		if((lines = mapper.getLineMap().getLines()) != null){
+    		lineVertices = new float[lines.length * 4];
+    		int j = -1;
+    		for (int i = 0; i < lines.length; i++){
+    			lineVertices[++j] = lines[i].x1 / gstsh;
+    			lineVertices[++j] = lines[i].y1 / gstsh;
+    			lineVertices[++j] = lines[i].x2 / gstsh;
+    			lineVertices[++j] = lines[i].y2 / gstsh;
+    		}
 		}
 	}
 
 	private void update(){
 		//Map update if it was changed
 		if (mapChanged) {
-			try {
-				rebuildMap();
-			} catch (InterruptedException e) {
-				// then use the old one...
-			}
+			rebuildMap();
 		}
 		
-		input();
-		
+		input();	
 	}
 	
 	/**
@@ -172,23 +173,91 @@ public class View extends Thread {
 			glBegin(GL_POINTS);                                                //Begin to draw Points
 			while (i < size) {
 				glColor3f(tileColors[++c], tileColors[++c], tileColors[++c]);  //set pixel color
-				glVertex2f(tileVertices[++i], tileVertices[++i]); 			   //make a point
+				glVertex2f(tileVertices[++i], tileVertices[++i]);              //make a point
 			}
 			glEnd();                                                           //End with tile draw
 		}
 		
-		size = lineVertices.length -1;
-		i = -1;
-		
-		if(drawLine){                                                          
-			glColor3f(0.0f, 0.5f, 1.0f);
-			glBegin(GL_LINES);                                                 //Begin to draw Points
-			while(i < size){
-				glVertex2f(lineVertices[++i], lineVertices[++i]);              //Set new LinePoint
-			}
-			glEnd();                                                           //End with Line draw
+		if(lineVertices != null){
+		    glLineWidth(2.0f);
+    		size = lineVertices.length -1;
+    		i = -1;
+    		
+    		if(drawLine){                                                          
+    			glColor3f(0.0f, 0.5f, 1.0f);
+    			glBegin(GL_LINES);                                                 //Begin to draw Points
+    			while(i < size){
+    				glVertex2f(lineVertices[++i], lineVertices[++i]);              //Set new LinePoint
+    			}
+    			glEnd();                                                           //End with Line draw
+    		}
+    		                                                     
 		}
-		Display.update();                                                      // Bring it to the screen.
+		
+		
+		// draw the center lines
+		glLineWidth(1.0f);
+	    glColor3f(0.8f, 0.4f, 0.3f);
+	    glBegin(GL_LINES);
+	    glVertex2f(-1.0f, 0.0f); glVertex2f(1.0f, 0.0f);
+	    glVertex2f(0.0f, -1.0f); glVertex2f(0.0f, 1.0f);
+	    glEnd();
+		
+
+	    drawRobots();
+	    
+		Display.update();                                                          // Bring it to the screen.
+	}
+	
+	private void drawRobots(){
+	    glEnable(GL_POINT_SMOOTH);
+	    glLineWidth(1.51f);
+	    
+	    String[] r_names = mapper.getTracer().getTracedNames();
+	    ArrayList<Pose> poses;
+	    
+	    float offset = mapper.getGrid().getGridSize() / 2 * mapper.getGrid().getTileSize();
+	    
+	    for(int i = 0; i < r_names.length; i++){
+	        // Define different colors for an other robot
+	        switch (i) {
+                case 0: glColor3f(0.3f, 0.5f, 0.8f); break;
+                case 1: glColor3f(0.8f, 0.4f, 0.6f); break;
+                case 2: glColor3f(0.2f, 0.8f, 0.2f); break;
+                
+                default: glColor3f(0.8f, 0.0f, 0.0f); break;
+            }
+	        
+	        poses = mapper.getTracer().getTracedPoseList(r_names[i]);
+	        // Draw the traced line
+	        
+	        glBegin(GL_LINE_STRIP);
+	        for (Pose pose : poses) {
+                glVertex2f(pose.getX() / offset, pose.getY() / offset);
+            }
+	        glEnd();
+	        
+	        //Draw a Point for the current robot position and a line for heading
+	        Pose current_pose = poses.get(poses.size()-1);
+	        float xp = current_pose.getX() / offset;
+	        float yp = current_pose.getY() / offset;
+	        
+	        glBegin(GL_POINTS);
+	        glVertex2f(xp, yp);
+	        glEnd();
+	        
+	        // Draw heading vector
+	        float[] normal = new float[2];  
+	        normal[0] = (float)(sin(toRadians((double)current_pose.getHeading())) * 0.05 + xp);
+	        normal[1] = (float)(cos(toRadians((double)current_pose.getHeading())) * 0.05 + yp);
+	        
+            glBegin(GL_LINES);
+            glVertex2f(xp, yp);
+            glVertex2f(normal[0], normal [1]);
+            glEnd();
+                 
+	    }
+        glDisable(GL_POINT_SMOOTH);
 	}
 
 	/**
@@ -243,15 +312,35 @@ public class View extends Thread {
 	 * Tells view that the map has changed (Thread safe)
 	 */
 	public void mapChanged() {
+		setTrue(mapChanged);
+	}
 
+	/**
+	 * Tells view that the Target has changed (Thread safe)
+	 */
+	public void targetChanged() {
+			setTrue(targetChanged);
+	}	
+	
+	private void setTrue(Boolean bool){
 		try {
 			semaphore.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		mapChanged = true;
+		bool = true;
 		semaphore.release();
 	}
 	
+	private void setFalse(Boolean bool){
+		try {
+			semaphore.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		bool = false;
+		semaphore.release();
+	}	
 }
