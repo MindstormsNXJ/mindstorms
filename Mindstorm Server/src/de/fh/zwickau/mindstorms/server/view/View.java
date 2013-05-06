@@ -12,6 +12,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
+import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.MapGrid;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 import static java.lang.Math.cos;
@@ -26,11 +27,14 @@ import static org.lwjgl.opengl.GL11.*;
  *
  */
 public class View extends Thread {
-
+	
 	private Mapper mapper;
+	private TargetManager targetM;
+	
 	private Boolean mapChanged;
 	private Boolean targetChanged;
 	private Semaphore semaphore;
+	
 	
 	// Draw Items
 	private float[] tileVertices;
@@ -45,6 +49,7 @@ public class View extends Thread {
 		this.mapChanged = new Boolean(true);
 		this.targetChanged = new Boolean(true);
 		this.semaphore = new Semaphore(1);
+		
 	}
 
 	@Override
@@ -307,7 +312,16 @@ public class View extends Thread {
 	public void registerMapper(Mapper mapper) {
 		this.mapper = mapper;
 	}
-
+	
+	/**
+	 * Register the TargetManager to be observed.
+	 * 
+	 * @param tM TargetManager
+	 */
+	public void registerTargetManager(TargetManager tM) {
+		this.targetM = tM;
+	}
+	
 	/**
 	 * Tells view that the map has changed (Thread safe)
 	 */
@@ -343,4 +357,6 @@ public class View extends Thread {
 		bool = false;
 		semaphore.release();
 	}	
+	
+
 }
