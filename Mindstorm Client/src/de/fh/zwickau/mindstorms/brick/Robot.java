@@ -5,7 +5,6 @@ import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.addon.CompassHTSensor;
-import lejos.robotics.PressureDetector;
 
 /**
  * This class is the abstract superclass for the two robot types, namely
