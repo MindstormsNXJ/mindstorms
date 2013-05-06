@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import lejos.geom.Line;
+import lejos.geom.Point;
 import lejos.robotics.navigation.Pose;
 
 import org.lwjgl.LWJGLException;
@@ -40,6 +41,7 @@ public class View extends Thread {
 	private float[] tileVertices;
 	private float[] tileColors;
 	private float[] lineVertices;
+	private float[] targetVertices;
 
 	//Draw options
 	boolean drawLine = true;
@@ -111,39 +113,52 @@ public class View extends Thread {
 		}
 	}
 
-	/**
-	 * Update the colors of the MapGrid. Green = clear area,
-	 * Red = area with located obstacle.
-	 * 
-	 * And generate the new LineMap view.
-	 */
-	private void rebuildMap() {
-		setFalse(mapChanged);
-
-		MapGrid grid = mapper.getGrid();
-		final int g_size = grid.getGridSize();
-		final float gstsh = g_size * grid.getTileSize() / 2.0f; 
-		
-		//Rebuild tile colors
-		int c = -1;
-		float strength;
-		for (int x = 0; x < g_size; x++) {
-			for (int y = 0; y < g_size; y++) {
-				if ((strength = (float)grid.get(x, y)) > 0) {
-					tileColors[++c] = 4.0f * strength / 4.0f;        // red
-					tileColors[++c] = 1.0f -  1.0f *strength/ 3.0f; // green
-					tileColors[++c] = 0.0f;                         // blue
-				} else {
-					tileColors[++c] = 1.0f; // red
-					tileColors[++c] = 1.0f; // green
-					tileColors[++c] = 1.0f; // blue
-				}
-			}
+	private void update(){
+		//Map update if it was changed
+		if (mapChanged) {
+			rebuildMap();
 		}
+		if (targetChanged) {
+            rebuildTargets();
+        }
 		
-		//Rebuild Line vertices
-		Line[] lines;
-		if((lines = mapper.getLineMap().getLines()) != null){
+		
+		input();	
+	}
+	
+	/**
+     * Update the colors of the MapGrid. Green = clear area,
+     * Red = area with located obstacle.
+     * 
+     * And generate the new LineMap view.
+     */
+    private void rebuildMap() {
+    	setFalse(mapChanged);
+    
+    	MapGrid grid = mapper.getGrid();
+    	final int g_size = grid.getGridSize();
+    	final float gstsh = g_size * grid.getTileSize() / 2.0f; 
+    	
+    	//Rebuild tile colors
+    	int c = -1;
+    	float strength;
+    	for (int x = 0; x < g_size; x++) {
+    		for (int y = 0; y < g_size; y++) {
+    			if ((strength = (float)grid.get(x, y)) > 0) {
+    				tileColors[++c] = 4.0f * strength / 4.0f;                  //red
+    				tileColors[++c] = 1.0f -  1.0f *strength/ 3.0f;            //green
+    				tileColors[++c] = 0.0f;                                    //blue
+    			} else {
+    				tileColors[++c] = 1.0f;                                    //red
+    				tileColors[++c] = 1.0f;                                    //green
+    				tileColors[++c] = 1.0f;                                    //blue
+    			}
+    		}
+    	}
+    	
+    	//Rebuild Line vertices
+    	Line[] lines;
+    	if((lines = mapper.getLineMap().getLines()) != null){
     		lineVertices = new float[lines.length * 4];
     		int j = -1;
     		for (int i = 0; i < lines.length; i++){
@@ -152,19 +167,26 @@ public class View extends Thread {
     			lineVertices[++j] = lines[i].x2 / gstsh;
     			lineVertices[++j] = lines[i].y2 / gstsh;
     		}
-		}
-	}
+    	}
+    }
+    
+    private void rebuildTargets(){
+        MapGrid grid = mapper.getGrid();
+        final float gstsh = grid.getGridSize() * grid.getTileSize() / 2.0f;
+        
+        ArrayList<Point> points; 
+        if((points = targetM.getTargets()) != null){
+            targetVertices = new float[points.size() * 2 + 2];
+            targetVertices[0] = targetVertices[1] = 0.0f;                      //this is the start point [0,0]
+            int j = 1;
+            for (int i = 0; i < points.size(); i++){
+                targetVertices[++j] = points.get(i).x / gstsh;
+                targetVertices[++j] = points.get(i).y / gstsh;
+            }
+        }
+    }
 
-	private void update(){
-		//Map update if it was changed
-		if (mapChanged) {
-			rebuildMap();
-		}
-		
-		input();	
-	}
-	
-	/**
+    /**
 	 * Draw all data on OpenGL canvas.
 	 */
 	private void draw() {
@@ -190,11 +212,11 @@ public class View extends Thread {
     		
     		if(drawLine){                                                          
     			glColor3f(0.0f, 0.5f, 1.0f);
-    			glBegin(GL_LINES);                                                 //Begin to draw Points
+    			glBegin(GL_LINES);                                             //Begin to draw Points
     			while(i < size){
-    				glVertex2f(lineVertices[++i], lineVertices[++i]);              //Set new LinePoint
+    				glVertex2f(lineVertices[++i], lineVertices[++i]);          //Set new LinePoint
     			}
-    			glEnd();                                                           //End with Line draw
+    			glEnd();                                                       //End with Line draw
     		}
     		                                                     
 		}
@@ -208,10 +230,24 @@ public class View extends Thread {
 	    glVertex2f(0.0f, -1.0f); glVertex2f(0.0f, 1.0f);
 	    glEnd();
 		
-
+	    drawTargets();
 	    drawRobots();
 	    
-		Display.update();                                                          // Bring it to the screen.
+		Display.update();                                                      //Bring it to the screen.
+	}
+	
+	private void drawTargets(){
+        int size = targetVertices.length - 1;
+        int i = -1;
+
+        glLineWidth(1.51f);
+        glColor3f(1.0f, 0.75f, 0.0f);
+        glBegin(GL_LINE_STRIP);                                                //Begin to draw Lines
+        while (i < size) {
+            glVertex2f(targetVertices[++i], targetVertices[++i]);              //make a point
+        }
+        glEnd();                                                               //End with target draw
+        
 	}
 	
 	private void drawRobots(){
