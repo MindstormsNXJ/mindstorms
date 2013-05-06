@@ -20,7 +20,7 @@ public class MovementManager implements Manager {
 	/** the Angle where the Robot stands at Start */
 	private int startdegrees;
 	/** the Boolean who shows that the robot is driving */
-	private boolean driving;
+	private boolean driving = false;
 	/** the Tachocounts from the Motors on the Start of the Moving Process */
 	private int tachoLeft;
 	private int tachoRight;

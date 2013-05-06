@@ -18,12 +18,9 @@ public class DirectionManager implements Manager {
 	/** robot which is rotating */
 	private Robot robot;
 	/** if the robot currently rotates */
-	private boolean isRotating;
+	private boolean isRotating = false;
 	/** the degree to rotate */
 	private int degrees;
-
-	// private int stepWide = 45;// the stepwide for stepwise rotating i think
-	// this isn't needed
 
 	/**
 	 * 
