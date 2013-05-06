@@ -19,14 +19,20 @@ public class Main {
 		
 		View view = new View();
 		Mapper mapper = new Mapper(1);
+		TargetManager targetManager = new TargetManager();
 		
 		//register for observer model
 		mapper.setObserverView(view);
+		targetManager.setObserverView(view);
+		
 		view.registerMapper(mapper);
+		view.registerTargetManager(targetManager);
+		
+		
+		
 		
 		view.start();	// new Thread for view
 		
-		TargetManager targetManager = new TargetManager();
 		new ConnectionManager(mapper, targetManager);
 		
 		//TODO TEST - remove if commands are calculated correctly now

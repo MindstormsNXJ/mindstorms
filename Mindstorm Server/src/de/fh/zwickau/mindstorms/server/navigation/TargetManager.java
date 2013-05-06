@@ -2,17 +2,19 @@ package de.fh.zwickau.mindstorms.server.navigation;
 
 import java.util.ArrayList;
 
+import de.fh.zwickau.mindstorms.server.view.View;
+
 import lejos.geom.Point;
 
 /**
  * This class is responsible for managing the target points the robot 
  * should move to.
  * 
- * @author Tobias Schießl
+ * @author Tobias Schießl, Patrick Rosenkranz
  * @version 1.0
  */
 public class TargetManager {
-
+	private View observer;
 	private ArrayList<Point> targets;
 	private int currentTargetNumber;
 	
@@ -36,6 +38,8 @@ public class TargetManager {
 		targets.add(target);
 	}
 	
+
+	
 	/**
 	 * Says whether there are more targets or not.
 	 * 
@@ -56,11 +60,28 @@ public class TargetManager {
 	}
 	
 	/**
+	 * Returns all known Targets
+	 * @return the targets
+	 */
+	public ArrayList<Point> getTargets() {
+		return targets;
+	}
+	
+	/**
 	 * Method that has to be called once a target is reached. getCurrentTarget()
 	 * will return the next one after this call, as far as there are more.
 	 */
 	public void targetReached() {
 		++currentTargetNumber;
+	}
+	
+	public void addTarget(Point target) {
+		targets.add(target);
+		observer.targetChanged();							// notify view that new targets arrived
+	}
+		
+	public void setObserverView(View observer) {
+		this.observer = observer;
 	}
 	
 }
