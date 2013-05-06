@@ -1,10 +1,9 @@
 package de.fh.zwickau.mindstorms.brick.initialisation;
 
-import java.util.Enumeration;
-
 import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
 import lejos.nxt.Motor;
+import lejos.nxt.MotorPort;
 import lejos.nxt.NXT;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
@@ -17,7 +16,7 @@ import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.communication.ConnectionManager;
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
 import de.fh.zwickau.mindstorms.brick.sensors.ObjectCentralisation;
-import de.fh.zwickau.mindstorms.brick.sensors.SensorManager;
+import de.fh.zwickau.mindstorms.brick.task.Pick;
 
 /**
  * This class is responsible for managing all tasks that have to be performed
@@ -30,7 +29,7 @@ import de.fh.zwickau.mindstorms.brick.sensors.SensorManager;
 public class Initializer implements ButtonListener {
 
 	private enum Mode {
-		CENTRALISATION, SERVERMODE,TEST;
+		CENTRALISATION, SERVERMODE, PICKERTEST, TEST;
 	}
 
 	private Robot robot;
@@ -44,7 +43,7 @@ public class Initializer implements ButtonListener {
 
 	// config Flags and Enums
 	private boolean hasToCalibrate = false;
-	private Mode mode= Mode.SERVERMODE;
+	private Mode mode = Mode.SERVERMODE;
 
 	/**
 	 * Initialises the NXT and adds a button listener to the escape button, that
@@ -57,12 +56,11 @@ public class Initializer implements ButtonListener {
 		robot.leftMotor = leftMotor;
 		rightMotor = Motor.B;
 		robot.rightMotor = rightMotor;
-		// grabberMotor = Motor.C;
+		robot.grabberMotor = new NXTRegulatedMotor(MotorPort.C);
 		compassSensor = new CompassHTSensor(SensorPort.S2);
 		robot.compassSensor = compassSensor;
-		robot.ultrasonicSensor = ultrasonicSensor = new UltrasonicSensor(
-				SensorPort.S1);
-		touchSensor = new TouchSensor(SensorPort.S3);
+		robot.ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
+		robot.touchSensor = new TouchSensor(SensorPort.S3);
 		initialize();
 		// establish connection to the server
 		if (mode == Mode.SERVERMODE) {
@@ -80,6 +78,11 @@ public class Initializer implements ButtonListener {
 		// place testing here
 		if (mode == Mode.TEST) {
 			
+		}
+		
+		if (mode == mode.PICKERTEST){
+			robot.positionManager = new PositionManager(new Pose(0, 0, 0), robot);
+			Pick p = new Pick(robot);
 		}
 	}
 

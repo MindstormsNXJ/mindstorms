@@ -18,7 +18,7 @@ public class Robot {
 	
 	public NXTRegulatedMotor leftMotor;
 	public NXTRegulatedMotor rightMotor;
-	public NXTRegulatedMotor picker;
+	public NXTRegulatedMotor grabberMotor;
 	public CompassHTSensor compassSensor;
 	public UltrasonicSensor ultrasonicSensor;
 	public TouchSensor touchSensor;

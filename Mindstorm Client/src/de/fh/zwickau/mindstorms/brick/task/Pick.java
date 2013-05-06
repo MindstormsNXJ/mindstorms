@@ -16,7 +16,7 @@ import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 public class Pick {
 	private Robot robot;
 	private TouchSensor touchSensor;
-	private NXTRegulatedMotor picker;
+	private NXTRegulatedMotor grabberMotor;
 	private int wayDown = 360;
 	private int itemDistance = 25;
 	private UltrasonicSensor sensor;
@@ -24,7 +24,7 @@ public class Pick {
 
 	public Pick(Robot r){
 		robot = r;
-		picker = robot.picker;
+		grabberMotor = robot.grabberMotor;
 		touchSensor = robot.touchSensor;
 		sensor = robot.ultrasonicSensor;
 //		pickerUp();
@@ -36,43 +36,43 @@ public class Pick {
 	}
 	
 	public void pickerUp(){
-		picker.resetTachoCount();
-		picker.setSpeed(250);
-		System.out.println(picker.getTachoCount());
-		robot.picker.forward();
+		grabberMotor.resetTachoCount();
+		grabberMotor.setSpeed(250);
+		System.out.println(grabberMotor.getTachoCount());
+		grabberMotor.forward();
 		boolean up = false;
 //		while(up || !up){
 //			System.out.println(robot.ultrasonicSensor.getDistance());
 //		}
 		while(!up){
-			if(touchSensor.isPressed() || (picker.getTachoCount() > 360)){
+			if(touchSensor.isPressed() || (grabberMotor.getTachoCount() > 360)){
 				Sound.beep();
-				robot.picker.stop();
+				grabberMotor.stop();
 				up = true;
 			}
 			
 		}
-		System.out.println(picker.getTachoCount());
+		System.out.println(grabberMotor.getTachoCount());
 		
 		Delay.msDelay(1000);
 		
 	}
 	
 	public void pickerDown(){
-		picker.resetTachoCount();
+		grabberMotor.resetTachoCount();
 //		System.out.println("down");
-		int currentTacho = picker.getTachoCount();
+		int currentTacho = grabberMotor.getTachoCount();
 		int targetTacho = currentTacho - wayDown;
 //		System.out.println(picker.getTachoCount());
 //		boolean move = true;
-		picker.setSpeed(100);
-		picker.backward();
+		grabberMotor.setSpeed(100);
+		grabberMotor.backward();
 //		Delay.msDelay(500);
 		boolean down = true;
 		while(down){
-			if(picker.getTachoCount() < targetTacho){
+			if(grabberMotor.getTachoCount() < targetTacho){
 				down = false;
-				picker.stop();
+				grabberMotor.stop();
 			}
 		}
 		
