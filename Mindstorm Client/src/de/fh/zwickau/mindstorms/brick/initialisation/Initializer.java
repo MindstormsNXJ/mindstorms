@@ -64,24 +64,21 @@ public class Initializer implements ButtonListener {
 		initialize();
 		// establish connection to the server
 		if (mode == Mode.SERVERMODE) {
-			robot.positionManager = new PositionManager(new Pose(0, 0, 0),
-					robot);
 			robot.positionManager.rotateTo(0);
 			new ConnectionManager(robot);
 		}
-		
-		// try to centralize the Object in  front of
+
+		// try to centralize the Object in front of
 		if (mode == Mode.CENTRALISATION) {
 			new ObjectCentralisation(robot);
 		}
-		
+
 		// place testing here
 		if (mode == Mode.TEST) {
-			
+
 		}
-		
-		if (mode == mode.PICKERTEST){
-			robot.positionManager = new PositionManager(new Pose(0, 0, 0), robot);
+
+		if (mode == mode.PICKERTEST) {
 			Pick p = new Pick(robot);
 		}
 	}
@@ -95,6 +92,7 @@ public class Initializer implements ButtonListener {
 	public void initialize() {
 		Button.ESCAPE.addButtonListener(this);
 		calibrate();
+		robot.positionManager = new PositionManager(new Pose(0, 0, compassSensor.getDegrees()), robot);
 
 	}
 
