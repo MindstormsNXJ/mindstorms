@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 
+import javax.naming.OperationNotSupportedException;
+
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTConnector;
 import lejos.robotics.navigation.Pose;
@@ -37,13 +39,19 @@ public class ConnectionManager {
 	 * @param mapper the mapper that gets notified about the robot's current Pose
 	 * @param targetManager the target manager which holds all targets to reach
 	 * @param robotName the robot's friendly name
+	 * @throws OperationNotSupportedException if the robot's name is not "Picker"
 	 */
-	public ConnectionManager(Mapper mapper, TargetManager targetManager, String robotName) {
+	public ConnectionManager(Mapper mapper, TargetManager targetManager, String robotName) throws OperationNotSupportedException {
 		this.mapper = mapper;
 		this.targetManager = targetManager;
 		targetManager.addRobot(robotName);
 		
-		pathFinder = new PathFinder(mapper.getLineMap(), targetManager, robotName);
+		try {
+			pathFinder = new PathFinder(mapper.getLineMap(), targetManager, robotName);
+		} catch (OperationNotSupportedException e) {
+			//the given robot name was not "Picker" - currently other robot types are not supported
+			throw e;
+		}
 		
 		while (!establishConnection(robotName)) {
 			System.err.println("Connection failed, will retry in 10 seconds...");
@@ -60,7 +68,8 @@ public class ConnectionManager {
 	 */
 	private boolean establishConnection(String robotName) {
 		connector = new NXTConnector();
-		boolean success = connector.connectTo(robotName, null, NXTCommFactory.BLUETOOTH);
+//		boolean success = connector.connectTo(robotName, null, NXTCommFactory.BLUETOOTH); //TODO enable for final version
+		boolean success = connector.connectTo(null, null, NXTCommFactory.BLUETOOTH);
 		if (success) {
 			System.out.println("Connection established via bluetooth");
 			commandSender = new DataOutputStream(connector.getOutputStream());

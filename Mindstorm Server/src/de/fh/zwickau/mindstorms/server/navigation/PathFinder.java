@@ -1,5 +1,7 @@
 package de.fh.zwickau.mindstorms.server.navigation;
 
+import javax.naming.OperationNotSupportedException;
+
 import de.fh.zwickau.mindstorms.server.communication.ConnectionManager;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.DestinationUnreachableException;
@@ -29,8 +31,12 @@ public class PathFinder {
 	 * @param map the map to use
 	 * @param targetManager the target manager to update the calculated paths
 	 * @param robotName the robot's friendly name
+	 * @throws OperationNotSupportedException if the robot name is unequal to "Picker"
 	 */
-	public PathFinder(LineMap map, TargetManager targetManager, String robotName) {
+	public PathFinder(LineMap map, TargetManager targetManager, String robotName) throws OperationNotSupportedException {
+		if (!robotName.equals("Picker"))
+			throw new OperationNotSupportedException("The nextAction() method is designed for the \"Picker\" robot only by now");
+		
 		finder = new DijkstraPathFinder(map);
 		this.targetManager = targetManager;
 		this.robotName = robotName;
@@ -46,7 +52,7 @@ public class PathFinder {
 	 */
 	public void nextAction(Pose currentPose, ConnectionManager manager) {
 		if (!targetManager.hasMoreWaypoints(robotName)) {
-			//find new path - will happen if method is called first and after the ball has been picked up
+			//find new path - will happen if method is called for the first time and after the ball has been picked up
 			Path path = null;
 			if (!robotHasBall) {
 				try {

@@ -1,5 +1,7 @@
 package de.fh.zwickau.mindstorms.server;
 
+import javax.naming.OperationNotSupportedException;
+
 import lejos.geom.Line;
 import lejos.geom.Rectangle;
 import lejos.robotics.mapping.LineMap;
@@ -38,7 +40,11 @@ public class Main {
 
 		view.start();	// new Thread for view
 		
-//		new ConnectionManager(mapper, targetManager);
+		try {
+			new ConnectionManager(mapper, targetManager, "Picker");
+		} catch (OperationNotSupportedException e) {
+			System.err.println("Please make sure the connection manager is initialized for the robot with the name \"Picker\" - other robot types are currently not supported");
+		}
 		
 		//TODO test of path finding
 		Line[] lines = new Line[2];
