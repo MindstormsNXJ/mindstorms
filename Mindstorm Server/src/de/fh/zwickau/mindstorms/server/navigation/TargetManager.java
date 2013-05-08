@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import de.fh.zwickau.mindstorms.server.view.View;
 
-import lejos.geom.Point;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
 
@@ -29,36 +28,68 @@ public class TargetManager {
 	public TargetManager() {
 		robotPaths = new HashMap<String, Path>();
 		currentRobotWaypointNumber = new HashMap<String, Integer>();
-		initPickerRobot();
+		addRobot("Picker");
 		initTargets();
 	}
 	
 	/**
-	 * Initialises the ArrayList and target number for the robot "Picker".
-	 */
-	private void initPickerRobot() {
-		robotPaths.put("Picker", new Path());
-		currentRobotWaypointNumber.put("Picker", 0);
-	}
-	
-	/**
-	 * Initialises the ball and the finish target.
+	 * Initialises the ball and the finish target. //TODO these targets should be stored in the mapper
 	 */
 	private void initTargets() {
 		ball = new Waypoint(10, 10);
 		target = new Waypoint(-10, -10);
 	}
 	
-	private boolean isBallWaypoint(Waypoint waypoint) {
+	/**
+	 * Adds another robot to the maps. Robots are identified by there bluetooth friendly names.
+	 * 
+	 * @param robotName the robot's friendly name
+	 */
+	public void addRobot(String robotName) {
+		robotPaths.put(robotName, new Path());
+		currentRobotWaypointNumber.put(robotName, 0);
+	}
+	
+	/**
+	 * Says whether a given waypoint is the ball or not.
+	 * 
+	 * @param waypoint the given waypoint
+	 * @return true if the waypoint is the ball, false otherwise
+	 */
+	public boolean isBallWaypoint(Waypoint waypoint) {
 		if ((int) waypoint.x == (int) ball.x && (int) waypoint.y == (int) ball.y)
 			return true;
 		return false;
 	}
 	
-	private boolean isFinalTarget(Waypoint waypoint) {
+	/**
+	 * Says whether a given waypoint is the final target or not.
+	 * 
+	 * @param waypoint the given waypoint
+	 * @return true if the waypoint is the target, false otherwise
+	 */
+	public boolean isFinalTarget(Waypoint waypoint) {
 		if ((int) waypoint.x == (int) target.x && (int) waypoint.y == (int) target.y)
 			return true;
 		return false;
+	}
+	
+	/**
+	 * Returns the waypoint where the ball can be found.
+	 * 
+	 * @return the ball's waypoint
+	 */
+	public Waypoint getBallWaypoint() {
+		return ball;
+	}
+	
+	/**
+	 * Returns the waypoint where the final target can be found.
+	 * 
+	 * @return the final target's waypoint
+	 */
+	public Waypoint getFinalTarget() {
+		return target;
 	}
 	
 	/**
@@ -78,17 +109,17 @@ public class TargetManager {
 	 * @param robotName the robots friendly name
 	 * @return the target point
 	 */
-	public Point getCurrentWaypoint(String robotName) {
+	public Waypoint getCurrentWaypoint(String robotName) {
 		return robotPaths.get(robotName).get(currentRobotWaypointNumber.get(robotName));
 	}
 	
 	/**
-	 * Returns all known Targets
+	 * Returns the robot's path.
 	 * 
 	 * @param robotName the robots friendly name
 	 * @return the targets as a path
 	 */
-	public Path getWaypoint(String robotName) {
+	public Path getPath(String robotName) {
 		return robotPaths.get(robotName);
 	}
 	
@@ -109,7 +140,7 @@ public class TargetManager {
 	 * @param path the path to append
 	 * @param robotName the robot's friendly name
 	 */
-	public void setNewPath(Path path, String robotName) {
+	public void setNewPath(Path path, String robotName) {		
 		Path currentPath = robotPaths.get(robotName);
 		//remove old waypoints
 		for (int i = currentRobotWaypointNumber.get(robotName); i < currentPath.size(); ++i)

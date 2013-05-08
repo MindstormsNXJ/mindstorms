@@ -7,13 +7,14 @@ import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.DijkstraPathFinder;
 import lejos.robotics.pathfinding.Path;
+import lejos.util.Delay;
 
 /**
  * This PathFinder class decides which command has to be send next by
  * finding to path to it's current target using a Dijkstra algorithm.
  * 
  * @author Tobias Schießl
- * @version 1.2
+ * @version 1.3
  */
 public class PathFinder {
 	
@@ -25,7 +26,7 @@ public class PathFinder {
 	 * Initialises a PathFinder with the LineMap to use from now on.
 	 * 
 	 * @param map the map to use
-	 * @param targetManager the targetManager to update the current target
+	 * @param targetManager the target manager to update the calculated paths
 	 */
 	public PathFinder(LineMap map, TargetManager targetManager) {
 		finder = new DijkstraPathFinder(map);
@@ -38,43 +39,41 @@ public class PathFinder {
 	 * 
 	 * @param currentPose the robot's current pose
 	 * @param manager the ConnectionManager which will send the command
+	 * @param robotName the robot's friendly name
 	 */
-	public void nextAction(Pose currentPose, ConnectionManager manager) {
-		Waypoint currentTarget = new Waypoint(targetManager.getCurrentWaypoint("Picker"));
-		Path path = null;
-		try {
-			path = finder.findRoute(currentPose, currentTarget);
-		} catch (DestinationUnreachableException e) {
-			System.err.println("Error in finding path: destination is unreachable");
-			return;
-		}
-		
-		for (int i = 0; i < path.size(); i++)
-			System.out.println("Waypoint" + i + ": (" + path.get(i).x + ", " + path.get(i).y + ")");
-		
-		if (path.size() == 1) {
-			System.out.println("Current target has been reached");
-			targetManager.waypointReached("Picker");
+	public void nextAction(Pose currentPose, ConnectionManager manager, String robotName) {
+		if (!targetManager.hasMoreWaypoints(robotName)) {
+			//find new path - will happen if method is called first and after the ball has been picked up
+			Path path = null;
 			if (!robotHasBall) {
-				robotHasBall = true;
-				manager.sendPickCommand();
-				System.out.println("Sending pick command");
+				try {
+					path = finder.findRoute(currentPose, targetManager.getBallWaypoint());
+				} catch (DestinationUnreachableException e) {
+					System.err.println("Error in finding path: destination is unreachable");
+					return;
+				}
 			} else {
-				manager.sendDropCommand();
-				System.out.println("Sending drop command");
-				manager.terminate();
-				System.out.println("Terminating server");
+				try {
+					path = finder.findRoute(currentPose, targetManager.getFinalTarget());
+				} catch (DestinationUnreachableException e) {
+					System.err.println("Error in finding path: destination is unreachable");
+					return;
+				}
 			}
-			System.out.println();
-			return;
+			System.out.println("Path calculated:\n" + path + "\n");
+			targetManager.setNewPath(path, robotName);
+			targetManager.waypointReached(robotName); //necessary because the first waypoint of the found path will be the current pose
 		}
-		Waypoint nextWaypoint = path.get(1); //0 is the current position
-		System.out.println("Next Waypoint: (" + nextWaypoint.x + ", " + nextWaypoint.y + ")");
-		int xDiv = (int) (nextWaypoint.x - currentPose.getX());
-		int yDiv = (int) (nextWaypoint.y - currentPose.getY());
+		
+		System.out.println("current pose: " + currentPose);
+		Waypoint currentWaypoint = targetManager.getCurrentWaypoint(robotName);
+		System.out.println("current target: " + currentWaypoint);
+		
+		int xDiv = (int) (currentWaypoint.x - currentPose.getX());
+		int yDiv = (int) (currentWaypoint.y - currentPose.getY());
 		int targetDir;
 		if (yDiv != 0 && xDiv != 0) {
-			targetDir = (int) Math.toDegrees(Math.atan(xDiv/yDiv));
+			targetDir = (int) Math.toDegrees(Math.atan((double) xDiv/ (double) yDiv));
 			if (yDiv > 0 && targetDir < 0) {
 				targetDir = 360 + targetDir;
 			} else if (yDiv < 0) {
@@ -83,12 +82,12 @@ public class PathFinder {
 		}
 		else {
 			if (yDiv == 0) {
-				if (nextWaypoint.x > currentPose.getX())
+				if (currentWaypoint.x > currentPose.getX())
 					targetDir = 90;
 				else
 					targetDir = 270;
 			} else {
-				if (nextWaypoint.y > currentPose.getY())
+				if (currentWaypoint.y > currentPose.getY())
 					targetDir = 0;
 				else
 					targetDir = 180;
@@ -101,8 +100,34 @@ public class PathFinder {
 		}
 		else { //move robot forward
 			int distanceToMove = (int) Math.sqrt(xDiv * xDiv + yDiv * yDiv);
-			manager.sendForwardCommand(distanceToMove);
-			System.out.println("Sending forward command - distance: " + distanceToMove);
+			if (targetManager.isBallWaypoint(currentWaypoint) || targetManager.isFinalTarget(currentWaypoint)) {
+				distanceToMove -= 20; //to leave enough distance for the pick and drop procedures
+				if (distanceToMove < 0) {
+					//TODO maybe we should move backwards, but that could cause trouble if a wall gets in the ultrasonic sensors range
+//					manager.sendBackwardCommand(Math.abs(distanceToMove));
+//					System.out.println("Sending backward command - distance: " + Math.abs(distanceToMove));
+				} else {
+					manager.sendForwardCommand(distanceToMove);
+					System.out.println("Sending forward command - distance: " + distanceToMove);
+				}
+				Delay.msDelay(2000);
+				if (targetManager.isBallWaypoint(currentWaypoint)) {
+					manager.sendPickCommand();
+					robotHasBall = true;
+					System.out.println("Sending pick command");
+				} else {
+					manager.sendDropCommand();
+					System.out.println("Sending drop command");
+					Delay.msDelay(2000);
+					manager.terminate();
+					System.out.println("Sending terminate command");
+				}
+					
+			} else {
+				manager.sendForwardCommand(distanceToMove);
+				System.out.println("Sending forward command - distance: " + distanceToMove);
+			}
+			targetManager.waypointReached(robotName);
 		}
 		System.out.println();
 	}

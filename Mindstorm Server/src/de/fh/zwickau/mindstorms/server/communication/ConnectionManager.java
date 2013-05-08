@@ -130,7 +130,7 @@ public class ConnectionManager {
 			return;
 		}
 		mapper.addPose(pose, connector.getNXTInfo().name);
-		pathFinder.nextAction(pose, this);
+		pathFinder.nextAction(pose, this, "Picker");
 	}
 	
 	/**
