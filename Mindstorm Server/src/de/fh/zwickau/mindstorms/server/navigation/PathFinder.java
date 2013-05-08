@@ -38,7 +38,8 @@ public class PathFinder {
 		if (!robotName.equals("Picker"))
 			throw new OperationNotSupportedException("The nextAction() method is designed for the \"Picker\" robot only by now");
 		
-		finder = new DijkstraPathFinder(map);
+//		finder = new DijkstraPathFinder(map);
+		finder = new ShortestPathFinder(map);
 		if (finder instanceof DijkstraPathFinder)
 			((DijkstraPathFinder) finder).lengthenLines(10);
 		else if (finder instanceof ShortestPathFinder)

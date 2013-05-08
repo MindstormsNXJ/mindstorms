@@ -92,7 +92,12 @@ public class Main {
 //			finder.nextAction(new Pose(-10,5,56), null);
 //			finder.nextAction(new Pose(5,15,56), null);
 //			finder.nextAction(new Pose(5,15,135), null);
-//			finder.nextAction(new Pose(10,10,135), null); //TODO causes exception
+//			finder.nextAction(new Pose(10,10,135), null); //TODO causes exception if DijkstraPathFinder is used
+//			finder.nextAction(new Pose(10,10,315), null);
+//			finder.nextAction(new Pose(5,15,315), null);
+//			finder.nextAction(new Pose(5,15,236), null);
+//			finder.nextAction(new Pose(-10,5,236), null);
+//			finder.nextAction(new Pose(-10,5,180), null);
 //		}
 //		System.exit(0);
 	}
