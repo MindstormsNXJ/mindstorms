@@ -25,7 +25,7 @@ public class Robot {
 	public double driveTranslation; // angel in degrees per cm
 	public PositionManager positionManager;
 
-	public int rotationSpeed = 100; // standard values, will be changed after
+	public int rotationSpeed = 10; // standard values, will be changed after
 									// the calibration
 	public int driveSpeed = 200;
 	public final int STANDARD_ROTATE_ACC = 5000;

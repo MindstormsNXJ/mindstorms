@@ -66,65 +66,45 @@ public class MovementManager implements Manager {
 
 		driving(dist);
 		/**
-		 * the intern Thread for stopping the Moving and correcting the Angle
+		 * Corects the drive Angle
 		 */
-		Thread check = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
+		while (driving == true) {
+			if (Math.abs(angelCorrection(startdegrees,
+					(int) robot.compassSensor.getDegrees())) > 5) {
+				robot.stop();
+				double newrtdl = rotToDriveLeft
+						- robot.leftMotor.getTachoCount();
+				double newrtdr = rotToDriveRight
+						- robot.rightMotor.getTachoCount();
 				/**
-				 * Corects the drive Angle
+				 * the doubles Saving the distance who is drived before
+				 * correcting the angle in rotatedegrees
 				 */
-				while (driving == true) {
-					if (Math.abs(angelCorrection(startdegrees,
-							(int) robot.compassSensor.getDegrees())) > 5) {
-						robot.stop();
-						double newrtdl = rotToDriveLeft
-								- robot.leftMotor.getTachoCount();
-						double newrtdr = rotToDriveRight
-								- robot.rightMotor.getTachoCount();
-						/**
-						 * the doubles Saving the distance who is drived before
-						 * correcting the angle in rotatedegrees
-						 */
-						positionManager.rotateTo(startdegrees);
-						/** reinitiale the restdistance in rotateangles */
-						rotToDriveLeft = robot.leftMotor.getTachoCount()
-								+ newrtdl;
-						rotToDriveRight = robot.rightMotor.getTachoCount()
-								+ newrtdr;
-						driving(distance);
-					}
-
-					/**
-					 * stops the moving when the right Tachocount is reached
-					 */
-					if (forward) {
-						if (rotToDriveRight <= robot.rightMotor.getTachoCount()
-								|| rotToDriveRight <= robot.rightMotor
-										.getTachoCount()) {
-							driving = false;
-						}
-					}
-					if (!forward) {
-						if (rotToDriveRight >= robot.rightMotor.getTachoCount()
-								|| rotToDriveLeft >= robot.leftMotor
-										.getTachoCount()) {
-							driving = false;
-						}
-					}
-				}
-
-				stop();
+				positionManager.rotateTo(startdegrees);
+				/** reinitiale the restdistance in rotateangles */
+				rotToDriveLeft = robot.leftMotor.getTachoCount() + newrtdl;
+				rotToDriveRight = robot.rightMotor.getTachoCount() + newrtdr;
+				driving(distance);
 			}
 
-		});
-		check.start();
-		try {
-			check.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+			/**
+			 * stops the moving when the right Tachocount is reached
+			 */
+			if (forward) {
+				if (rotToDriveRight <= robot.rightMotor.getTachoCount()
+						|| rotToDriveRight <= robot.rightMotor.getTachoCount()) {
+					driving = false;
+				}
+			}
+			if (!forward) {
+				if (rotToDriveRight >= robot.rightMotor.getTachoCount()
+						|| rotToDriveLeft >= robot.leftMotor.getTachoCount()) {
+					driving = false;
+				}
+			}
 		}
+
+		stop();
 
 	}
 
