@@ -36,28 +36,31 @@ public class ConnectionManager {
 	 * 
 	 * @param mapper the mapper that gets notified about the robot's current Pose
 	 * @param targetManager the target manager which holds all targets to reach
+	 * @param robotName the robot's friendly name
 	 */
-	public ConnectionManager(Mapper mapper, TargetManager targetManager) {
+	public ConnectionManager(Mapper mapper, TargetManager targetManager, String robotName) {
 		this.mapper = mapper;
 		this.targetManager = targetManager;
+		targetManager.addRobot(robotName);
 		
-		pathFinder = new PathFinder(mapper.getLineMap(), targetManager);
+		pathFinder = new PathFinder(mapper.getLineMap(), targetManager, robotName);
 		
-		while (!establishConnection()) {
+		while (!establishConnection(robotName)) {
 			System.err.println("Connection failed, will retry in 10 seconds...");
 			Delay.msDelay(10000);
 		}
-		receiveAndProcessPoses();
+		receiveAndProcessPoses(robotName);
 	}
 	
 	/**
 	 * Establishes the connection to the NXT.
 	 * 
+	 * @param robotName the robot's friendly name
 	 * @return true if connection was successful established
 	 */
-	private boolean establishConnection() {
+	private boolean establishConnection(String robotName) {
 		connector = new NXTConnector();
-		boolean success = connector.connectTo(null, null, NXTCommFactory.BLUETOOTH);
+		boolean success = connector.connectTo(robotName, null, NXTCommFactory.BLUETOOTH);
 		if (success) {
 			System.out.println("Connection established via bluetooth");
 			commandSender = new DataOutputStream(connector.getOutputStream());
@@ -70,8 +73,10 @@ public class ConnectionManager {
 	
 	/**
 	 * Starts the Thread that will listen for received Poses and process them afterwards.
+	 * 
+	 * @param robotName the robot's friendly name
 	 */
-	private void receiveAndProcessPoses() {
+	private void receiveAndProcessPoses(final String robotName) {
 		new Thread(new Runnable() {
 			
 			@Override
@@ -84,9 +89,9 @@ public class ConnectionManager {
 						decodePose(pose);
 					} catch (EOFException ex) {
 						System.err.println("Connection terminated by NXT");
-						if (targetManager.hasMoreWaypoints("Picker")) {
+						if (targetManager.hasMoreWaypoints(robotName)) {
 							System.out.println("Resetting connection");
-							while (!establishConnection())
+							while (!establishConnection(robotName))
 								Delay.msDelay(2000);
 						} else {
 							terminate();
@@ -130,7 +135,7 @@ public class ConnectionManager {
 			return;
 		}
 		mapper.addPose(pose, connector.getNXTInfo().name);
-		pathFinder.nextAction(pose, this, "Picker");
+		pathFinder.nextAction(pose, this);
 	}
 	
 	/**

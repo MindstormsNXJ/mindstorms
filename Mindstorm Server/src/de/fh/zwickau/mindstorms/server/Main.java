@@ -16,10 +16,10 @@ import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 import de.fh.zwickau.mindstorms.server.view.View;
 
 /**
- * The Server start point
+ * The server start point of the application.
  * 
- * @author Andre Furchner
- *
+ * @author Andre Furchner, Tobias Schießl
+ * @version 1.0
  */
 public class Main {
 
@@ -40,6 +40,7 @@ public class Main {
 		
 //		new ConnectionManager(mapper, targetManager);
 		
+		//TODO test of path finding
 		Line[] lines = new Line[2];
 		lines[0] = new Line(0,5,(float) 5.01,5);
 		lines[1] = new Line(5,5,5,0);
@@ -52,16 +53,18 @@ public class Main {
 //			//nothing
 //		}
 //		System.out.println(path);
-		//TODO test of path finding
+		
 //		try {
 //			Path path = new MindstormPathFinder(mapper).findRoute(new Pose(0, 0, 0), new Waypoint(10, 10));
 //		} catch (DestinationUnreachableException e) {
 //			//nothing
 //		}
+//		System.out.println(path);
 		
 		//TODO TEST - remove if commands are calculated correctly now
 //		PathFinder finder = new PathFinder(lineMap, targetManager);
-//		finder.nextAction(new Pose(0,0,0), null, "Picker"); //TODO algorithm does not work
+//		targetManager.addRobot("Picker");
+//		finder.nextAction(new Pose(0,0,0), null, "Picker");
 //		finder.nextAction(new Pose(0,0,90), null, "Picker");
 //		finder.nextAction(new Pose(5,0,90), null, "Picker");
 //		finder.nextAction(new Pose(5,0,26), null, "Picker");

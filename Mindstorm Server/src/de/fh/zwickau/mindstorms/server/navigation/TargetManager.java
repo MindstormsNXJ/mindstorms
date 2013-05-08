@@ -17,8 +17,8 @@ import lejos.robotics.pathfinding.Path;
 public class TargetManager {
 	
 	private View observer;
-	private HashMap<String, Path> robotPaths;
-	private HashMap<String, Integer> currentRobotWaypointNumber;
+	private HashMap<String, Path> robotPaths; //assigns every robot name to it's current path
+	private HashMap<String, Integer> currentRobotWaypointNumber; //assigns every robot name to it's current waypoint number
 	private Waypoint ball;
 	private Waypoint target;
 	
@@ -28,7 +28,6 @@ public class TargetManager {
 	public TargetManager() {
 		robotPaths = new HashMap<String, Path>();
 		currentRobotWaypointNumber = new HashMap<String, Integer>();
-		addRobot("Picker");
 		initTargets();
 	}
 	

@@ -21,16 +21,19 @@ public class PathFinder {
 	private lejos.robotics.pathfinding.PathFinder finder;
 	private TargetManager targetManager;
 	private boolean robotHasBall = false;
+	private String robotName;
 	
 	/**
 	 * Initialises a PathFinder with the LineMap to use from now on.
 	 * 
 	 * @param map the map to use
 	 * @param targetManager the target manager to update the calculated paths
+	 * @param robotName the robot's friendly name
 	 */
-	public PathFinder(LineMap map, TargetManager targetManager) {
+	public PathFinder(LineMap map, TargetManager targetManager, String robotName) {
 		finder = new DijkstraPathFinder(map);
 		this.targetManager = targetManager;
+		this.robotName = robotName;
 	}
 	
 	/**
@@ -41,7 +44,7 @@ public class PathFinder {
 	 * @param manager the ConnectionManager which will send the command
 	 * @param robotName the robot's friendly name
 	 */
-	public void nextAction(Pose currentPose, ConnectionManager manager, String robotName) {
+	public void nextAction(Pose currentPose, ConnectionManager manager) {
 		if (!targetManager.hasMoreWaypoints(robotName)) {
 			//find new path - will happen if method is called first and after the ball has been picked up
 			Path path = null;
@@ -95,7 +98,7 @@ public class PathFinder {
 		}
 		int deltaDir = (int) Math.abs(targetDir - currentPose.getHeading());
 		if (deltaDir > 2) {//turn robot
-			manager.sendTurnCommand(targetDir);
+//			manager.sendTurnCommand(targetDir);
 			System.out.println("Sending turn command - degrees: " + targetDir);
 		}
 		else { //move robot forward
@@ -107,24 +110,24 @@ public class PathFinder {
 //					manager.sendBackwardCommand(Math.abs(distanceToMove));
 //					System.out.println("Sending backward command - distance: " + Math.abs(distanceToMove));
 				} else {
-					manager.sendForwardCommand(distanceToMove);
+//					manager.sendForwardCommand(distanceToMove);
 					System.out.println("Sending forward command - distance: " + distanceToMove);
 				}
 				Delay.msDelay(2000);
 				if (targetManager.isBallWaypoint(currentWaypoint)) {
-					manager.sendPickCommand();
+//					manager.sendPickCommand();
 					robotHasBall = true;
 					System.out.println("Sending pick command");
 				} else {
-					manager.sendDropCommand();
+//					manager.sendDropCommand();
 					System.out.println("Sending drop command");
 					Delay.msDelay(2000);
-					manager.terminate();
+//					manager.terminate();
 					System.out.println("Sending terminate command");
 				}
 					
 			} else {
-				manager.sendForwardCommand(distanceToMove);
+//				manager.sendForwardCommand(distanceToMove);
 				System.out.println("Sending forward command - distance: " + distanceToMove);
 			}
 			targetManager.waypointReached(robotName);
