@@ -118,7 +118,9 @@ public class PositionManager implements Manager {
 	@Override
 	public int stop() {
 		movementManager.stop();
+		//TODO updatePosition for the movement
 		directionManager.stop();
+		updateRotation();
 		return 0;
 	}
 

@@ -55,10 +55,6 @@ public class Robot {
 		return (int) compassSensor.getDegrees();
 	}
 
-	public void setRotateSpeed(int rotationSpeed) {
-		this.rotationSpeed = rotationSpeed;
-	}
-
 	public void setDriveTranslation(double driveTranslation) {
 		this.driveTranslation = driveTranslation;
 	}
