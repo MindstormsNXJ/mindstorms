@@ -1,6 +1,8 @@
 package de.fh.zwickau.mindstorms.brick;
 
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
+import de.fh.zwickau.mindstorms.brick.task.Pick;
+import lejos.nxt.ColorSensor;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.UltrasonicSensor;
@@ -15,13 +17,16 @@ import lejos.nxt.addon.CompassHTSensor;
  * @version 1.0
  */
 public class Robot {
-	
+	// Motors
 	public NXTRegulatedMotor leftMotor;
 	public NXTRegulatedMotor rightMotor;
 	public NXTRegulatedMotor grabberMotor;
+	// Sensors
 	public CompassHTSensor compassSensor;
 	public UltrasonicSensor ultrasonicSensor;
 	public TouchSensor touchSensor;
+	public ColorSensor colorSensor;
+	
 	public double driveTranslation; // angel in degrees per cm
 	public PositionManager positionManager;
 
@@ -62,6 +67,14 @@ public class Robot {
 	public void stop(){
 		rightMotor.stop(true);
 		leftMotor.stop(false);
+	}
+	
+	/**
+	 * This method moves the robot in front of an item and picks the item with the grabber.
+	 */
+	public void pickItem(){
+		Pick p = new Pick(this);
+		p.pickItem();
 	}
 
 }

@@ -2,6 +2,7 @@ package de.fh.zwickau.mindstorms.brick.initialisation;
 
 import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
+import lejos.nxt.ColorSensor;
 import lejos.nxt.Motor;
 import lejos.nxt.MotorPort;
 import lejos.nxt.NXT;
@@ -14,6 +15,7 @@ import lejos.nxt.addon.CompassHTSensor;
 import lejos.robotics.navigation.Pose;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.communication.ConnectionManager;
+import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
 import de.fh.zwickau.mindstorms.brick.sensors.ObjectCentralisation;
 import de.fh.zwickau.mindstorms.brick.task.Pick;
@@ -57,10 +59,11 @@ public class Initializer implements ButtonListener {
 		rightMotor = Motor.B;
 		robot.rightMotor = rightMotor;
 		robot.grabberMotor = new NXTRegulatedMotor(MotorPort.C);
-		compassSensor = new CompassHTSensor(SensorPort.S2);
 		robot.compassSensor = compassSensor;
 		robot.ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
+		compassSensor = new CompassHTSensor(SensorPort.S2);
 		robot.touchSensor = new TouchSensor(SensorPort.S3);
+		robot.colorSensor = new ColorSensor(SensorPort.S4);
 		initialize();
 		// establish connection to the server
 		if (mode == Mode.SERVERMODE) {
@@ -79,7 +82,11 @@ public class Initializer implements ButtonListener {
 		}
 
 		if (mode == mode.PICKERTEST) {
-			Pick p = new Pick(robot);
+//			Pick p = new Pick(robot);
+			robot.pickItem();
+			robot.positionManager.rotate(90, Direction.RIGHT);
+//			robot.putDown();
+			robot.positionManager.move(-10);
 		}
 	}
 

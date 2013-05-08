@@ -6,10 +6,10 @@ import lejos.nxt.TouchSensor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
-import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 
 /**
- * 
+ * Class which enables a robot to use it's grabber. This class provides methods as pickerUp, 
+ * pickerDown, take and drop item.
  * @author simon
  *
  */
@@ -28,46 +28,37 @@ public class Pick {
 		touchSensor = robot.touchSensor;
 		sensor = robot.ultrasonicSensor;
 //		pickerUp();
-		takeItem();
+//		takeItem();
 //		pickerDown();
 //		pickerUp();
 //		pickerDown();
 //		robot.positionManager.move(10);
 	}
 	
+	/**
+	 * Lift the grabber up, regardless if there is an item to pick.
+	 * To pick an item use pickItem().
+	 */
 	public void pickerUp(){
 		grabberMotor.resetTachoCount();
 		grabberMotor.setSpeed(250);
-		System.out.println(grabberMotor.getTachoCount());
 		grabberMotor.forward();
 		boolean up = false;
-//		while(up || !up){
-//			System.out.println(robot.ultrasonicSensor.getDistance());
-//		}
 		while(!up){
 			if(touchSensor.isPressed() || (grabberMotor.getTachoCount() > 360)){
 				Sound.beep();
 				grabberMotor.stop();
 				up = true;
 			}
-			
 		}
-		System.out.println(grabberMotor.getTachoCount());
-		
-		Delay.msDelay(1000);
-		
 	}
 	
 	public void pickerDown(){
 		grabberMotor.resetTachoCount();
-//		System.out.println("down");
 		int currentTacho = grabberMotor.getTachoCount();
 		int targetTacho = currentTacho - wayDown;
-//		System.out.println(picker.getTachoCount());
-//		boolean move = true;
 		grabberMotor.setSpeed(100);
 		grabberMotor.backward();
-//		Delay.msDelay(500);
 		boolean down = true;
 		while(down){
 			if(grabberMotor.getTachoCount() < targetTacho){
@@ -75,12 +66,12 @@ public class Pick {
 				grabberMotor.stop();
 			}
 		}
-		
-//		System.out.println(picker.getTachoCount());
-//		Delay.msDelay(4000);
 	}
 	
-	public void takeItem(){
+	/**
+	 * Method to pick an item which is straight ahead of the robot
+	 */
+	public void pickItem(){
 		pickerUp();
 		int distance = sensor.getDistance();
 		if(distance < 250){
@@ -89,16 +80,12 @@ public class Pick {
 			robot.positionManager.move(driveDist);
 			pickerDown();
 			robot.positionManager.move(9);
-			Delay.msDelay(1000);
 			pickerUp();
-			robot.positionManager.rotate(45, Direction.RIGHT);
-			pickerDown();
-			
 		}
 		else{
 			System.out.println("nothing to pick");
+			Sound.beepSequence();
 		}
-		
 		Delay.msDelay(2000);
 		
 	}
