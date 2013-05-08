@@ -40,7 +40,7 @@ public class PathFinder {
 	 * @param manager the ConnectionManager which will send the command
 	 */
 	public void nextAction(Pose currentPose, ConnectionManager manager) {
-		Waypoint currentTarget = new Waypoint(targetManager.getCurrentTarget());
+		Waypoint currentTarget = new Waypoint(targetManager.getCurrentWaypoint("Picker"));
 		Path path = null;
 		try {
 			path = finder.findRoute(currentPose, currentTarget);
@@ -54,7 +54,7 @@ public class PathFinder {
 		
 		if (path.size() == 1) {
 			System.out.println("Current target has been reached");
-			targetManager.targetReached();
+			targetManager.waypointReached("Picker");
 			if (!robotHasBall) {
 				robotHasBall = true;
 				manager.sendPickCommand();

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import lejos.geom.Line;
-import lejos.geom.Point;
 import lejos.robotics.navigation.Pose;
+import lejos.robotics.pathfinding.Path;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -174,8 +174,8 @@ public class View extends Thread {
         MapGrid grid = mapper.getGrid();
         final float gstsh = grid.getGridSize() * grid.getTileSize() / 2.0f;
         
-        ArrayList<Point> points; 
-        if((points = targetM.getTargets()) != null){
+        Path points; 
+        if((points = targetM.getWaypoint("Picker")) != null){
             targetVertices = new float[points.size() * 2 + 2];
             targetVertices[0] = targetVertices[1] = 0.0f;                      //this is the start point [0,0]
             int j = 1;

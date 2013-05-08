@@ -84,7 +84,7 @@ public class ConnectionManager {
 						decodePose(pose);
 					} catch (EOFException ex) {
 						System.err.println("Connection terminated by NXT");
-						if (targetManager.hasMoreTargets()) {
+						if (targetManager.hasMoreWaypoints("Picker")) {
 							System.out.println("Resetting connection");
 							while (!establishConnection())
 								Delay.msDelay(2000);
