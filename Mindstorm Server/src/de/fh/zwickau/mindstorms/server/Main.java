@@ -47,10 +47,10 @@ public class Main {
 		}
 		
 		//TODO test of path finding
-		Line[] lines = new Line[2];
-		lines[0] = new Line(0,5,(float) 5.01,5);
-		lines[1] = new Line(5,5,5,0);
-		LineMap lineMap = new LineMap(lines, new Rectangle(-20, 20, 40, 40));
+//		Line[] lines = new Line[2];
+//		lines[0] = new Line(0,5,(float) 5.01,5);
+//		lines[1] = new Line(5,5,5,0);
+//		LineMap lineMap = new LineMap(lines, new Rectangle(-20, 20, 40, 40));
 //		lejos.robotics.pathfinding.PathFinder finder = new DijkstraPathFinder(lineMap);
 //		Path path = null;
 //		try {
@@ -68,16 +68,21 @@ public class Main {
 //		System.out.println(path);
 		
 		//TODO TEST - remove if commands are calculated correctly now
-//		PathFinder finder = new PathFinder(lineMap, targetManager);
+//		PathFinder finder = null;
+//		try {
+//			finder = new PathFinder(lineMap, targetManager, "Picker");
+//		} catch (OperationNotSupportedException e) {
+//			//nothing
+//		}
 //		targetManager.addRobot("Picker");
-//		finder.nextAction(new Pose(0,0,0), null, "Picker");
-//		finder.nextAction(new Pose(0,0,90), null, "Picker");
-//		finder.nextAction(new Pose(5,0,90), null, "Picker");
-//		finder.nextAction(new Pose(5,0,26), null, "Picker");
-//		finder.nextAction(new Pose(10,10,26), null, "Picker");
-//		finder.nextAction(new Pose(10,10,206), null, "Picker");
-//		finder.nextAction(new Pose(5,0,206), null, "Picker");
-//		finder.nextAction(new Pose(5,0,236), null, "Picker");
+//		finder.nextAction(new Pose(0,0,0), null);
+//		finder.nextAction(new Pose(0,0,90), null);
+//		finder.nextAction(new Pose(5,0,90), null);
+//		finder.nextAction(new Pose(5,0,26), null);
+//		finder.nextAction(new Pose(10,10,26), null);
+//		finder.nextAction(new Pose(10,10,206), null);
+//		finder.nextAction(new Pose(5,0,206), null);
+//		finder.nextAction(new Pose(5,0,236), null);
 //		System.exit(0);
 	}
 

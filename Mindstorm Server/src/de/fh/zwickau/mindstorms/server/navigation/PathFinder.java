@@ -116,24 +116,24 @@ public class PathFinder {
 //					manager.sendBackwardCommand(Math.abs(distanceToMove));
 //					System.out.println("Sending backward command - distance: " + Math.abs(distanceToMove));
 				} else {
-//					manager.sendForwardCommand(distanceToMove);
+					manager.sendForwardCommand(distanceToMove);
 					System.out.println("Sending forward command - distance: " + distanceToMove);
 				}
 				Delay.msDelay(2000);
 				if (targetManager.isBallWaypoint(currentWaypoint)) {
-//					manager.sendPickCommand();
+					manager.sendPickCommand();
 					robotHasBall = true;
 					System.out.println("Sending pick command");
 				} else {
-//					manager.sendDropCommand();
+					manager.sendDropCommand();
 					System.out.println("Sending drop command");
 					Delay.msDelay(2000);
-//					manager.terminate();
+					manager.terminate();
 					System.out.println("Sending terminate command");
 				}
 					
 			} else {
-//				manager.sendForwardCommand(distanceToMove);
+				manager.sendForwardCommand(distanceToMove);
 				System.out.println("Sending forward command - distance: " + distanceToMove);
 			}
 			targetManager.waypointReached(robotName);
