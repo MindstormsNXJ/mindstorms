@@ -75,7 +75,7 @@ public class DirectionManager implements Manager {
 			backwardMotor = robot.leftMotor;
 			degrees = -degree;
 		}
-		if (degrees < 15) { // use lower value of rotationSpeed for 15 degree
+		if (degrees <= 15) { // use lower value of rotationSpeed for 15 degree
 			robot.setMotorSpeed(robot.rotationSpeed / 10);
 		}
 		forwardMotor.forward();
