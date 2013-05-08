@@ -75,14 +75,25 @@ public class Main {
 //			//nothing
 //		}
 //		targetManager.addRobot("Picker");
-//		finder.nextAction(new Pose(0,0,0), null);
-//		finder.nextAction(new Pose(0,0,90), null);
-//		finder.nextAction(new Pose(5,0,90), null);
-//		finder.nextAction(new Pose(5,0,26), null);
-//		finder.nextAction(new Pose(10,10,26), null);
-//		finder.nextAction(new Pose(10,10,206), null);
-//		finder.nextAction(new Pose(5,0,206), null);
-//		finder.nextAction(new Pose(5,0,236), null);
+//		boolean lineLengthen = true;
+//		if (!lineLengthen) {
+//			finder.nextAction(new Pose(0,0,0), null);
+//			finder.nextAction(new Pose(0,0,90), null);
+//			finder.nextAction(new Pose(5,0,90), null);
+//			finder.nextAction(new Pose(5,0,26), null);
+//			finder.nextAction(new Pose(10,10,26), null);
+//			finder.nextAction(new Pose(10,10,206), null);
+//			finder.nextAction(new Pose(5,0,206), null);
+//			finder.nextAction(new Pose(5,0,236), null);
+//		} else {
+//			finder.nextAction(new Pose(0,0,0), null);
+//			finder.nextAction(new Pose(0,0,297), null);
+//			finder.nextAction(new Pose(-10,5,297), null);
+//			finder.nextAction(new Pose(-10,5,56), null);
+//			finder.nextAction(new Pose(5,15,56), null);
+//			finder.nextAction(new Pose(5,15,135), null);
+//			finder.nextAction(new Pose(10,10,135), null); //TODO causes exception
+//		}
 //		System.exit(0);
 	}
 

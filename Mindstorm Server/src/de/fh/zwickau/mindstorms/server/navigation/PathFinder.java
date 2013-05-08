@@ -9,6 +9,7 @@ import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.DijkstraPathFinder;
 import lejos.robotics.pathfinding.Path;
+import lejos.robotics.pathfinding.ShortestPathFinder;
 import lejos.util.Delay;
 
 /**
@@ -38,6 +39,10 @@ public class PathFinder {
 			throw new OperationNotSupportedException("The nextAction() method is designed for the \"Picker\" robot only by now");
 		
 		finder = new DijkstraPathFinder(map);
+		if (finder instanceof DijkstraPathFinder)
+			((DijkstraPathFinder) finder).lengthenLines(10);
+		else if (finder instanceof ShortestPathFinder)
+			((ShortestPathFinder) finder).lengthenLines(10);
 		this.targetManager = targetManager;
 		this.robotName = robotName;
 	}
@@ -104,7 +109,7 @@ public class PathFinder {
 		}
 		int deltaDir = (int) Math.abs(targetDir - currentPose.getHeading());
 		if (deltaDir > 2) {//turn robot
-//			manager.sendTurnCommand(targetDir);
+			manager.sendTurnCommand(targetDir);
 			System.out.println("Sending turn command - degrees: " + targetDir);
 		}
 		else { //move robot forward
