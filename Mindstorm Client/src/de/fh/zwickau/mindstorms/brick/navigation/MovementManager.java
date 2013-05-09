@@ -63,8 +63,13 @@ public class MovementManager implements Manager {
 		tachoLeft = robot.leftMotor.getTachoCount();
 		rotToDriveRight = (int) (dist * driveTranslation) + tachoRight;
 		rotToDriveLeft = (int) (dist * driveTranslation) + tachoLeft;
-
-		driving(dist);
+		if (dist > 0) {
+			forward = true;
+		}
+		{
+			forward = false;
+		}
+		drive();
 		/**
 		 * Corects the drive Angle
 		 */
@@ -84,28 +89,24 @@ public class MovementManager implements Manager {
 				/** reinitiale the restdistance in rotateangles */
 				rotToDriveLeft = robot.leftMotor.getTachoCount() + newrtdl;
 				rotToDriveRight = robot.rightMotor.getTachoCount() + newrtdr;
-				driving(distance);
+				drive();
 			}
 
 			/**
 			 * stops the moving when the right Tachocount is reached
 			 */
-			if (forward) {
-				if (rotToDriveRight <= robot.rightMotor.getTachoCount()
-						|| rotToDriveRight <= robot.rightMotor.getTachoCount()) {
-					driving = false;
-				}
+			if (forward
+					&& (rotToDriveRight <= robot.rightMotor.getTachoCount() || rotToDriveRight <= robot.rightMotor
+							.getTachoCount())) {
+				driving = false;
 			}
-			if (!forward) {
-				if (rotToDriveRight >= robot.rightMotor.getTachoCount()
-						|| rotToDriveLeft >= robot.leftMotor.getTachoCount()) {
-					driving = false;
-				}
+			if (!forward
+					&& (rotToDriveRight >= robot.rightMotor.getTachoCount() || rotToDriveLeft >= robot.leftMotor
+							.getTachoCount())) {
+				driving = false;
 			}
 		}
-
 		stop();
-
 	}
 
 	/**
@@ -145,21 +146,16 @@ public class MovementManager implements Manager {
 	}
 
 	/**
-	 * the method who starts driving and decides if for ore backward
-	 * 
-	 * @param dist
-	 *            distance who to drive, positive forward negativ backward
+	 * the method who starts driving and decides if for- or backward
 	 */
-	void driving(int dist) {
+	void drive() {
 		robot.setModeDrive();
-		if (dist >= 0) {
+		if (forward) {
 			robot.leftMotor.forward();
 			robot.rightMotor.forward();
-			forward = true;
 		} else {
 			robot.leftMotor.backward();
 			robot.rightMotor.backward();
-			forward = false;
 		}
 	}
 }
