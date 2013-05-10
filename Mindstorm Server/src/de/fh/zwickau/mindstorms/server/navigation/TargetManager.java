@@ -22,13 +22,24 @@ public class TargetManager {
 	private Waypoint ball;
 	private Waypoint target;
 	
+	private static TargetManager instance;
+	
 	/**
 	 * Initialises a new target manager.
 	 */
-	public TargetManager() {
+	private TargetManager() {
 		robotPaths = new HashMap<String, Path>();
 		currentRobotWaypointNumber = new HashMap<String, Integer>();
 		initTargets();
+	}
+	
+	/**
+	 * Returns the TargetManager instance for the current session.
+	 */
+	public synchronized static TargetManager getInstance() {
+		if (instance == null)
+			instance = new TargetManager();
+		return instance;
 	}
 	
 	/**

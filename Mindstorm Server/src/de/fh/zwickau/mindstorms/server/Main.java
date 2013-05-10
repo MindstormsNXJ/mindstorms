@@ -29,7 +29,7 @@ public class Main {
 		
 		View view = new View();
 		Mapper mapper = new Mapper(1);
-		TargetManager targetManager = new TargetManager();
+		TargetManager targetManager = TargetManager.getInstance();
 		
 		//register for observer model
 		mapper.setObserverView(view);
