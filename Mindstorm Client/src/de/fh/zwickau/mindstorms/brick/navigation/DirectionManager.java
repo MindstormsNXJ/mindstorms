@@ -14,13 +14,10 @@ import de.fh.zwickau.mindstorms.brick.util.Manager;
 
 public class DirectionManager implements Manager {
 
-	// int motorSpeed = 200; i think this isn't needed
 	/** robot which is rotating */
 	private Robot robot;
 	/** if the robot currently rotates */
-	private boolean isRotating = false;
-	/** the degree to rotate */
-	private int degrees;
+	private boolean isRotating;
 
 	/**
 	 * 
@@ -29,6 +26,7 @@ public class DirectionManager implements Manager {
 	 */
 	public DirectionManager(Robot robot) {
 		this.robot = robot;
+		isRotating = false;
 	}
 
 	/**
@@ -43,43 +41,43 @@ public class DirectionManager implements Manager {
 		robot.setModeRotate();
 		isRotating = true;
 
-		checkMotors(degree, direction);
+		int degrees = activateMotors(degree, direction);
+
 		// check when the target angle is reached and stop rotating
 		// the direction the robot stands at start
 		int startDirection = (int) robot.compassSensor.getDegrees();
 		// the direction where the robot should head to at the end
 		int targetdirection = (startDirection + degrees) % 360;
 		if (targetdirection < 0) {
-			targetdirection = 360 + targetdirection;
+			targetdirection += 360;
 		}
+
 		while (isRotating == true) {
 			int currentDirection = (int) robot.compassSensor.getDegrees();
-			// System.out.println(targetdirection);
 			if (currentDirection == targetdirection) {
 				isRotating = false;
 			}
 		}
 		stop();
-
 	}
 
-	private void checkMotors(int degree, Direction direction) {
+	private int activateMotors(int degrees, Direction direction) {
 		NXTRegulatedMotor forwardMotor;
 		NXTRegulatedMotor backwardMotor;
-		if (direction == Direction.RIGHT) {
-			forwardMotor = robot.leftMotor;
-			backwardMotor = robot.rightMotor;
-			degrees = degree;
-		} else {
-			forwardMotor = robot.rightMotor;
-			backwardMotor = robot.leftMotor;
-			degrees = -degree;
-		}
 		if (degrees <= 15) { // use lower value of rotationSpeed for 15 degree
 			robot.setMotorSpeed(robot.rotationSpeed / 10);
 		}
+		if (direction == Direction.RIGHT) {
+			forwardMotor = robot.leftMotor;
+			backwardMotor = robot.rightMotor;
+		} else { // direction == Direction.LEFT
+			forwardMotor = robot.rightMotor;
+			backwardMotor = robot.leftMotor;
+			degrees = -degrees;
+		}
 		forwardMotor.forward();
 		backwardMotor.backward();
+		return degrees;
 	}
 
 	public boolean isRotating() {
@@ -90,6 +88,6 @@ public class DirectionManager implements Manager {
 	public int stop() {
 		robot.stop();
 		isRotating = false;
-		return 0; // get the current heading from the compasssensor
+		return 0; // get the current heading from the compass sensor
 	}
 }

@@ -8,7 +8,7 @@ import lejos.robotics.navigation.Pose;
  * With the PositionManager the position of the robot can be changed. It's
  * responsible for moving and rotating.
  * 
- * @author
+ * @author Philip Laube
  * 
  */
 public class PositionManager implements Manager {
@@ -26,6 +26,10 @@ public class PositionManager implements Manager {
 		robot.positionManager = this;
 	}
 
+	/**
+	 * @return the current pose
+	 */
+
 	public Pose getPose() {
 		return pose;
 	}
@@ -33,7 +37,7 @@ public class PositionManager implements Manager {
 	/**
 	 * Returns true if the robot is rotating or moving.
 	 * 
-	 * @return
+	 * @return whether the robot is currently moving
 	 */
 	public boolean isPositioning() {
 		return directionManager.isRotating() || movementManager.isMoving();
@@ -42,14 +46,13 @@ public class PositionManager implements Manager {
 	/**
 	 * Rotates the robot to a absolute direction in degrees.
 	 * 
-	 * @param deg
+	 * @param degree
 	 *            the direction to rotate to
 	 */
-	public void rotateTo(int deg) {
+	public void rotateTo(int degree) {
 		int startdegrees = (int) robot.compassSensor.getDegrees();
-		int calculatedAngle = calculateAngle(startdegrees, deg);
+		int calculatedAngle = calculateAngle(startdegrees, degree);
 		int toRotate = Math.abs(calculatedAngle);
-		// TODO: Rethink idea
 		if (calculatedAngle <= 0) {
 			rotate(toRotate, Direction.LEFT);
 		} else {
@@ -67,8 +70,6 @@ public class PositionManager implements Manager {
 	public void rotate(int degree, Direction direction) {
 		directionManager.rotateInDirection(degree, direction);
 		updateRotation();
-		//FIME rotate() Nullpointer Exeption
-
 	}
 
 	// /**
@@ -118,7 +119,7 @@ public class PositionManager implements Manager {
 	@Override
 	public int stop() {
 		movementManager.stop();
-		//TODO updatePosition for the movement
+		// TODO updatePosition for the movement
 		directionManager.stop();
 		updateRotation();
 		return 0;
