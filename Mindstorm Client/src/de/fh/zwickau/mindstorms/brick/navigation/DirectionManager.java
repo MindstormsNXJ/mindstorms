@@ -40,12 +40,13 @@ public class DirectionManager implements Manager {
 	public void rotateInDirection(int degree, Direction direction) {
 		robot.setModeRotate();
 		isRotating = true;
-
+		
+		// the direction the robot stands at start
+		int startDirection = (int) robot.compassSensor.getDegrees();
+		
 		int degrees = activateMotors(degree, direction);
 
 		// check when the target angle is reached and stop rotating
-		// the direction the robot stands at start
-		int startDirection = (int) robot.compassSensor.getDegrees();
 		// the direction where the robot should head to at the end
 		int targetdirection = (startDirection + degrees) % 360;
 		if (targetdirection < 0) {
