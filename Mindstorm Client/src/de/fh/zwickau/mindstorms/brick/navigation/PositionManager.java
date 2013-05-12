@@ -50,7 +50,7 @@ public class PositionManager implements Manager {
 	 *            the direction to rotate to
 	 */
 	public void rotateTo(int degree) {
-		int startdegrees = (int) robot.compassSensor.getDegrees();
+		int startdegrees = robot.getDirection();
 		int calculatedAngle = calculateAngle(startdegrees, degree);
 		int toRotate = Math.abs(calculatedAngle);
 		if (calculatedAngle <= 0) {
@@ -74,7 +74,7 @@ public class PositionManager implements Manager {
 
 	private void updateRotation() {
 		if (!isPositioning()) {
-			pose.setHeading(robot.compassSensor.getDegrees());
+			pose.setHeading(robot.getDirection());
 		} else {
 			System.err.println("Still rotating... something went wrong!");
 		}

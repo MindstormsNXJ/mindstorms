@@ -42,7 +42,7 @@ public class DirectionManager implements Manager {
 		isRotating = true;
 		
 		// the direction the robot stands at start
-		int startDirection = (int) robot.compassSensor.getDegrees();
+		int startDirection = robot.getDirection();
 		
 		int degrees = activateMotors(degree, direction);
 
@@ -54,7 +54,7 @@ public class DirectionManager implements Manager {
 		}
 
 		while (isRotating == true) {
-			int currentDirection = (int) robot.compassSensor.getDegrees();
+			int currentDirection = robot.getDirection();
 			if (currentDirection == targetdirection) {
 				isRotating = false;
 			}

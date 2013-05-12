@@ -59,7 +59,7 @@ public class MovementManager implements Manager {
 		if (dist == 0) {
 			return;
 		}
-		startdegrees = (int) robot.compassSensor.getDegrees();
+		startdegrees = robot.getDirection();
 		this.distance = dist;
 		driving = true;
 		tachoRight = robot.rightMotor.getTachoCount();
@@ -77,7 +77,7 @@ public class MovementManager implements Manager {
 		 */
 		while (driving == true) {
 			if (Math.abs(angelCorrection(startdegrees,
-					(int) robot.compassSensor.getDegrees())) > 5) {
+					robot.getDirection())) > 5) {
 				robot.stop();
 				double newrtdl = rotToDriveLeft
 						- robot.leftMotor.getTachoCount();
