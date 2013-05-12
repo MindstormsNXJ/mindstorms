@@ -38,12 +38,15 @@ public class DirectionManager implements Manager {
 	 *            left or right (@see {@link Direction})
 	 */
 	public void rotateInDirection(int degree, Direction direction) {
+		if (degree == 0) {
+			return;
+		}
 		robot.setModeRotate();
 		isRotating = true;
-		
+
 		// the direction the robot stands at start
 		int startDirection = robot.getDirection();
-		
+
 		int degrees = activateMotors(degree, direction);
 
 		// check when the target angle is reached and stop rotating
