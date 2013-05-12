@@ -26,7 +26,7 @@ public class Robot {
 	public UltrasonicSensor ultrasonicSensor;
 	public TouchSensor touchSensor;
 	public ColorSensor colorSensor;
-	
+
 	public double driveTranslation; // angel in degrees per cm
 	public PositionManager positionManager;
 
@@ -36,43 +36,72 @@ public class Robot {
 	public final int STANDARD_ROTATE_ACC = 5000;
 	public final int STANDARD_DRIVE_ACC = 500;
 
+	/**
+	 * Set the speed of the motors to a specific value.
+	 * 
+	 * @param speed
+	 */
 	public void setMotorSpeed(int speed) {
 		leftMotor.setSpeed(speed);
 		rightMotor.setSpeed(speed);
 	}
 
+	/**
+	 * Set the acceleration of the motors to a specific value.
+	 * 
+	 * @param acc
+	 */
 	public void setAcc(int acc) {
 		leftMotor.setAcceleration(acc);
 		rightMotor.setAcceleration(acc);
 	}
 
+	/**
+	 * This method is used to set the motor speed and acceleration for driving.
+	 */
 	public void setModeDrive() {
 		setMotorSpeed(driveSpeed);
 		setAcc(STANDARD_DRIVE_ACC);
 	}
 
+	/**
+	 * This method is used to set the motor speed and acceleration for rotating.
+	 */
 	public void setModeRotate() {
 		setMotorSpeed(rotationSpeed);
 		setAcc(STANDARD_ROTATE_ACC);
 	}
 
+	/**
+	 * 
+	 * @return current degrees directly from the compass sensor
+	 */
 	public int getDirection() {
 		return (int) compassSensor.getDegrees();
 	}
 
+	/**
+	 * Sets the current driveTranslation used to control the motors
+	 * 
+	 * @param driveTranslation
+	 */
 	public void setDriveTranslation(double driveTranslation) {
 		this.driveTranslation = driveTranslation;
 	}
-	
-	public void stop(){
+
+	/**
+	 * This method stops the two motors of the robot.
+	 */
+	public void stop() {
 		rightMotor.stop(true);
 		leftMotor.stop(false);
 	}
-	
+
 	/**
-	 * This method moves the robot in front of an item and picks the item with the grabber.
+	 * This method moves the robot in front of an item and picks the item with
+	 * the grabber.
 	 */
-	public void pickItem(){
+	public void pickItem() {
 		Pick p = new Pick(this);
 		p.pickItem();
 	}
