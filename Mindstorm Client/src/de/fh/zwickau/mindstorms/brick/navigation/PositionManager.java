@@ -72,20 +72,6 @@ public class PositionManager implements Manager {
 		updateRotation();
 	}
 
-	// /**
-	// * Rotate in ...steps in an direction
-	// *
-	// * @param steps
-	// * @param direction
-	// * @param stepWide
-	// * default stepWide should be 45
-	// */
-	// public void rotateStepwise(int steps, Direction direction, int stepWide)
-	// {
-	// rotate(steps * stepWide, direction);
-	// updateRotation();
-	// }
-
 	private void updateRotation() {
 		if (!isPositioning()) {
 			pose.setHeading(robot.compassSensor.getDegrees());
