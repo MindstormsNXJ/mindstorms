@@ -40,6 +40,7 @@ public class Main {
 
 		view.start();	// new Thread for view
 		
+		
 		try {
 			new ConnectionManager(mapper, targetManager, "Picker");
 		} catch (OperationNotSupportedException e) {
