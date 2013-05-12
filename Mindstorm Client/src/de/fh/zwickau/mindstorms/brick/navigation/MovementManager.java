@@ -35,7 +35,7 @@ public class MovementManager implements Manager {
 	private PositionManager positionManager;
 
 	/**
-	 * The Konstruktor of the MovementManager
+	 * The Constructor of the MovementManager
 	 * 
 	 * @param robot
 	 *            the robot which has to move
@@ -56,6 +56,9 @@ public class MovementManager implements Manager {
 	 *            negative = drive backward
 	 */
 	public void move(int dist) {
+		if (dist == 0) {
+			return;
+		}
 		startdegrees = (int) robot.compassSensor.getDegrees();
 		this.distance = dist;
 		driving = true;
@@ -65,13 +68,12 @@ public class MovementManager implements Manager {
 		rotToDriveLeft = (int) (dist * driveTranslation) + tachoLeft;
 		if (dist > 0) {
 			forward = true;
-		}
-		{
+		} else {
 			forward = false;
 		}
 		drive();
 		/**
-		 * Corects the drive Angle
+		 * Corrects the drive Angle
 		 */
 		while (driving == true) {
 			if (Math.abs(angelCorrection(startdegrees,
@@ -82,11 +84,11 @@ public class MovementManager implements Manager {
 				double newrtdr = rotToDriveRight
 						- robot.rightMotor.getTachoCount();
 				/**
-				 * the doubles Saving the distance who is drived before
-				 * correcting the angle in rotatedegrees
+				 * the doubles saving the distance which was driven before
+				 * correcting the angle with rotating
 				 */
 				positionManager.rotateTo(startdegrees);
-				/** reinitiale the restdistance in rotateangles */
+				/** reinitialize the distance for motor */
 				rotToDriveLeft = robot.leftMotor.getTachoCount() + newrtdl;
 				rotToDriveRight = robot.rightMotor.getTachoCount() + newrtdr;
 				drive();
@@ -130,7 +132,7 @@ public class MovementManager implements Manager {
 	 * @param currentAngle
 	 *            angle where you are
 	 * @param newAngle
-	 *            angle who wantet
+	 *            angle who wanted
 	 * @return degrees where to move
 	 */
 	int angelCorrection(int currentAngle, int newAngle) {
