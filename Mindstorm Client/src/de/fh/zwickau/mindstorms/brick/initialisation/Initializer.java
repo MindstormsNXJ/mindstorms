@@ -18,7 +18,6 @@ import de.fh.zwickau.mindstorms.brick.communication.ConnectionManager;
 import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
 import de.fh.zwickau.mindstorms.brick.sensors.ObjectCentralisation;
-import de.fh.zwickau.mindstorms.brick.task.Pick;
 
 /**
  * This class is responsible for managing all tasks that have to be performed
@@ -35,12 +34,6 @@ public class Initializer implements ButtonListener {
 	}
 
 	private Robot robot;
-	private NXTRegulatedMotor leftMotor;
-	private NXTRegulatedMotor rightMotor;
-	private NXTRegulatedMotor grabberMotor;
-	private TouchSensor touchSensor;
-	private CompassHTSensor compassSensor;
-	private UltrasonicSensor ultrasonicSensor;
 	private final double STD_DRIVE_TRANSLATION = 38.0;
 
 	// config Flags and Enums
@@ -54,14 +47,11 @@ public class Initializer implements ButtonListener {
 	public Initializer() {
 
 		robot = new Robot();
-		leftMotor = Motor.A;
-		robot.leftMotor = leftMotor;
-		rightMotor = Motor.B;
-		robot.rightMotor = rightMotor;
+		robot.leftMotor = Motor.A;
+		robot.rightMotor = Motor.B;
 		robot.grabberMotor = new NXTRegulatedMotor(MotorPort.C);
-		robot.compassSensor = compassSensor;
 		robot.ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
-		compassSensor = new CompassHTSensor(SensorPort.S2);
+		robot.compassSensor = new CompassHTSensor(SensorPort.S2);
 		robot.touchSensor = new TouchSensor(SensorPort.S3);
 		robot.colorSensor = new ColorSensor(SensorPort.S4);
 		initialize();
@@ -81,7 +71,7 @@ public class Initializer implements ButtonListener {
 
 		}
 
-		if (mode == mode.PICKERTEST) {
+		if (mode == Mode.PICKERTEST) {
 //			Pick p = new Pick(robot);
 			robot.pickItem();
 			robot.positionManager.rotate(90, Direction.RIGHT);
@@ -92,14 +82,14 @@ public class Initializer implements ButtonListener {
 
 	@Override
 	public void buttonPressed(Button b) {
-		compassSensor.stopCalibration();
+		robot.compassSensor.stopCalibration();
 		NXT.shutDown();
 	}
 
 	public void initialize() {
 		Button.ESCAPE.addButtonListener(this);
 		calibrate();
-		robot.positionManager = new PositionManager(new Pose(0, 0, compassSensor.getDegrees()), robot);
+		robot.positionManager = new PositionManager(new Pose(0, 0, robot.compassSensor.getDegrees()), robot);
 
 	}
 
@@ -110,13 +100,13 @@ public class Initializer implements ButtonListener {
 				{
 					// calculate driveTranslation
 					DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(
-							leftMotor, rightMotor, ultrasonicSensor);
+							robot.leftMotor, robot.rightMotor, robot.ultrasonicSensor);
 					robot.driveTranslation = driveTranslationCalibrator
 							.getDriveTranslation();
 
 					// calibrate compass sensor
-					CompassCalibrator compassCalibrator = new CompassCalibrator(
-							leftMotor, rightMotor, compassSensor);
+					new CompassCalibrator(
+							robot.leftMotor, robot.rightMotor, robot.compassSensor);
 
 				}
 				System.out.println("calibrated");

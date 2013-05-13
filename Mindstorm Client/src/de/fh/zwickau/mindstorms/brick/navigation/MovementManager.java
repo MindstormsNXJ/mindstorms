@@ -62,6 +62,7 @@ public class MovementManager implements Manager {
 			forward = true;
 		}
 		drive(forward);
+
 		/**
 		 * Corrects the drive Angle
 		 */
