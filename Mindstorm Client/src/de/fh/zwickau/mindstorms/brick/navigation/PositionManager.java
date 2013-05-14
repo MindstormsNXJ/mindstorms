@@ -23,7 +23,6 @@ public class PositionManager implements Manager {
 		this.robot = robot;
 		this.directionManager = new DirectionManager(robot);
 		this.movementManager = new MovementManager(robot, this);
-		robot.positionManager = this;
 	}
 
 	/**
