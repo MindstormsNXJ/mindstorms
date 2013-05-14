@@ -2,6 +2,7 @@ package de.fh.zwickau.mindstorms.server.navigation;
 
 import java.util.HashMap;
 
+import de.fh.zwickau.mindstorms.server.Server;
 import de.fh.zwickau.mindstorms.server.view.View;
 
 import lejos.robotics.navigation.Waypoint;
@@ -16,7 +17,7 @@ import lejos.robotics.pathfinding.Path;
  */
 public class TargetManager {
 	
-	private View observer;
+	private Server controller;
 	private HashMap<String, Path> robotPaths; //assigns every robot name to it's current path
 	private HashMap<String, Integer> currentRobotWaypointNumber; //assigns every robot name to it's current waypoint number
 	private Waypoint ball;
@@ -158,11 +159,11 @@ public class TargetManager {
 		//add new path
 		currentPath.addAll(path);
 		robotPaths.put(robotName, currentPath);
-		observer.targetChanged(); // notify view that new targets arrived
+		controller.targetChanged(); // notify view that new targets arrived
 	}
 		
-	public void setObserverView(View observer) {
-		this.observer = observer;
+	public void setController(Server controller) {
+		this.controller = controller;
 	}
 	
 }

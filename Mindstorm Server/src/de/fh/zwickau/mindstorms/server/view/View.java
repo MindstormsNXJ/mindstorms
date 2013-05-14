@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
 
+import de.fh.zwickau.mindstorms.server.Server;
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 import de.fh.zwickau.mindstorms.server.view.graphic.GraphicCanvas;
@@ -27,7 +28,7 @@ import de.fh.zwickau.mindstorms.server.view.graphic.GraphicCanvas;
  */
 public class View {
     
-    private Mapper mapper;
+	private Server controller;
 	
     private GraphicCanvas graphicCanvas;    // OpenGL View
     private JFrame jFrame;
@@ -74,7 +75,7 @@ public class View {
             
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                mapper.saveMap();
+                controller.saveMap();
             }
 	    });
 
@@ -91,7 +92,6 @@ public class View {
 	 */
 	public void registerMapper(Mapper mapper) {
 	    graphicCanvas.setMapper(mapper);
-	    this.mapper = mapper;
 	}
 	
 	/**
@@ -118,5 +118,9 @@ public class View {
         graphicCanvas.targetChanged();
         // Add Optional refresh for view here
     }
+    
+	public void setController(Server controller) {
+		this.controller = controller;
+	}
 	
 }

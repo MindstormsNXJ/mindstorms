@@ -212,4 +212,9 @@ public class ConnectionManager {
 		System.exit(0); //TODO there should be a smarter way to do this
 	}
 	
+	public void mapChaged(){
+		//TODO: Map has changed. Update PathFinder with new LineMap.
+		//update new LineMap with mapper.getLineMap();
+	}
+	
 }

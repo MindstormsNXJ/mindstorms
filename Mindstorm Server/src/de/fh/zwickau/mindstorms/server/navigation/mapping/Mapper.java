@@ -1,5 +1,6 @@
 package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
+import de.fh.zwickau.mindstorms.server.Server;
 import de.fh.zwickau.mindstorms.server.view.View;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
@@ -13,7 +14,7 @@ import lejos.robotics.navigation.Pose;
  *
  */
 public class Mapper {
-	private View observer;
+	private Server controller;
 	private RobotTracer tracer;
 	private MapGrid mapGrid;
 	private LineMap lineMap;
@@ -78,7 +79,7 @@ public class Mapper {
 		try {
 			mapGrid.set(x, y);
 			buildLineMap();
-			observer.mapChanged();
+			controller.mapChanged();
 		} catch (ArrayIndexOutOfBoundsException e){
 			//ignore it
 		}
@@ -93,7 +94,7 @@ public class Mapper {
 		try {
 			mapGrid.clear(x, y);
 			buildLineMap();
-			observer.mapChanged();
+			controller.mapChanged();
 		} catch (ArrayIndexOutOfBoundsException e){
 			//ignore it
 		}
@@ -128,8 +129,8 @@ public class Mapper {
 		return lineMap;
 	}
 
-	public void setObserverView(View observer) {
-		this.observer = observer;
+	public void setController(Server controller) {
+		this.controller = controller;
 	}
 
 }
