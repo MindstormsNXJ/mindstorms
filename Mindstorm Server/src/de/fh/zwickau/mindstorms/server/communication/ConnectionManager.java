@@ -41,7 +41,7 @@ public class ConnectionManager {
 	 * @param robotName the robot's friendly name
 	 * @throws OperationNotSupportedException if the robot's name is not "Picker"
 	 */
-	public ConnectionManager(final Mapper mapper, final String robotName) throws OperationNotSupportedException {
+	public ConnectionManager(final Mapper mapper, final String robotName) {
 		this.mapper = mapper;
 		this.robotName = robotName;
 		new Thread(new Runnable(){
