@@ -74,8 +74,7 @@ public class Initializer implements ButtonListener {
 	public void initialize() {
 		Button.ESCAPE.addButtonListener(this);
 		calibrate();
-		robot.positionManager = new PositionManager(new Pose(0, 0, robot.compassSensor.getDegrees()), robot);
-
+		robot.positionManager = new PositionManager(new Pose(0, 0, robot.getDirection()), robot);
 	}
 
 	private void calibrate() {
