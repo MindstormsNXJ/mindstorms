@@ -31,6 +31,7 @@ public class ConnectionManager {
 	private PathFinder pathFinder;
 	private DataOutputStream commandSender;
 	private DataInputStream poseReceiver;
+	private String robotName;
 	
 	/**
 	 * Initialises a ConnectionManager, including the connection itself as well as
@@ -41,21 +42,22 @@ public class ConnectionManager {
 	 * @throws OperationNotSupportedException if the robot's name is not "Picker"
 	 */
 	public ConnectionManager(final Mapper mapper, final String robotName) throws OperationNotSupportedException {
+		this.mapper = mapper;
+		this.robotName = robotName;
 		new Thread(new Runnable(){
 			
 			@Override
 			public void run() {
-				ConnectionManager.this.mapper = mapper;
 				targetManager = TargetManager.getInstance();
 				targetManager.addRobot(robotName);
 				
 				pathFinder = new PathFinder(mapper.getLineMap(), robotName);
 				
-				while (!establishConnection(robotName)) {
+				while (!establishConnection()) {
 					System.err.println("Connection failed, will retry in 10 seconds...");
 					Delay.msDelay(10000);
 				}
-				receiveAndProcessPoses(robotName);
+				receiveAndProcessPoses();
 			}
 			
 		}).start();
@@ -64,13 +66,12 @@ public class ConnectionManager {
 	/**
 	 * Establishes the connection to the NXT.
 	 * 
-	 * @param robotName the robot's friendly name
 	 * @return true if connection was successful established
 	 */
-	private boolean establishConnection(String robotName) {
+	private boolean establishConnection() {
 		connector = new NXTConnector();
-//		boolean success = connector.connectTo(robotName, null, NXTCommFactory.BLUETOOTH); //TODO enable for final version
-		boolean success = connector.connectTo(null, null, NXTCommFactory.BLUETOOTH);
+		boolean success = connector.connectTo(robotName, null, NXTCommFactory.BLUETOOTH);
+//		boolean success = connector.connectTo(null, null, NXTCommFactory.BLUETOOTH);
 		if (success) {
 			System.out.println("Connection established via bluetooth");
 			commandSender = new DataOutputStream(connector.getOutputStream());
@@ -83,40 +84,31 @@ public class ConnectionManager {
 	
 	/**
 	 * Starts the Thread that will listen for received Poses and process them afterwards.
-	 * 
-	 * @param robotName the robot's friendly name
 	 */
-	private void receiveAndProcessPoses(final String robotName) {
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				while (true) {
-					try {
-						System.out.println("Waiting to receive Pose...");
-						String pose = poseReceiver.readUTF();
-						System.out.println("Pose received: " + pose);
-						decodePose(pose);
-					} catch (EOFException ex) {
-						System.err.println("Connection terminated by NXT");
-						if (targetManager.hasMoreWaypoints(robotName)) {
-							System.out.println("Resetting connection");
-							while (!establishConnection(robotName))
-								Delay.msDelay(2000);
-						} else {
-							terminate();
-							break;
-						}
-					} catch (IOException ex) {
-						if (ex.getMessage().contains("Failed to read"))
-							System.err.println("Timeout while receiving pose");
-						else
-							ex.printStackTrace();
-					}
+	private void receiveAndProcessPoses() {
+		while (true) {
+			try {
+				System.out.println("Waiting to receive Pose...");
+				String pose = poseReceiver.readUTF();
+				System.out.println("Pose received: " + pose);
+				decodePose(pose);
+			} catch (EOFException ex) {
+				System.err.println("Connection terminated by NXT");
+				if (targetManager.hasMoreWaypoints(robotName)) {
+					System.out.println("Resetting connection");
+					while (!establishConnection())
+						Delay.msDelay(2000);
+				} else {
+					terminate();
+					break;
 				}
+			} catch (IOException ex) {
+				if (ex.getMessage().contains("Failed to read"))
+					System.err.println("Timeout while receiving pose");
+				else
+					ex.printStackTrace();
 			}
-			
-		}).start();
+		}
 	}
 	
 	private void decodePose(String poseString) {
