@@ -3,7 +3,6 @@ package de.fh.zwickau.mindstorms.server.navigation;
 import java.util.HashMap;
 
 import de.fh.zwickau.mindstorms.server.Server;
-import de.fh.zwickau.mindstorms.server.view.View;
 
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
@@ -48,7 +47,7 @@ public class TargetManager {
 	 */
 	private void initTargets() {
 		ball = new Waypoint(10, 10);
-		target = new Waypoint(-10, -10);
+		target = new Waypoint(-20, -10);
 	}
 	
 	/**

@@ -36,7 +36,7 @@ public class ConnectionManager {
 	private DataInputStream poseReceiver;
 	private String robotName;
 	
-	private final boolean NO_NXT = false; //true, if there is only there is no NXT available - PathFinding only
+	private final boolean NO_NXT = true; //true, if there is only there is no NXT available - PathFinding only
 	
 	/**
 	 * Initialises a ConnectionManager, including the connection itself as well as
@@ -82,6 +82,18 @@ public class ConnectionManager {
 		LineMap lineMap = new LineMap(lines, new Rectangle(-31, 31, 62, 62));
 		pathFinder = new PathFinder(lineMap, robotName);
 		pathFinder.nextAction(new Pose(0,0,0), this);
+		pathFinder.nextAction(new Pose(0,0,225), this);
+		pathFinder.nextAction(new Pose(5,-5,225), this);
+		pathFinder.nextAction(new Pose(5,-5,251), this);
+		pathFinder.nextAction(new Pose(-10,-10,251), this);
+		pathFinder.nextAction(new Pose(-10,-10,154), this);
+		pathFinder.nextAction(new Pose(0,-30,154), this);
+		pathFinder.nextAction(new Pose(0,-30,45), this);
+		pathFinder.nextAction(new Pose(20,-10,45), this);
+		pathFinder.nextAction(new Pose(20,-10,342), this);
+		pathFinder.nextAction(new Pose(15,5,342), this);
+		pathFinder.nextAction(new Pose(15,5,315), this);
+		pathFinder.nextAction(new Pose(10,10,315), this);
 	}
 	
 	/**
