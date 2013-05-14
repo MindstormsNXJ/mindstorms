@@ -118,7 +118,13 @@ public class Robot {
 	 * the grabber.
 	 */
 	public void pickItem() {
-		picker.pickItem();
+		// do centralisation first
+		if( ! picker.pickItem() )
+			pickItem();		// attention, this could be an infinite loop, should be changed
+	}
+	
+	public void dropItem(){
+		picker.dropItem();
 	}
 
 }

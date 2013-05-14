@@ -1,5 +1,6 @@
 package de.fh.zwickau.mindstorms.brick.task;
 
+import lejos.nxt.ColorSensor.Color;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.Sound;
 import lejos.nxt.TouchSensor;
@@ -17,7 +18,7 @@ public class Pick {
 	private Robot robot;
 	private TouchSensor touchSensor;
 	private NXTRegulatedMotor grabberMotor;
-	private int wayDown = 480;
+	private int wayDown = 460;
 	private int itemDistance = 25;
 	private UltrasonicSensor sensor;
 	
@@ -27,12 +28,6 @@ public class Pick {
 		grabberMotor = robot.grabberMotor;
 		touchSensor = robot.touchSensor;
 		sensor = robot.ultrasonicSensor;
-//		pickerUp();
-//		takeItem();
-//		pickerDown();
-//		pickerUp();
-//		pickerDown();
-//		robot.positionManager.move(10);
 	}
 	
 	/**
@@ -41,11 +36,11 @@ public class Pick {
 	 */
 	public void pickerUp(){
 		grabberMotor.resetTachoCount();
-		grabberMotor.setSpeed(300);
+		grabberMotor.setSpeed(150);
 		grabberMotor.forward();
 		boolean up = false;
 		while(!up){
-			if(touchSensor.isPressed() /*|| (grabberMotor.getTachoCount() > 330)*/ ){
+			if(touchSensor.isPressed() || (grabberMotor.getTachoCount() > 700)){
 				Sound.beep();
 				grabberMotor.stop();
 				up = true;
@@ -60,7 +55,7 @@ public class Pick {
 		if(!touchSensor.isPressed())
 			pickerUp();
 		grabberMotor.resetTachoCount();
-		grabberMotor.setSpeed(100);
+		grabberMotor.setSpeed(150);
 		grabberMotor.backward();
 		boolean down = true;
 		while(down){
@@ -73,8 +68,9 @@ public class Pick {
 	
 	/**
 	 * Method to pick an item which is straight ahead of the robot
+	 * @return true if the item was picked correctly
 	 */
-	public void pickItem(){
+	public boolean pickItem(){
 		pickerUp();
 		int distance = sensor.getDistance();
 		if(distance < 250){
@@ -82,15 +78,43 @@ public class Pick {
 			System.out.println(driveDist);
 			robot.positionManager.move(driveDist);
 			pickerDown();
-			robot.positionManager.move(9);
+			robot.positionManager.move(12);
 			pickerUp();
+			
+			// delay and some movement to ensure the ball is still in the picker
+			Delay.msDelay(3000);
+			robot.positionManager.move(-5);
+			robot.positionManager.move(5);
+			
+			// check the color sensor, if the blue ball was picked
+			if(robot.colorSensor.getColorID() == 2){
+				Sound.beepSequenceUp();
+				System.out.println("blue");
+				return true;
+			}
+			else{
+				System.out.println("no color");
+				return false;
+			}
 		}
-		else{
+		else{	// no item was found
 			System.out.println("nothing to pick");
-			Sound.beepSequence();
+//			Sound.beepSequence();
+			return false;
 		}
-		Delay.msDelay(2000);
 		
+	}
+	
+	public void dropItem(){
+		grabberMotor.resetTachoCount();
+		boolean down = true;
+		grabberMotor.setSpeed(50);
+		grabberMotor.backward();
+		while(down){
+			if(grabberMotor.getTachoCount() < - wayDown || robot.colorSensor.getColorID() != 2)
+				down = false;
+		}
+		pickerUp();
 	}
 
 }
