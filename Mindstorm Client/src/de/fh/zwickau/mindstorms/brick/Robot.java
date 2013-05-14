@@ -3,7 +3,10 @@ package de.fh.zwickau.mindstorms.brick;
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
 import de.fh.zwickau.mindstorms.brick.task.Pick;
 import lejos.nxt.ColorSensor;
+import lejos.nxt.Motor;
+import lejos.nxt.MotorPort;
 import lejos.nxt.NXTRegulatedMotor;
+import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.addon.CompassHTSensor;
@@ -35,6 +38,16 @@ public class Robot {
 	public int driveSpeed = 200;
 	public final int STANDARD_ROTATE_ACC = 5000;
 	public final int STANDARD_DRIVE_ACC = 500;
+
+	public Robot() {
+		leftMotor = Motor.A;
+		rightMotor = Motor.B;
+		grabberMotor = new NXTRegulatedMotor(MotorPort.C);
+		ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
+		compassSensor = new CompassHTSensor(SensorPort.S2);
+		touchSensor = new TouchSensor(SensorPort.S3);
+		colorSensor = new ColorSensor(SensorPort.S4);
+	}
 
 	/**
 	 * Set the speed of the motors to a specific value.

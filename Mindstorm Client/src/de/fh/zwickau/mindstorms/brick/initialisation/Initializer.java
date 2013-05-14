@@ -47,13 +47,6 @@ public class Initializer implements ButtonListener {
 	public Initializer() {
 
 		robot = new Robot();
-		robot.leftMotor = Motor.A;
-		robot.rightMotor = Motor.B;
-		robot.grabberMotor = new NXTRegulatedMotor(MotorPort.C);
-		robot.ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
-		robot.compassSensor = new CompassHTSensor(SensorPort.S2);
-		robot.touchSensor = new TouchSensor(SensorPort.S3);
-		robot.colorSensor = new ColorSensor(SensorPort.S4);
 		initialize();
 		// establish connection to the server
 		if (mode == Mode.SERVERMODE) {
