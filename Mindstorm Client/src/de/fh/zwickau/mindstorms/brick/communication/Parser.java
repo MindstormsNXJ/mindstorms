@@ -62,10 +62,10 @@ public class Parser {
 			robot.positionManager.rotateTo(valueAsInt);
 			break;
 		case "pick":
-			//TODO pick up the ball
+			robot.pickItem();
 			break;
 		case "drop":
-			//TODO drop the ball
+			robot.dropItem();
 			break;
 		case "exit":
 			NXT.shutDown();
