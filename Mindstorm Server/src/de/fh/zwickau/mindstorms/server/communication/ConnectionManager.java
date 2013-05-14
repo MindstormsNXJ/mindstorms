@@ -7,8 +7,11 @@ import java.io.IOException;
 
 import javax.naming.OperationNotSupportedException;
 
+import lejos.geom.Line;
+import lejos.geom.Rectangle;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTConnector;
+import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
 
@@ -33,6 +36,8 @@ public class ConnectionManager {
 	private DataInputStream poseReceiver;
 	private String robotName;
 	
+	private final boolean NO_NXT = false; //true, if there is only there is no NXT available - PathFinding only
+	
 	/**
 	 * Initialises a ConnectionManager, including the connection itself as well as
 	 * the Thread that will process the received Poses.
@@ -51,16 +56,32 @@ public class ConnectionManager {
 				targetManager = TargetManager.getInstance();
 				targetManager.addRobot(robotName);
 				
-				pathFinder = new PathFinder(mapper.getLineMap(), robotName);
-				
-				while (!establishConnection()) {
-					System.err.println("Connection failed, will retry in 10 seconds...");
-					Delay.msDelay(10000);
+				if (NO_NXT) 
+					localTest();
+				else {
+					pathFinder = new PathFinder(mapper.getLineMap(), robotName);
+					
+					while (!establishConnection()) {
+						System.err.println("Connection failed, will retry in 10 seconds...");
+						Delay.msDelay(10000);
+					}
+					receiveAndProcessPoses();
 				}
-				receiveAndProcessPoses();
 			}
 			
 		}).start();
+	}
+	
+	private void localTest() {
+		Line[] lines = new Line[5];
+		lines[0] = new Line(-5,5,5,5);
+		lines[1] = new Line(-5,5,-5,31);
+		lines[2] = new Line(5,5,5,-5);
+		lines[3] = new Line(0,-10,10,-10);
+		lines[4] = new Line(0,-10,0,-20);
+		LineMap lineMap = new LineMap(lines, new Rectangle(-31, 31, 62, 62));
+		pathFinder = new PathFinder(lineMap, robotName);
+		pathFinder.nextAction(new Pose(0,0,0), this);
 	}
 	
 	/**
@@ -147,8 +168,10 @@ public class ConnectionManager {
 	 */
 	private void sendCommand(String command) {
 		try {
-			commandSender.writeUTF(command);
-			commandSender.flush();
+			if (!NO_NXT) {
+				commandSender.writeUTF(command);
+				commandSender.flush();
+			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
