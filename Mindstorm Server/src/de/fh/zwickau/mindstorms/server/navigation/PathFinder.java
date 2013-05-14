@@ -26,6 +26,10 @@ public class PathFinder {
 	private boolean robotHasBall = false;
 	private String robotName;
 	
+	//two values which will be used for the lengthenLines() method
+	private final int ROBOT_LENGTH_CM = 20;
+	private final int ROBOT_WIDTH_CM = 15;
+	
 	/**
 	 * Initialises a PathFinder with the LineMap to use from now on.
 	 * 
@@ -37,9 +41,9 @@ public class PathFinder {
 //		finder = new DijkstraPathFinder(map);
 		finder = new ShortestPathFinder(map);
 		if (finder instanceof DijkstraPathFinder)
-			((DijkstraPathFinder) finder).lengthenLines(10);
+			((DijkstraPathFinder) finder).lengthenLines((ROBOT_LENGTH_CM > ROBOT_WIDTH_CM) ? ROBOT_LENGTH_CM / 2 : ROBOT_WIDTH_CM / 2);
 		else if (finder instanceof ShortestPathFinder)
-			((ShortestPathFinder) finder).lengthenLines(10);
+			((ShortestPathFinder) finder).lengthenLines((ROBOT_LENGTH_CM > ROBOT_WIDTH_CM) ? ROBOT_LENGTH_CM / 2 : ROBOT_WIDTH_CM / 2);
 		this.targetManager = TargetManager.getInstance();
 		this.robotName = robotName;
 	}
