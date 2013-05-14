@@ -30,7 +30,7 @@ public class Initializer implements ButtonListener {
 
 	// config Flags and Enums
 	private boolean hasToCalibrate = false;
-	private Mode mode = Mode.SERVERMODE;
+	private Mode mode = Mode.PICKERTEST;
 
 	/**
 	 * Initialises the NXT and adds a button listener to the escape button, that
@@ -57,11 +57,16 @@ public class Initializer implements ButtonListener {
 		}
 
 		if (mode == Mode.PICKERTEST) {
-//			Pick p = new Pick(robot);
-			robot.pickItem();
-			robot.positionManager.rotate(90, Direction.RIGHT);
+//			robot.pickItem();
+//			robot.picker.pickerUp();
+			robot.picker.pickerDown();
+			robot.picker.pickerUp();
+			robot.picker.pickerDown();
+			robot.picker.pickerUp();
+			robot.picker.pickerDown();
+//			robot.positionManager.rotate(90, Direction.RIGHT);
 //			robot.putDown();
-			robot.positionManager.move(-10);
+//			robot.positionManager.move(-10);
 		}
 	}
 

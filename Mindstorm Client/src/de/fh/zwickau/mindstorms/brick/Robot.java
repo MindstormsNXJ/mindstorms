@@ -37,6 +37,8 @@ public class Robot {
 	public int driveSpeed = 200;
 	public final int STANDARD_ROTATE_ACC = 5000;
 	public final int STANDARD_DRIVE_ACC = 500;
+	
+	public Pick picker;
 
 	public Robot() {
 		leftMotor = Motor.A;
@@ -46,6 +48,8 @@ public class Robot {
 		compassSensor = new CompassHTSensor(SensorPort.S2);
 		touchSensor = new TouchSensor(SensorPort.S3);
 		colorSensor = new ColorSensor(SensorPort.S4);
+		picker = new Pick(this);
+		picker.pickerUp();
 	}
 
 	/**
@@ -114,8 +118,7 @@ public class Robot {
 	 * the grabber.
 	 */
 	public void pickItem() {
-		Pick p = new Pick(this);
-		p.pickItem();
+		picker.pickItem();
 	}
 
 }

@@ -17,7 +17,7 @@ public class Pick {
 	private Robot robot;
 	private TouchSensor touchSensor;
 	private NXTRegulatedMotor grabberMotor;
-	private int wayDown = 360;
+	private int wayDown = 480;
 	private int itemDistance = 25;
 	private UltrasonicSensor sensor;
 	
@@ -41,11 +41,11 @@ public class Pick {
 	 */
 	public void pickerUp(){
 		grabberMotor.resetTachoCount();
-		grabberMotor.setSpeed(250);
+		grabberMotor.setSpeed(300);
 		grabberMotor.forward();
 		boolean up = false;
 		while(!up){
-			if(touchSensor.isPressed() || (grabberMotor.getTachoCount() > 360)){
+			if(touchSensor.isPressed() /*|| (grabberMotor.getTachoCount() > 330)*/ ){
 				Sound.beep();
 				grabberMotor.stop();
 				up = true;
@@ -53,15 +53,18 @@ public class Pick {
 		}
 	}
 	
+	/**
+	 * Move the picker down. When this method is called the picker should be UP!
+	 */
 	public void pickerDown(){
+		if(!touchSensor.isPressed())
+			pickerUp();
 		grabberMotor.resetTachoCount();
-		int currentTacho = grabberMotor.getTachoCount();
-		int targetTacho = currentTacho - wayDown;
 		grabberMotor.setSpeed(100);
 		grabberMotor.backward();
 		boolean down = true;
 		while(down){
-			if(grabberMotor.getTachoCount() < targetTacho){
+			if(grabberMotor.getTachoCount() < - wayDown){
 				down = false;
 				grabberMotor.stop();
 			}
