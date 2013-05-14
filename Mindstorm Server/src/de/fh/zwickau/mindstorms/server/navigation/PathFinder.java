@@ -117,7 +117,7 @@ public class PathFinder {
 				System.out.println("Sending turn command - degrees: " + targetDir);
 			}
 			else { //move robot forward
-				if (targetManager.isBallWaypoint(currentWaypoint) || targetManager.isFinalTarget(currentWaypoint)) {
+				if (targetManager.isBallWaypoint(currentWaypoint) || (robotHasBall && targetManager.isFinalTarget(currentWaypoint))) {
 					distanceToMove -= 20; //to leave enough distance for the pick and drop procedures
 					if (distanceToMove < 0) {
 						//TODO maybe we should move backwards, but that could cause trouble if a wall gets in the ultrasonic sensors range
