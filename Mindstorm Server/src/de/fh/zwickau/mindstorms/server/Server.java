@@ -1,5 +1,7 @@
 package de.fh.zwickau.mindstorms.server;
 
+import java.util.ArrayList;
+
 import javax.naming.OperationNotSupportedException;
 
 import de.fh.zwickau.mindstorms.server.communication.ConnectionManager;
@@ -8,12 +10,12 @@ import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 import de.fh.zwickau.mindstorms.server.view.View;
 
 public class Server {
+	
 	private View view;
 	private Mapper mapper;
 	private TargetManager targetManager;
-	private ConnectionManager connectionManager;
-	
-	
+	private ArrayList<ConnectionManager> connectionManagers;
+
 	public Server(){
 		view = new View();
 		mapper = new Mapper(1);
@@ -24,7 +26,7 @@ public class Server {
 		view.start();	//new Thread for view
 		
 		try {
-			connectionManager = new ConnectionManager(mapper, targetManager, "Picker");
+			connectionManagers.add(new ConnectionManager(mapper, "Picker"));
 		} catch (OperationNotSupportedException e) {
 			System.err.println("Please make sure the connection manager is initialized for the robot with the name \"Picker\" - other robot types are currently not supported");
 		}
@@ -47,7 +49,8 @@ public class Server {
 	
 	public void mapChanged(){
 		view.mapChanged();
-		//connectionManager.mapChaged();
+//		for (ConnectionManager manager : connectionManagers)
+//			manager.mapChaged();
 	}
 	
 	public void targetChanged(){
