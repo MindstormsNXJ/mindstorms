@@ -36,28 +36,29 @@ public class ConnectionManager {
 	 * Initialises a ConnectionManager, including the connection itself as well as
 	 * the Thread that will process the received Poses.
 	 * 
-	 * @param mapper the mapper that gets notified about the robot's current Pose
-	 * @param targetManager the target manager which holds all targets to reach
+	 * @param mapper the Mapper that gets notified about the robot's current Pose
 	 * @param robotName the robot's friendly name
 	 * @throws OperationNotSupportedException if the robot's name is not "Picker"
 	 */
-	public ConnectionManager(Mapper mapper, TargetManager targetManager, String robotName) throws OperationNotSupportedException {
-		this.mapper = mapper;
-		this.targetManager = targetManager;
-		targetManager.addRobot(robotName);
-		
-		try {
-			pathFinder = new PathFinder(mapper.getLineMap(), targetManager, robotName);
-		} catch (OperationNotSupportedException e) {
-			//the given robot name was not "Picker" - currently other robot types are not supported
-			throw e;
-		}
-		
-		while (!establishConnection(robotName)) {
-			System.err.println("Connection failed, will retry in 10 seconds...");
-			Delay.msDelay(10000);
-		}
-		receiveAndProcessPoses(robotName);
+	public ConnectionManager(final Mapper mapper, final String robotName) throws OperationNotSupportedException {
+		new Thread(new Runnable(){
+			
+			@Override
+			public void run() {
+				ConnectionManager.this.mapper = mapper;
+				targetManager = TargetManager.getInstance();
+				targetManager.addRobot(robotName);
+				
+				pathFinder = new PathFinder(mapper.getLineMap(), robotName);
+				
+				while (!establishConnection(robotName)) {
+					System.err.println("Connection failed, will retry in 10 seconds...");
+					Delay.msDelay(10000);
+				}
+				receiveAndProcessPoses(robotName);
+			}
+			
+		}).start();
 	}
 	
 	/**

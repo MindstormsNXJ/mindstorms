@@ -30,21 +30,17 @@ public class PathFinder {
 	 * Initialises a PathFinder with the LineMap to use from now on.
 	 * 
 	 * @param map the map to use
-	 * @param targetManager the target manager to update the calculated paths
 	 * @param robotName the robot's friendly name
 	 * @throws OperationNotSupportedException if the robot name is unequal to "Picker"
 	 */
-	public PathFinder(LineMap map, TargetManager targetManager, String robotName) throws OperationNotSupportedException {
-		if (!robotName.equals("Picker"))
-			throw new OperationNotSupportedException("The nextAction() method is designed for the \"Picker\" robot only by now");
-		
+	public PathFinder(LineMap map, String robotName) {
 //		finder = new DijkstraPathFinder(map);
 		finder = new ShortestPathFinder(map);
 		if (finder instanceof DijkstraPathFinder)
 			((DijkstraPathFinder) finder).lengthenLines(10);
 		else if (finder instanceof ShortestPathFinder)
 			((ShortestPathFinder) finder).lengthenLines(10);
-		this.targetManager = targetManager;
+		this.targetManager = TargetManager.getInstance();
 		this.robotName = robotName;
 	}
 	
