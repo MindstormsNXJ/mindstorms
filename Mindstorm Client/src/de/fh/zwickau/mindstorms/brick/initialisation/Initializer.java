@@ -2,16 +2,8 @@ package de.fh.zwickau.mindstorms.brick.initialisation;
 
 import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
-import lejos.nxt.ColorSensor;
-import lejos.nxt.Motor;
-import lejos.nxt.MotorPort;
 import lejos.nxt.NXT;
-import lejos.nxt.NXTRegulatedMotor;
-import lejos.nxt.SensorPort;
 import lejos.nxt.Sound;
-import lejos.nxt.TouchSensor;
-import lejos.nxt.UltrasonicSensor;
-import lejos.nxt.addon.CompassHTSensor;
 import lejos.robotics.navigation.Pose;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.communication.ConnectionManager;
