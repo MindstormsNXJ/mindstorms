@@ -57,13 +57,18 @@ public class Initializer implements ButtonListener {
 		}
 
 		if (mode == Mode.PICKERTEST) {
-//			robot.pickItem();
+			for (int i = 0 ; i < 1 ; i++ ){
+				robot.pickItem();
+//				robot.picker.pickerDown();
+				robot.dropItem();
+				robot.positionManager.move(-20);
+			}
 //			robot.picker.pickerUp();
-			robot.picker.pickerDown();
-			robot.picker.pickerUp();
-			robot.picker.pickerDown();
-			robot.picker.pickerUp();
-			robot.picker.pickerDown();
+//			robot.picker.pickerDown();
+//			robot.picker.pickerUp();
+//			robot.picker.pickerDown();
+//			robot.picker.pickerUp();
+//			robot.picker.pickerDown();
 //			robot.positionManager.rotate(90, Direction.RIGHT);
 //			robot.putDown();
 //			robot.positionManager.move(-10);
