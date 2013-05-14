@@ -4,7 +4,6 @@ import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
 import de.fh.zwickau.mindstorms.brick.task.Pick;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.Motor;
-import lejos.nxt.MotorPort;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;
@@ -42,7 +41,7 @@ public class Robot {
 	public Robot() {
 		leftMotor = Motor.A;
 		rightMotor = Motor.B;
-		grabberMotor = new NXTRegulatedMotor(MotorPort.C);
+		grabberMotor = Motor.C;
 		ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
 		compassSensor = new CompassHTSensor(SensorPort.S2);
 		touchSensor = new TouchSensor(SensorPort.S3);
