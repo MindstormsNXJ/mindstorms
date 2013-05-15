@@ -3,12 +3,13 @@ package de.fh.zwickau.mindstorms.server.navigation.mapping;
 import java.util.ArrayList;
 
 import lejos.geom.Line;
+import lejos.geom.Point;
 import lejos.geom.Rectangle;
 import lejos.robotics.mapping.LineMap;
 
 public class ConverterV2 {
 
-	public static LineMap convertGridToLineMap(MapGrid gridMap, int halfRoboterSize) {		
+	public static LineMap convertGridToLineMap(MapGrid gridMap, int halfRoboterSize) {	
 		int maxAbsValue = gridMap.getGridSize() / 2;
 		Rectangle bounds = new Rectangle(-maxAbsValue, maxAbsValue, 2 * maxAbsValue, 2 * maxAbsValue);
 		ArrayList<Line> lineList = new ArrayList<Line>();
@@ -57,6 +58,7 @@ public class ConverterV2 {
 			}
 		}		
 		Line[] lines = broadenLines(lineList, halfRoboterSize);
+		movePointsToWorldCoordinates(lines, maxAbsValue);
 		LineMap lineMap = new LineMap(lines, bounds);
 		return lineMap;
 	}
@@ -127,6 +129,63 @@ public class ConverterV2 {
 			return true;
 		else
 			return false;
+	}
+	
+	private static void movePointsToWorldCoordinates(Line[] lines, int maxAbsValue) {
+		for (Line line : lines) {
+			Point p1 = line.getP1();
+			Point p2 = line.getP2();
+			Quadrant q1 = getQuadrant(p1, maxAbsValue);
+			Quadrant q2 = getQuadrant(p2, maxAbsValue);
+			switch (q1) {
+			case FIRST:
+				p1.x = p1.x - maxAbsValue;
+				break;
+			case SECOND:
+				p1.x = -(maxAbsValue - p1.x);
+				break;
+			case THIRD: 
+				p1.x = -(maxAbsValue - p1.x);
+				break;
+			case FOURTH: 
+				p1.x = p1.x - maxAbsValue;
+				break;
+			}
+			p1.y = maxAbsValue - p1.y;
+			switch (q2) {
+			case FIRST:
+				p2.x = p2.x - maxAbsValue;
+				break;
+			case SECOND:
+				p2.x = -(maxAbsValue - p2.x);
+				break;
+			case THIRD: 
+				p2.x = -(maxAbsValue - p2.x);
+				break;
+			case FOURTH: 
+				p2.x = p2.x - maxAbsValue;
+				break;
+			}
+			p2.y = maxAbsValue - p2.y;
+		}
+	}
+	
+	private static Quadrant getQuadrant(Point point, int maxAbsValue) {
+		if (point.x < maxAbsValue) { //second or third
+			if (point.y < maxAbsValue)
+				return Quadrant.SECOND;
+			else
+				return Quadrant.THIRD;
+		} else { //first or fourth
+			if (point.y < maxAbsValue)
+				return Quadrant.FIRST;
+			else
+				return Quadrant.FOURTH;
+		}
+	}
+	
+	private enum Quadrant {
+		FIRST, SECOND, THIRD, FOURTH;
 	}
 	
 }
