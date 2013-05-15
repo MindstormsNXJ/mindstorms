@@ -58,12 +58,12 @@ public class ConnectionManager {
 				targetManager.addRobot(robotName);
 				
 				//TODO test
-				LineMap map = ConverterV2.convertGridToLineMap(mapper.getGrid(), 10);
-				int number = 0;
-				for (Line line : map.getLines()) {
-					printLine(line, number);
-					++number;
-				}
+//				LineMap map = ConverterV2.convertGridToLineMap(mapper.getGrid(), 5);
+//				int number = 0;
+//				for (Line line : map.getLines()) {
+//					printLine(line, number);
+//					++number;
+//				}
 				
 				if (NO_NXT) 
 					localTest();
@@ -82,29 +82,29 @@ public class ConnectionManager {
 	}
 	
 	private void localTest() {
-		System.exit(0); //TODO
-		Line[] lines = new Line[6];
-		lines[0] = new Line(-5,5,5,5);
-		lines[1] = new Line(-5,5,-5,31);
-		lines[2] = new Line(5,5,5,-5);
-		lines[3] = new Line(0,-10,10,-10);
-		lines[4] = new Line(0,-10,0,-20);
-		lines[5] = new Line(-11,10,-11,-15);
-		LineMap lineMap = new LineMap(lines, new Rectangle(-31, 31, 62, 62));
+//		Line[] lines = new Line[6];
+//		lines[0] = new Line(-5,5,5,5);
+//		lines[1] = new Line(-5,5,-5,31);
+//		lines[2] = new Line(5,5,5,-5);
+//		lines[3] = new Line(0,-10,10,-10);
+//		lines[4] = new Line(0,-10,0,-20);
+//		lines[5] = new Line(-11,10,-11,-15);
+//		LineMap lineMap = new LineMap(lines, new Rectangle(-31, 31, 62, 62));
+		LineMap lineMap = ConverterV2.convertGridToLineMap(mapper.getGrid(), 2);
 		pathFinder = new PathFinder(lineMap, robotName);
 		pathFinder.nextAction(new Pose(0,0,0), this);
-		pathFinder.nextAction(new Pose(0,0,225), this);
-		pathFinder.nextAction(new Pose(5,-5,225), this);
-		pathFinder.nextAction(new Pose(5,-5,251), this);
-		pathFinder.nextAction(new Pose(-10,-10,251), this);
-		pathFinder.nextAction(new Pose(-10,-10,154), this);
-		pathFinder.nextAction(new Pose(0,-30,154), this);
-		pathFinder.nextAction(new Pose(0,-30,45), this);
-		pathFinder.nextAction(new Pose(20,-10,45), this);
-		pathFinder.nextAction(new Pose(20,-10,342), this);
-		pathFinder.nextAction(new Pose(15,5,342), this);
-		pathFinder.nextAction(new Pose(15,5,315), this);
-		pathFinder.nextAction(new Pose(10,10,315), this);
+//		pathFinder.nextAction(new Pose(0,0,225), this);
+//		pathFinder.nextAction(new Pose(5,-5,225), this);
+//		pathFinder.nextAction(new Pose(5,-5,251), this);
+//		pathFinder.nextAction(new Pose(-10,-10,251), this);
+//		pathFinder.nextAction(new Pose(-10,-10,154), this);
+//		pathFinder.nextAction(new Pose(0,-30,154), this);
+//		pathFinder.nextAction(new Pose(0,-30,45), this);
+//		pathFinder.nextAction(new Pose(20,-10,45), this);
+//		pathFinder.nextAction(new Pose(20,-10,342), this);
+//		pathFinder.nextAction(new Pose(15,5,342), this);
+//		pathFinder.nextAction(new Pose(15,5,315), this);
+//		pathFinder.nextAction(new Pose(10,10,315), this);
 	}
 	
 	private void printLine(Line line, int number) {

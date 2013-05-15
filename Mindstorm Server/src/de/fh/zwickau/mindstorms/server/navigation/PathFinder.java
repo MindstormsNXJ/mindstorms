@@ -40,10 +40,10 @@ public class PathFinder {
 	public PathFinder(LineMap map, String robotName) {
 //		finder = new DijkstraPathFinder(map);
 		finder = new ShortestPathFinder(map);
-		if (finder instanceof DijkstraPathFinder)
-			((DijkstraPathFinder) finder).lengthenLines((ROBOT_LENGTH_CM > ROBOT_WIDTH_CM) ? ROBOT_LENGTH_CM / 2 : ROBOT_WIDTH_CM / 2);
-		else if (finder instanceof ShortestPathFinder)
-			((ShortestPathFinder) finder).lengthenLines((ROBOT_LENGTH_CM > ROBOT_WIDTH_CM) ? ROBOT_LENGTH_CM / 2 : ROBOT_WIDTH_CM / 2);
+//		if (finder instanceof DijkstraPathFinder)
+//			((DijkstraPathFinder) finder).lengthenLines((ROBOT_LENGTH_CM > ROBOT_WIDTH_CM) ? ROBOT_LENGTH_CM / 2 : ROBOT_WIDTH_CM / 2);
+//		else if (finder instanceof ShortestPathFinder)
+//			((ShortestPathFinder) finder).lengthenLines((ROBOT_LENGTH_CM > ROBOT_WIDTH_CM) ? ROBOT_LENGTH_CM / 2 : ROBOT_WIDTH_CM / 2);
 		this.targetManager = TargetManager.getInstance();
 		this.robotName = robotName;
 	}
