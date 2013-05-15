@@ -55,7 +55,10 @@ public class DirectionManager implements Manager {
 		if (targetdirection < 0) {
 			targetdirection += 360;
 		}
-
+		if (targetdirection==360){
+			targetdirection=0;
+		}
+		
 		while (isRotating == true) {
 			int currentDirection = robot.getDirection();
 			if (currentDirection == targetdirection) {
