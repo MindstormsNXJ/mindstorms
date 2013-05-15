@@ -92,6 +92,6 @@ public class DirectionManager implements Manager {
 	public int stop() {
 		robot.stop();
 		isRotating = false;
-		return 0; // get the current heading from the compass sensor
+		return robot.getDirection(); 
 	}
 }

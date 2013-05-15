@@ -19,6 +19,9 @@ public class MovementManager implements Manager {
 	private boolean driving;
 	/** the intern Position Manager for correcting the Driving angle */
 	private PositionManager positionManager;
+	private double rotToDriveLeft;
+	private double rotToDriveRight;
+	private int dist;
 
 	/**
 	 * The Constructor of the MovementManager
@@ -45,16 +48,18 @@ public class MovementManager implements Manager {
 		if (dist == 0) {
 			return;
 		}
+		this.dist=dist;
 		// the angle where the robot stands at start
 		int startdegrees = robot.getDirection();
 		driving = true;
 
+		double fullDrivingDistance=dist;
 		// the tachocounts from the motors on the start of the moving process
 		int tachoRight = robot.rightMotor.getTachoCount();
 		int tachoLeft = robot.leftMotor.getTachoCount();
 		// the angle which is the robot driving in real
-		double rotToDriveRight = dist * robot.driveTranslation + tachoRight;
-		double rotToDriveLeft = dist * robot.driveTranslation + tachoLeft;
+		rotToDriveRight = dist * robot.driveTranslation + tachoRight;
+		rotToDriveLeft = dist * robot.driveTranslation + tachoLeft;
 
 		// the boolean who shows if the robot drives for- or backward
 		boolean forward = false;
@@ -106,7 +111,11 @@ public class MovementManager implements Manager {
 	public int stop() {
 		robot.stop();
 		driving = false;
-		return 0;
+		double wayNotDrived = 
+				((rotToDriveLeft- robot.leftMotor.getTachoCount())+
+				(rotToDriveRight- robot.rightMotor.getTachoCount()))/
+				(2*robot.driveTranslation);
+		return (int) (dist-wayNotDrived);
 	}
 
 	public boolean isMoving() {
