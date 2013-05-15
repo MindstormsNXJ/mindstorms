@@ -17,6 +17,7 @@ import lejos.util.Delay;
 
 import de.fh.zwickau.mindstorms.server.navigation.PathFinder;
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
+import de.fh.zwickau.mindstorms.server.navigation.mapping.ConverterV2;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 
 /**
@@ -36,7 +37,7 @@ public class ConnectionManager {
 	private DataInputStream poseReceiver;
 	private String robotName;
 	
-	private final boolean NO_NXT = true; //true, if there is only there is no NXT available - PathFinding only
+	private final boolean NO_NXT = true; //true, if there is no NXT available - PathFinding only
 	
 	/**
 	 * Initialises a ConnectionManager, including the connection itself as well as
@@ -56,6 +57,9 @@ public class ConnectionManager {
 				targetManager = TargetManager.getInstance();
 				targetManager.addRobot(robotName);
 				
+				//TODO test
+				ConverterV2.convertGridToLineMap(mapper.getGrid(), 10);
+				
 				if (NO_NXT) 
 					localTest();
 				else {
@@ -73,12 +77,14 @@ public class ConnectionManager {
 	}
 	
 	private void localTest() {
-		Line[] lines = new Line[5];
+		System.exit(0); //TODO
+		Line[] lines = new Line[6];
 		lines[0] = new Line(-5,5,5,5);
 		lines[1] = new Line(-5,5,-5,31);
 		lines[2] = new Line(5,5,5,-5);
 		lines[3] = new Line(0,-10,10,-10);
 		lines[4] = new Line(0,-10,0,-20);
+		lines[5] = new Line(-11,10,-11,-15);
 		LineMap lineMap = new LineMap(lines, new Rectangle(-31, 31, 62, 62));
 		pathFinder = new PathFinder(lineMap, robotName);
 		pathFinder.nextAction(new Pose(0,0,0), this);
