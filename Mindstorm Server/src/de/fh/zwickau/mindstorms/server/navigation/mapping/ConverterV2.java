@@ -58,7 +58,7 @@ public class ConverterV2 {
 			}
 		}		
 		Line[] lines = broadenLines(lineList, halfRoboterSize);
-		movePointsToWorldCoordinates(lines, maxAbsValue);
+		lines = movePointsToWorldCoordinates(lines, maxAbsValue);
 		LineMap lineMap = new LineMap(lines, bounds);
 		return lineMap;
 	}
@@ -131,7 +131,9 @@ public class ConverterV2 {
 			return false;
 	}
 	
-	private static void movePointsToWorldCoordinates(Line[] lines, int maxAbsValue) {
+	private static Line[] movePointsToWorldCoordinates(Line[] lines, int maxAbsValue) {
+		Line[] returnArray = new Line[lines.length];
+		int index = 0;
 		for (Line line : lines) {
 			Point p1 = line.getP1();
 			Point p2 = line.getP2();
@@ -167,7 +169,10 @@ public class ConverterV2 {
 				break;
 			}
 			p2.y = maxAbsValue - p2.y;
+			returnArray[index] = new Line(p1.x, p1.y, p2.x, p2.y);
+			++index;
 		}
+		return returnArray;
 	}
 	
 	private static Quadrant getQuadrant(Point point, int maxAbsValue) {

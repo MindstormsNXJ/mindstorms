@@ -59,11 +59,11 @@ public class ConnectionManager {
 				
 				//TODO test
 				LineMap map = ConverterV2.convertGridToLineMap(mapper.getGrid(), 10);
-//				int number = 0;
-//				for (Line line : map.getLines()) {
-//					printLine(line, number);
-//					++number;
-//				}
+				int number = 0;
+				for (Line line : map.getLines()) {
+					printLine(line, number);
+					++number;
+				}
 				
 				if (NO_NXT) 
 					localTest();
