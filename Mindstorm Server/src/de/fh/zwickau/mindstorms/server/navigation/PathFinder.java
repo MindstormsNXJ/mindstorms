@@ -7,7 +7,6 @@ import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.DestinationUnreachableException;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
-import lejos.robotics.pathfinding.DijkstraPathFinder;
 import lejos.robotics.pathfinding.Path;
 import lejos.robotics.pathfinding.ShortestPathFinder;
 import lejos.util.Delay;
@@ -38,13 +37,9 @@ public class PathFinder {
 	 * @throws OperationNotSupportedException if the robot name is unequal to "Picker"
 	 */
 	public PathFinder(LineMap map, String robotName) {
-//		finder = new DijkstraPathFinder(map);
 		finder = new ShortestPathFinder(map);
-//		if (finder instanceof DijkstraPathFinder)
-//			((DijkstraPathFinder) finder).lengthenLines((ROBOT_LENGTH_CM > ROBOT_WIDTH_CM) ? ROBOT_LENGTH_CM / 2 : ROBOT_WIDTH_CM / 2);
-//		else if (finder instanceof ShortestPathFinder)
+//		if (finder instanceof ShortestPathFinder)
 //			((ShortestPathFinder) finder).lengthenLines((ROBOT_LENGTH_CM > ROBOT_WIDTH_CM) ? ROBOT_LENGTH_CM / 2 : ROBOT_WIDTH_CM / 2);
-		((ShortestPathFinder) finder).lengthenLines((float) 0.1);
 		this.targetManager = TargetManager.getInstance();
 		this.robotName = robotName;
 	}
