@@ -9,14 +9,17 @@ import lejos.robotics.mapping.LineMap;
 
 public class ConverterV2 {
 
-	public static LineMap convertGridToLineMap(MapGrid gridMap, int halfRoboterSize) {	
+	public static LineMap convertGridToLineMap(MapGrid gridMap, int halfRoboterSize) {
 		int maxAbsValue = gridMap.getGridSize() / 2;
 		Rectangle bounds = new Rectangle(-maxAbsValue, maxAbsValue, 2 * maxAbsValue, 2 * maxAbsValue);
 		ArrayList<Line> lineList = new ArrayList<Line>();
 		byte[][] bytes = gridMap.getByteGrid();
+		bytes = flipArray(bytes);
 		int arrayLength = bytes.length; //value for both dimensions
-		for (int i = 0; i < arrayLength; ++i) {
-			for (int j = 0; j < arrayLength; ++j) {
+		for (int j = 0; j < arrayLength; ++j) {
+//			System.out.println();
+			for (int i = 0; i < arrayLength; ++i) {
+//				System.out.print(bytes[i][j] + " ");
 				if (bytes[i][j] != 0 && !partOfLine(lineList, i, j)) { //something on field (i,j) that is not recognised yet
 					int x = i;
 					int y = j;
@@ -61,6 +64,16 @@ public class ConverterV2 {
 		lines = movePointsToWorldCoordinates(lines, maxAbsValue);
 		LineMap lineMap = new LineMap(lines, bounds);
 		return lineMap;
+	}
+	
+	private static byte[][] flipArray(byte[][] bytes) {
+		byte[][] returnArray = new byte[bytes.length][bytes.length];
+		for (int j = 0; j < bytes.length; ++j) {
+			for (int i = 0; i < bytes.length; ++i) {
+				returnArray[i][j] = bytes[i][bytes.length - 1 - j];
+			}
+		}
+		return returnArray;
 	}
 	
 	private static boolean partOfLine(ArrayList<Line> lineList, int xCor, int yCor) {
@@ -139,36 +152,38 @@ public class ConverterV2 {
 			Point p2 = line.getP2();
 			Quadrant q1 = getQuadrant(p1, maxAbsValue);
 			Quadrant q2 = getQuadrant(p2, maxAbsValue);
-			switch (q1) {
-			case FIRST:
-				p1.x = p1.x - maxAbsValue;
-				break;
-			case SECOND:
-				p1.x = -(maxAbsValue - p1.x);
-				break;
-			case THIRD: 
-				p1.x = -(maxAbsValue - p1.x);
-				break;
-			case FOURTH: 
-				p1.x = p1.x - maxAbsValue;
-				break;
-			}
-			p1.y = maxAbsValue - p1.y;
-			switch (q2) {
-			case FIRST:
-				p2.x = p2.x - maxAbsValue;
-				break;
-			case SECOND:
-				p2.x = -(maxAbsValue - p2.x);
-				break;
-			case THIRD: 
-				p2.x = -(maxAbsValue - p2.x);
-				break;
-			case FOURTH: 
-				p2.x = p2.x - maxAbsValue;
-				break;
-			}
-			p2.y = maxAbsValue - p2.y;
+			p1 = getPointInWorldCoordinates(p1, q1, maxAbsValue);
+			p2 = getPointInWorldCoordinates(p2, q2, maxAbsValue);
+//			switch (q1) {
+//			case FIRST:
+//				p1.x = p1.x - maxAbsValue;
+//				break;
+//			case SECOND:
+//				p1.x = -(maxAbsValue - p1.x);
+//				break;
+//			case THIRD: 
+//				p1.x = -(maxAbsValue - p1.x);
+//				break;
+//			case FOURTH: 
+//				p1.x = p1.x - maxAbsValue;
+//				break;
+//			}
+//			p1.y = maxAbsValue - p1.y;
+//			switch (q2) {
+//			case FIRST:
+//				p2.x = p2.x - maxAbsValue;
+//				break;
+//			case SECOND:
+//				p2.x = -(maxAbsValue - p2.x);
+//				break;
+//			case THIRD: 
+//				p2.x = -(maxAbsValue - p2.x);
+//				break;
+//			case FOURTH: 
+//				p2.x = p2.x - maxAbsValue;
+//				break;
+//			}
+//			p2.y = maxAbsValue - p2.y;
 			returnArray[index] = new Line(p1.x, p1.y, p2.x, p2.y);
 			++index;
 		}
@@ -187,6 +202,25 @@ public class ConverterV2 {
 			else
 				return Quadrant.FOURTH;
 		}
+	}
+	
+	private static Point getPointInWorldCoordinates(Point point, Quadrant quadrant, int maxAbsValue) {
+		switch (quadrant) {
+		case FIRST:
+			point.x = point.x - maxAbsValue;
+			break;
+		case SECOND:
+			point.x = -(maxAbsValue - point.x);
+			break;
+		case THIRD: 
+			point.x = -(maxAbsValue - point.x);
+			break;
+		case FOURTH: 
+			point.x = point.x - maxAbsValue;
+			break;
+		}
+		point.y = maxAbsValue - point.y;
+		return new Point(point.x, point.y);
 	}
 	
 	private enum Quadrant {

@@ -58,12 +58,13 @@ public class ConnectionManager {
 				targetManager.addRobot(robotName);
 				
 				//TODO test
-//				LineMap map = ConverterV2.convertGridToLineMap(mapper.getGrid(), 5);
+//				LineMap map = ConverterV2.convertGridToLineMap(mapper.getGrid(), 1);
 //				int number = 0;
 //				for (Line line : map.getLines()) {
 //					printLine(line, number);
 //					++number;
 //				}
+//				System.exit(0);
 				
 				if (NO_NXT) 
 					localTest();
@@ -90,7 +91,7 @@ public class ConnectionManager {
 //		lines[4] = new Line(0,-10,0,-20);
 //		lines[5] = new Line(-11,10,-11,-15);
 //		LineMap lineMap = new LineMap(lines, new Rectangle(-31, 31, 62, 62));
-		LineMap lineMap = ConverterV2.convertGridToLineMap(mapper.getGrid(), 2);
+		LineMap lineMap = ConverterV2.convertGridToLineMap(mapper.getGrid(), 1);
 		pathFinder = new PathFinder(lineMap, robotName);
 		pathFinder.nextAction(new Pose(0,0,0), this);
 //		pathFinder.nextAction(new Pose(0,0,225), this);
@@ -108,7 +109,7 @@ public class ConnectionManager {
 	}
 	
 	private void printLine(Line line, int number) {
-		System.out.println("Line" + number + ": " + line.x1 + ", " + line.y1 + " - " + line.x2 + ", " + line.y2);
+		System.out.println("Line" + number + ": " + line.x1 + ", " + line.y1 + " to " + line.x2 + ", " + line.y2);
 	}
 	
 	/**
