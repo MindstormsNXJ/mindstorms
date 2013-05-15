@@ -2,7 +2,6 @@ package de.fh.zwickau.mindstorms.brick.initialisation;
 
 import ch.aplu.nxtsim.*;
 import de.fh.zwickau.mindstorms.brick.Robot;
-import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
 import de.fh.zwickau.mindstorms.brick.sensors.ObjectCentralisation;
 
