@@ -52,8 +52,6 @@ public class MovementManager implements Manager {
 		// the angle where the robot stands at start
 		int startdegrees = robot.getDirection();
 		driving = true;
-
-		double fullDrivingDistance=dist;
 		// the tachocounts from the motors on the start of the moving process
 		int tachoRight = robot.rightMotor.getTachoCount();
 		int tachoLeft = robot.leftMotor.getTachoCount();
