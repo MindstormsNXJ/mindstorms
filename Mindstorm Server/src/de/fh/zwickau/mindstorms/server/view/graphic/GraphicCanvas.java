@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import lejos.geom.Line;
+import lejos.geom.Point;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.pathfinding.Path;
 
@@ -236,6 +237,7 @@ public class GraphicCanvas extends Thread {
         
         drawTargets();
         drawRobots();
+        drawObjects();
         
         Display.update();                                                      //Bring it to the screen.
     }
@@ -305,6 +307,28 @@ public class GraphicCanvas extends Thread {
         glDisable(GL_POINT_SMOOTH);
     }
 
+    /**
+     * Draw Objects like Ball and Goal
+     */
+    private void drawObjects(){
+        float offset = mapper.getGrid().getGridSize() / 2 * mapper.getGrid().getTileSize();
+        
+        Point ball = mapper.getBallPosition();
+        Point goal = mapper.getGoalPosition();
+        
+        
+        glBegin(GL_POINTS);
+        if(ball != null){
+            glColor3f(1.0f, 0.25f, 0.0f);
+            glVertex2f(ball.x, ball.y);
+        }
+        if(goal != null){
+            glColor3f(0.25f, 1.0f, 0.0f);
+            glVertex2f(goal.x / offset, goal.y / offset);
+        }
+        glEnd();
+    }
+    
     /**
      * Handle user input
      */
