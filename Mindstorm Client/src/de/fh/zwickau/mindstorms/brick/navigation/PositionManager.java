@@ -106,6 +106,8 @@ public class PositionManager implements Manager {
 		updatePosition(movementManager.stop());
 		directionManager.stop();
 		updateRotation();
+		robot.rightMotor.stop(true);
+		robot.leftMotor.stop(false);
 		return 0;
 	}
 

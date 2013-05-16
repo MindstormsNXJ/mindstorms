@@ -109,8 +109,7 @@ public class Robot {
 	 * This method stops the two motors of the robot.
 	 */
 	public void stop() {
-		rightMotor.stop(true);
-		leftMotor.stop(false);
+		positionManager.stop();
 	}
 
 	/**
