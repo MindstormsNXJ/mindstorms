@@ -48,7 +48,7 @@ public class MovementManager implements Manager {
 		if (dist == 0) {
 			return;
 		}
-		this.dist=dist;
+		this.dist = dist;
 		// the angle where the robot stands at start
 		int startdegrees = robot.getDirection();
 		driving = true;
@@ -108,13 +108,11 @@ public class MovementManager implements Manager {
 	@Override
 	public int stop() {
 		driving = false;
-		double wayNotDrived = 
-				((rotToDriveLeft- robot.leftMotor.getTachoCount())+
-				(rotToDriveRight- robot.rightMotor.getTachoCount()))/
-				(2*robot.driveTranslation);
-		robot.rightMotor.stop(true);
-		robot.leftMotor.stop(false);
-		return (int) (dist-wayNotDrived);
+		double wayNotDrived = ((rotToDriveLeft - robot.leftMotor
+				.getTachoCount()) + (rotToDriveRight - robot.rightMotor
+				.getTachoCount()))
+				/ (2 * robot.driveTranslation);
+		return (int) (dist - wayNotDrived);
 	}
 
 	public boolean isMoving() {

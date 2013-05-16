@@ -55,10 +55,10 @@ public class DirectionManager implements Manager {
 		if (targetdirection < 0) {
 			targetdirection += 360;
 		}
-		if (targetdirection==360){
-			targetdirection=0;
+		if (targetdirection == 360) {
+			targetdirection = 0;
 		}
-		
+
 		while (isRotating == true) {
 			int currentDirection = robot.getDirection();
 			if (currentDirection == targetdirection) {
@@ -71,9 +71,9 @@ public class DirectionManager implements Manager {
 	private int activateMotors(int degrees, Direction direction) {
 		NXTRegulatedMotor forwardMotor;
 		NXTRegulatedMotor backwardMotor;
-//		if (degrees <= 15) { // use lower value of rotationSpeed for 15 degree
-//			robot.setMotorSpeed(robot.rotationSpeed / 10);
-//		}
+		if (degrees <= 5) { // use lower value of rotationSpeed for 15 degree
+			robot.setMotorSpeed(robot.rotationSpeed / 10);
+		}
 		if (direction == Direction.RIGHT) {
 			forwardMotor = robot.leftMotor;
 			backwardMotor = robot.rightMotor;
@@ -94,8 +94,23 @@ public class DirectionManager implements Manager {
 	@Override
 	public int stop() {
 		isRotating = false;
-		robot.rightMotor.stop(true);
-		robot.leftMotor.stop(false);
-		return robot.getDirection(); 
+		return robot.getDirection();
+	}
+
+	/**
+	 * Calculates the direction to rotate from the current position.
+	 * 
+	 * @param currentDegree
+	 * @param targetDegree
+	 * @return the angle to rotate (positive for right, negative for left)
+	 */
+	public int calculateAngle(int currentDegree, int targetDegree) {
+		int angleDiff = targetDegree - currentDegree;
+		if (angleDiff >= 180) {
+			angleDiff -= 360;
+		} else if (angleDiff < -180) {
+			angleDiff += 360;
+		}
+		return angleDiff;
 	}
 }
