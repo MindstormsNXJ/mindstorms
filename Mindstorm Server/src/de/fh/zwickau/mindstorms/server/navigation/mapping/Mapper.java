@@ -2,6 +2,7 @@ package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
 import de.fh.zwickau.mindstorms.server.Server;
 import de.fh.zwickau.mindstorms.server.view.View;
+import lejos.geom.Point;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
 
@@ -15,9 +16,12 @@ import lejos.robotics.navigation.Pose;
  */
 public class Mapper {
 	private Server controller;
+	
 	private RobotTracer tracer;
 	private MapGrid mapGrid;
 	private LineMap lineMap;
+	private Point ball;
+	private Point goal;
 
 	/**
 	 * New Instance of Mapper
@@ -124,6 +128,22 @@ public class Mapper {
 	public RobotTracer getTracer(){
 	    return tracer;
 	}
+	
+	public void setBallPosition(Point position){
+	    this.ball = position;
+	}
+	
+	public Point getBallPosition(){
+	    return ball;
+	}
+	
+	public void setGoalPosition(Point position){
+        this.goal = position;
+    }
+    
+    public Point getGoalPosition(){
+        return goal;
+    }
 
 	public LineMap getLineMap() {
 		return lineMap;
