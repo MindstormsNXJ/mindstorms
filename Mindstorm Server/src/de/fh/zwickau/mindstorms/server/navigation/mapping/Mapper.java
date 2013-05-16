@@ -108,7 +108,8 @@ public class Mapper {
 	 * generate a new LineMap
 	 */
 	private void buildLineMap() {
-		lineMap = Converter.gridToLineMap(mapGrid);
+//		lineMap = Converter.gridToLineMap(mapGrid);
+		lineMap = ConverterV2.convertGridToLineMap(mapGrid, 3);
 	}
 
 	public void loadMap(){

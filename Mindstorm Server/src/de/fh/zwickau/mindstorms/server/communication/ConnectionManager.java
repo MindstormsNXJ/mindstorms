@@ -97,7 +97,8 @@ public class ConnectionManager {
 //		pathFinder.nextAction(new Pose(15,5,315), this);
 //		pathFinder.nextAction(new Pose(10,10,315), this);
 		
-		LineMap lineMap = ConverterV2.convertGridToLineMap(mapper.getGrid(), 3);
+//		LineMap lineMap = ConverterV2.convertGridToLineMap(mapper.getGrid(), 3);
+		LineMap lineMap = mapper.getLineMap();
 		pathFinder = new PathFinder(lineMap, robotName);
 		pathFinder.nextAction(new Pose(0,0,0), this);
 	}
