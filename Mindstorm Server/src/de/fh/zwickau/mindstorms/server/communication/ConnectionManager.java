@@ -25,7 +25,7 @@ import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
  * NXT, receiving it's position as a Pose and sending commands to it.
  * 
  * @author Tobias Schießl
- * @version 1.2
+ * @version 1.3
  */
 public class ConnectionManager {
 
@@ -101,6 +101,19 @@ public class ConnectionManager {
 		LineMap lineMap = mapper.getLineMap();
 		pathFinder = new PathFinder(lineMap, robotName);
 		pathFinder.nextAction(new Pose(0,0,0), this);
+		pathFinder.nextAction(new Pose(0,0,206), this);
+		pathFinder.nextAction(new Pose(-3,-6,206), this);
+		pathFinder.nextAction(new Pose(-3,-6,180), this);
+		pathFinder.nextAction(new Pose(-3,-12,180), this);
+		pathFinder.nextAction(new Pose(-3,-21,180), this);
+		pathFinder.nextAction(new Pose(-3,-21,90), this);
+		pathFinder.nextAction(new Pose(3,-21,90), this);
+		pathFinder.nextAction(new Pose(3,-21,45), this);
+		pathFinder.nextAction(new Pose(12,-12,45), this);
+		pathFinder.nextAction(new Pose(12,-12,0), this);
+		pathFinder.nextAction(new Pose(12,-6,0), this);
+		pathFinder.nextAction(new Pose(12,-6,353), this);
+		pathFinder.nextAction(new Pose(10,10,353), this);
 	}
 	
 	/**

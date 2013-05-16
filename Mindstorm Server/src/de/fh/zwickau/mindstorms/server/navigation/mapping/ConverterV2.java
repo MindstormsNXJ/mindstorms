@@ -154,36 +154,6 @@ public class ConverterV2 {
 			Quadrant q2 = getQuadrant(p2, maxAbsValue);
 			p1 = getPointInWorldCoordinates(p1, q1, maxAbsValue);
 			p2 = getPointInWorldCoordinates(p2, q2, maxAbsValue);
-//			switch (q1) {
-//			case FIRST:
-//				p1.x = p1.x - maxAbsValue;
-//				break;
-//			case SECOND:
-//				p1.x = -(maxAbsValue - p1.x);
-//				break;
-//			case THIRD: 
-//				p1.x = -(maxAbsValue - p1.x);
-//				break;
-//			case FOURTH: 
-//				p1.x = p1.x - maxAbsValue;
-//				break;
-//			}
-//			p1.y = maxAbsValue - p1.y;
-//			switch (q2) {
-//			case FIRST:
-//				p2.x = p2.x - maxAbsValue;
-//				break;
-//			case SECOND:
-//				p2.x = -(maxAbsValue - p2.x);
-//				break;
-//			case THIRD: 
-//				p2.x = -(maxAbsValue - p2.x);
-//				break;
-//			case FOURTH: 
-//				p2.x = p2.x - maxAbsValue;
-//				break;
-//			}
-//			p2.y = maxAbsValue - p2.y;
 			returnArray[index] = new Line(p1.x, p1.y, p2.x, p2.y);
 			++index;
 		}
