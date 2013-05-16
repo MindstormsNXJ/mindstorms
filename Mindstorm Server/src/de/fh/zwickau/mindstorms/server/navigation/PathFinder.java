@@ -26,8 +26,8 @@ public class PathFinder {
 	private String robotName;
 	
 	//two values which will be used for the lengthenLines() method
-	private final int ROBOT_LENGTH_CM = 20;
-	private final int ROBOT_WIDTH_CM = 15;
+	public static final int ROBOT_LENGTH_CM = 6;
+	public static final int ROBOT_WIDTH_CM = 4;
 	
 	/**
 	 * Initialises a PathFinder with the LineMap to use from now on.

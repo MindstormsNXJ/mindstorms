@@ -1,6 +1,7 @@
 package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
 import de.fh.zwickau.mindstorms.server.Server;
+import de.fh.zwickau.mindstorms.server.navigation.PathFinder;
 import de.fh.zwickau.mindstorms.server.view.View;
 import lejos.geom.Point;
 import lejos.robotics.mapping.LineMap;
@@ -108,8 +109,7 @@ public class Mapper {
 	 * generate a new LineMap
 	 */
 	private void buildLineMap() {
-//		lineMap = Converter.gridToLineMap(mapGrid);
-		lineMap = ConverterV2.convertGridToLineMap(mapGrid, 3);
+		lineMap = ConverterV2.convertGridToLineMap(mapGrid, (PathFinder.ROBOT_LENGTH_CM > PathFinder.ROBOT_WIDTH_CM) ? PathFinder.ROBOT_LENGTH_CM / 2 : PathFinder.ROBOT_WIDTH_CM / 2);
 	}
 
 	public void loadMap(){
