@@ -18,9 +18,9 @@ public class Pick {
 	private Robot robot;
 	private TouchSensor touchSensor;
 	private NXTRegulatedMotor grabberMotor;
-	private int wayDown = 460;
-	private int itemDistance = 25;
 	private UltrasonicSensor sensor;
+	private int wayDown = 460;			// tacho count of grabber motor to move grabber down
+	private int itemDistance = 250;		// at this distance the robot stops and put the grabber down
 	
 
 	public Pick(Robot r){
@@ -78,13 +78,13 @@ public class Pick {
 			System.out.println(driveDist);
 			robot.positionManager.move(driveDist);
 			pickerDown();
-			robot.positionManager.move(12);
+			robot.positionManager.move(120);
 			pickerUp();
 			
 			// delay and some movement to ensure the ball is still in the picker
-			Delay.msDelay(3000);
-			robot.positionManager.move(-5);
-			robot.positionManager.move(5);
+			Delay.msDelay(2500);
+			robot.positionManager.move(-10);
+			robot.positionManager.move(10);
 			
 			// check the color sensor, if the blue ball was picked
 			if(robot.colorSensor.getColorID() == 2){

@@ -94,7 +94,7 @@ public class PositionManager implements Manager {
 	 * backwards (negative values)
 	 * 
 	 * @param distance
-	 *            the distance to move in cm
+	 *            the distance to move in mm
 	 */
 	public void move(int distance) {
 		movementManager.move(distance);
