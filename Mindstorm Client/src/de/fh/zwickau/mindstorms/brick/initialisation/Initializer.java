@@ -26,11 +26,11 @@ public class Initializer implements ButtonListener {
 	}
 
 	private Robot robot;
-	private final double STD_DRIVE_TRANSLATION = 38.0;
+	private final double STD_DRIVE_TRANSLATION = 38.0 / 10;
 
 	// config Flags and Enums
 	private boolean hasToCalibrate = false;
-	private Mode mode = Mode.PICKERTEST;
+	private Mode mode = Mode.SERVERMODE;
 
 	/**
 	 * Initialises the NXT and adds a button listener to the escape button, that
@@ -95,8 +95,7 @@ public class Initializer implements ButtonListener {
 					// calculate driveTranslation
 					DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(
 							robot.leftMotor, robot.rightMotor, robot.ultrasonicSensor);
-					robot.driveTranslation = driveTranslationCalibrator
-							.getDriveTranslation();
+					robot.driveTranslation = driveTranslationCalibrator.getDriveTranslation() / 10;
 
 					// calibrate compass sensor
 					new CompassCalibrator(

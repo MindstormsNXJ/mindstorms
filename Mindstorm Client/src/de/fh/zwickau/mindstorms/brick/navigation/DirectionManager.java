@@ -71,9 +71,9 @@ public class DirectionManager implements Manager {
 	private int activateMotors(int degrees, Direction direction) {
 		NXTRegulatedMotor forwardMotor;
 		NXTRegulatedMotor backwardMotor;
-		if (degrees <= 15) { // use lower value of rotationSpeed for 15 degree
-			robot.setMotorSpeed(robot.rotationSpeed / 10);
-		}
+//		if (degrees <= 15) { // use lower value of rotationSpeed for 15 degree
+//			robot.setMotorSpeed(robot.rotationSpeed / 10);
+//		}
 		if (direction == Direction.RIGHT) {
 			forwardMotor = robot.leftMotor;
 			backwardMotor = robot.rightMotor;

@@ -104,7 +104,7 @@ public class PathFinder {
 					targetDir = 180;
 			}
 		}
-		int distanceToMove = (int) Math.sqrt(xDiv * xDiv + yDiv * yDiv);
+		int distanceToMove = (int) (Math.sqrt(xDiv * xDiv + yDiv * yDiv) * 10);
 		if (distanceToMove == 0) {
 			//just a bug that happens due to calculation with float in the path finder - use next waypoint
 			System.out.println("Skipping target...");
@@ -118,7 +118,7 @@ public class PathFinder {
 			}
 			else { //move robot forward
 				if (targetManager.isBallWaypoint(currentWaypoint) || (robotHasBall && targetManager.isFinalTarget(currentWaypoint))) {
-					distanceToMove -= 20; //to leave enough distance for the pick and drop procedures
+					distanceToMove -= 300; //to leave enough distance for the pick and drop procedures
 					if (distanceToMove < 0) {
 						//TODO maybe we should move backwards, but that could cause trouble if a wall gets in the ultrasonic sensors range
 	//					manager.sendBackwardCommand(Math.abs(distanceToMove));

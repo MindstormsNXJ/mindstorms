@@ -29,7 +29,7 @@ public class Robot {
 	public TouchSensor touchSensor;
 	public ColorSensor colorSensor;
 
-	public double driveTranslation; // angel in degrees per cm
+	public double driveTranslation; // angel in degrees per mm
 	public PositionManager positionManager;
 
 	public int rotationSpeed = 100; // standard values, will be changed after
