@@ -320,7 +320,7 @@ public class GraphicCanvas extends Thread {
         glBegin(GL_POINTS);
         if(ball != null){
             glColor3f(1.0f, 0.25f, 0.0f);
-            glVertex2f(ball.x, ball.y);
+            glVertex2f(ball.x / offset, ball.y / offset);
         }
         if(goal != null){
             glColor3f(0.25f, 1.0f, 0.0f);

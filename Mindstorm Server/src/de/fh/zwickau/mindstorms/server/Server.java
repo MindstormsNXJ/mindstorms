@@ -21,6 +21,9 @@ public class Server {
 		mapper = new Mapper(1);
 		targetManager = TargetManager.getInstance();
 		
+		mapper.setBallPosition(targetManager.getBallWaypoint());
+		mapper.setGoalPosition(targetManager.getFinalTarget());
+		
 		registerObjects();
 		
 		view.start();	//new Thread for view
