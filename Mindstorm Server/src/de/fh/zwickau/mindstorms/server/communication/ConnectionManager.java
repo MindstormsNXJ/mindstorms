@@ -37,7 +37,7 @@ public class ConnectionManager {
 	private DataInputStream poseReceiver;
 	private String robotName;
 	
-	private final boolean NO_NXT = true; //true, if there is no NXT available - PathFinding only
+	private final boolean NO_NXT = false; //true, if there is no NXT available - PathFinding only
 	
 	/**
 	 * Initialises a ConnectionManager, including the connection itself as well as
@@ -183,7 +183,7 @@ public class ConnectionManager {
 		}
 		Pose pose = null;
 		try {
-			pose = new Pose(Integer.parseInt(xPos), Integer.parseInt(yPos), Integer.parseInt(dir));
+			pose = new Pose(Integer.parseInt(xPos) / 10, Integer.parseInt(yPos) / 10, Integer.parseInt(dir));
 		} catch (NumberFormatException ex) {
 			System.err.println("Could not parse received pose");
 			System.err.println("Received String: " + poseString);
