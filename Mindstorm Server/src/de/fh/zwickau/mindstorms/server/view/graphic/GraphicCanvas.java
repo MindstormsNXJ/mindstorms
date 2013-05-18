@@ -18,6 +18,7 @@ import org.lwjgl.opengl.DisplayMode;
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.MapGrid;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
+import de.fh.zwickau.mindstorms.server.view.graphic.shader.ShaderManager;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
@@ -92,6 +93,8 @@ public class GraphicCanvas extends Thread {
      * Initialize some OpenGL parameters and allocate memory
      */
     private void initialize() {
+        ShaderManager.Initialize();
+        
         final int size = mapper.getGrid().getGridSize();
         
         // GL initialize
