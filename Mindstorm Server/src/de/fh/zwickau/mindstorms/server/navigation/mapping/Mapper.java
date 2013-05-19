@@ -2,6 +2,7 @@ package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
 import de.fh.zwickau.mindstorms.server.Server;
 import de.fh.zwickau.mindstorms.server.navigation.PathFinder;
+import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.Camera;
 import de.fh.zwickau.mindstorms.server.view.View;
 import lejos.geom.Point;
 import lejos.robotics.mapping.LineMap;
@@ -24,11 +25,14 @@ public class Mapper {
 	private Point ball;
 	private Point goal;
 
+	private Camera camera;
+
 	/**
 	 * New Instance of Mapper
 	 * @param tileSize tile size for grid
 	 */
 	public Mapper(float tileSize) {
+		camera = new Camera();
 		mapGrid = new MapGrid(tileSize);
 		lineMap = new LineMap();
 		tracer = new RobotTracer();
