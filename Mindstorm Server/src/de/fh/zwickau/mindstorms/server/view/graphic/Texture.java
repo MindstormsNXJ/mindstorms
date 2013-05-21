@@ -91,5 +91,21 @@ class Texture
         glActiveTexture(bindingPoint);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
+    
+    public String getName(){
+    	return nameInShader;
+    }
+    
+    public int getHandle(){
+    	return handle;
+    }
+    
+    public int getWidth(){
+    	return width;
+    }
+    
+    public int getHeight(){
+    	return height;
+    }
 }
 
