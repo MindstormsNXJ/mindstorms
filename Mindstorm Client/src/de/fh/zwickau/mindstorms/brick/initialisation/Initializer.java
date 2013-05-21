@@ -9,7 +9,7 @@ import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.communication.ConnectionManager;
 import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
-import de.fh.zwickau.mindstorms.brick.sensors.ObjectCentralisation;
+import de.fh.zwickau.mindstorms.brick.task.ObjectCentralisation;
 
 /**
  * This class is responsible for managing all tasks that have to be performed
