@@ -13,7 +13,7 @@ import org.lwjgl.BufferUtils;
 /// <summary>
 /// A simple rectangle for UI building
 /// </summary>
-class PrimRectangle
+public class Rectangle
 {
 	private static boolean BufferIsUploaded = false;
     private static int vao;
@@ -35,7 +35,7 @@ class PrimRectangle
          1.0f, 0.0f
     };
 
-    public PrimRectangle() 
+    public Rectangle() 
     {
 
         if(!BufferIsUploaded){

@@ -10,10 +10,12 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 
+import de.fh.zwickau.mindstorms.server.view.graphic.shape.Rectangle;
+
 
 public class RenderTarget
 {
-    //private PrimRectangle quad;
+    private Rectangle quad;
     private int frameBuffer, depthBuffer;
     private Texture[] textureBuffers;
 
@@ -40,7 +42,7 @@ public class RenderTarget
     	depthBuffer = glGenRenderbuffers();
     	frameBuffer = glGenFramebuffers();
 
-        //quad = new PrimRectangle(Vector3.Zero, ViewportManager.ClientSize, Color4.Black); // TODO
+        quad = new Rectangle();
 
     }
 
@@ -126,7 +128,7 @@ public class RenderTarget
     public void Draw()
     {
         bindTextures();
-        //quad.Draw(); //TODO
+        quad.Draw();
         unbindTextures();
     }
 }
