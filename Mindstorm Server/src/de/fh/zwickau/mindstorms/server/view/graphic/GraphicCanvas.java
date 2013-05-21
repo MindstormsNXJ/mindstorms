@@ -14,15 +14,27 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GLUConstants;
 
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.MapGrid;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
+import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.Camera;
 import de.fh.zwickau.mindstorms.server.view.graphic.shader.ShaderManager;
+import de.fh.zwickau.mindstorms.server.view.graphic.shape.Rectangle;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
+
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.*;
+import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL14.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL21.*;
+import static org.lwjgl.opengl.GL30.*;
+
 
 /**
  * OpenGL View for mapping data
@@ -36,10 +48,12 @@ public class GraphicCanvas extends Thread {
     private Canvas parent;
     
     private Mapper mapper;
+    private Camera camera;
     private TargetManager targetM;
     
     private Boolean mapChanged;
     private Boolean targetChanged;
+    private Boolean cameraChanged;
     private Semaphore semaphore;
     
     
@@ -49,6 +63,8 @@ public class GraphicCanvas extends Thread {
     private float[] lineVertices;
     private float[] targetVertices;
 
+    private Texture tex_camera;
+    
     //Draw options
     boolean drawLine = true;
     boolean drawTile = true;
@@ -57,6 +73,7 @@ public class GraphicCanvas extends Thread {
         this.parent = parent;
         this.mapChanged = new Boolean(true);
         this.targetChanged = new Boolean(true);
+        this.cameraChanged = new Boolean(true);
         this.semaphore = new Semaphore(1);
         
     }
@@ -68,10 +85,13 @@ public class GraphicCanvas extends Thread {
 
         while (!Display.isCloseRequested()) {
             update();
-            draw();
+            
+            drawCamera();
+            //drawMapOverview();
         }
 
         Display.destroy();
+        System.exit(0);
     }
 
     /**
@@ -129,7 +149,9 @@ public class GraphicCanvas extends Thread {
         if (targetChanged) {
             rebuildTargets();
         }
-        
+        if (cameraChanged) {
+        	updateCamera();
+        }
         
         input();    
     }
@@ -193,11 +215,34 @@ public class GraphicCanvas extends Thread {
             }
         }
     }
+    
+    private void updateCamera(){
+    	
+    	tex_camera = new Texture(32, 32, "tex");
+    	tex_camera.SetupTextures(camera.getByteBuffer());
+    	//tex_camera.UploadPixelsToGPU(camera.getByteBuffer());
+    }
 
+    private void drawCamera(){
+    	glClear(GL_COLOR_BUFFER_BIT);
+    	
+    	ShaderManager.useShader("compute");
+    	glUniform4f(ShaderManager.getUniformLocation("color"),0.5f,1.0f,0.0f,1.0f);
+    	
+    	tex_camera.Bind(0);
+    	
+    	
+    	Rectangle quad = new Rectangle();
+    	quad.Draw();
+    	tex_camera.Unbind();
+    	Display.update();
+    }
+    
+    
     /**
      * Draw all data on OpenGL canvas.
      */
-    private void draw() {
+    private void drawMapOverview() {
         glClear(GL_COLOR_BUFFER_BIT);
             
         int size = tileVertices.length - 1;
@@ -387,6 +432,10 @@ public class GraphicCanvas extends Thread {
      */
     public void setTargetManager(TargetManager tM) {
         this.targetM = tM;
+    }
+    
+    public void setCamera(Camera camera){
+    	this.camera = camera; 
     }
     
     /**

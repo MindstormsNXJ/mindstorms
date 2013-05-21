@@ -2,6 +2,8 @@ package de.fh.zwickau.mindstorms.server.view.graphic;
 
 import java.nio.ByteBuffer;
 
+import org.lwjgl.BufferUtils;
+
 import de.fh.zwickau.mindstorms.server.view.graphic.shader.ShaderManager;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
@@ -41,11 +43,11 @@ class Texture
     /**
      * Creating the buffer for the GPU and setting PixelFormats
      */
-    public void SetupTextures()
-    {
+    public void SetupTextures(ByteBuffer texture)
+    {  	
         glBindTexture(GL_TEXTURE_2D, handle);
         setupTextureParameter();
-        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, texture);
         glBindTexture(GL_TEXTURE_2D, 0);
     }
     
@@ -54,8 +56,8 @@ class Texture
      */
     private void setupTextureParameter()
     {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     }

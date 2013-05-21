@@ -56,6 +56,7 @@ public class Camera {
 //                 System.out.println((pixel & 0xFF));
              }
          }
+         buffer.rewind();
 		return buffer;
 }
 

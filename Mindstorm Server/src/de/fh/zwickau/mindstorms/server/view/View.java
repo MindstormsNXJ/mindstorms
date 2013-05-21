@@ -17,6 +17,7 @@ import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
 import de.fh.zwickau.mindstorms.server.Server;
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
+import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.Camera;
 import de.fh.zwickau.mindstorms.server.view.graphic.GraphicCanvas;
 
 
@@ -101,6 +102,15 @@ public class View {
 	 */
 	public void registerTargetManager(TargetManager tM) {
 	    graphicCanvas.setTargetManager(tM);
+	}
+	
+	/**
+	 * Register the Camera to be observed.
+	 * 
+	 * @param tM TargetManager
+	 */
+	public void registerCamera(Camera camera) {
+	    graphicCanvas.setCamera(camera);
 	}
 	
     /**

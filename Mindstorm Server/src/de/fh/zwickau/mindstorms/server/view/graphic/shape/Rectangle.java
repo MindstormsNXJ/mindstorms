@@ -21,18 +21,18 @@ public class Rectangle
     
     private static FloatBuffer vertices = BufferUtils.createFloatBuffer(12);
     private static float[] verticesf = {
-         1.0f, 1.0f, 0.0f,
-         0.0f, 1.0f, 0.0f,
-         0.0f, 0.0f, 0.0f,
-         1.0f, 0.0f, 0.0f
+         1.0f, 1.0f, -1.0f,
+         -1.0f, 1.0f, -1.0f,
+         -1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f
     };
 
     private static FloatBuffer uv = BufferUtils.createFloatBuffer(8);
     private static float[] uvf = {
-         1.0f, 1.0f,
-         0.0f, 1.0f,
+         1.0f, 0.0f,
          0.0f, 0.0f,
-         1.0f, 0.0f
+         0.0f, 1.0f,
+         1.0f, 1.0f
     };
 
     public Rectangle() 
@@ -41,7 +41,11 @@ public class Rectangle
         if(!BufferIsUploaded){
         	vertices.put(verticesf);
         	uv.put(uvf);
+        	
+        	vertices.rewind();
+        	uv.rewind();
             UploadToGPU();
+            
         }
     }
 

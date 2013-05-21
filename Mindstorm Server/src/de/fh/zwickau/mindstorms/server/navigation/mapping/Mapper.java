@@ -25,14 +25,11 @@ public class Mapper {
 	private Point ball;
 	private Point goal;
 
-	private Camera camera;
-
 	/**
 	 * New Instance of Mapper
 	 * @param tileSize tile size for grid
 	 */
 	public Mapper(float tileSize) {
-		camera = new Camera();
 		mapGrid = new MapGrid(tileSize);
 		lineMap = new LineMap();
 		tracer = new RobotTracer();
