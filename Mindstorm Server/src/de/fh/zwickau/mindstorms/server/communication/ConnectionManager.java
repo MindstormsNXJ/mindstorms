@@ -5,8 +5,6 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 
-import javax.naming.OperationNotSupportedException;
-
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTConnector;
 import lejos.robotics.mapping.LineMap;
@@ -15,7 +13,6 @@ import lejos.util.Delay;
 
 import de.fh.zwickau.mindstorms.server.navigation.PathFinder;
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
-import de.fh.zwickau.mindstorms.server.navigation.mapping.ConverterV2;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 
 /**
@@ -23,7 +20,7 @@ import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
  * NXT, receiving it's position as a Pose and sending commands to it.
  * 
  * @author Tobias Schießl
- * @version 1.3
+ * @version 2.0
  */
 public class ConnectionManager {
 
@@ -71,6 +68,7 @@ public class ConnectionManager {
 		}).start();
 	}
 	
+	//TODO remove for final version
 	private void localTest() {
 //		Line[] lines = new Line[6];
 //		lines[0] = new Line(-5,5,5,5);
@@ -151,9 +149,9 @@ public class ConnectionManager {
 		while (true) {
 			try {
 				System.out.println("Waiting to receive Pose...");
-				String pose = poseReceiver.readUTF();
-				System.out.println("Pose received: " + pose);
-				decodePose(pose);
+				String receivedString = poseReceiver.readUTF();
+				System.out.println("String received: " + receivedString);
+				decodeString(receivedString);
 			} catch (EOFException ex) {
 				System.err.println("Connection terminated by NXT");
 				if (targetManager.hasMoreWaypoints(robotName)) {
@@ -174,38 +172,44 @@ public class ConnectionManager {
 	}
 	
 	/**
-	 * Decodes the received pose and forwards it. Note, that the received pose will be with millimeter
-	 * coordinates - we will convert them to centimeter for the path finder.
+	 * Decodes the received String and forwards it if necessary. 
+	 * Note, that a received pose will be with millimeter coordinates - we will convert them to centimeter for the path finder.
 	 * 
-	 * @param poseString the received pose string
+	 * @param receivedString the received string
 	 */
-	private void decodePose(String poseString) {
-		int index = 1; //skip 'x'
-		String xPos = "", yPos = "", dir = "";
-		while (poseString.charAt(index) != 'y') {
-			xPos += poseString.charAt(index);
-			++index;
+	private void decodeString(String receivedString) {
+		if (receivedString.charAt(0) == 'o') { //something should be printed on the console
+			System.out.println("Output from NXT: " + receivedString.substring(1));
+		} else if (receivedString.charAt(0) == 'x') { //a pose was received
+			int index = 1; //skip 'x'
+			String xPos = "", yPos = "", dir = "";
+			while (receivedString.charAt(index) != 'y') {
+				xPos += receivedString.charAt(index);
+				++index;
+			}
+			++index; //skip 'y'
+			while (receivedString.charAt(index) != 'd') {
+				yPos += receivedString.charAt(index);
+				++index;
+			}
+			index += 3; // skip 'dir'
+			while (receivedString.charAt(index) != 'e') {
+				dir += receivedString.charAt(index);
+				++index;
+			}
+			Pose pose = null;
+			try {
+				pose = new Pose(Integer.parseInt(xPos) / 10, Integer.parseInt(yPos) / 10, Integer.parseInt(dir));
+			} catch (NumberFormatException ex) {
+				System.err.println("Could not parse received pose");
+				System.err.println("Received String: " + receivedString);
+				return;
+			}
+			mapper.addPose(pose, connector.getNXTInfo().name);
+			pathFinder.nextAction(pose, this);
+		} else {
+			System.err.println("The received String could not be decoded.");
 		}
-		++index; //skip 'y'
-		while (poseString.charAt(index) != 'd') {
-			yPos += poseString.charAt(index);
-			++index;
-		}
-		index += 3; // skip 'dir'
-		while (poseString.charAt(index) != 'e') {
-			dir += poseString.charAt(index);
-			++index;
-		}
-		Pose pose = null;
-		try {
-			pose = new Pose(Integer.parseInt(xPos) / 10, Integer.parseInt(yPos) / 10, Integer.parseInt(dir));
-		} catch (NumberFormatException ex) {
-			System.err.println("Could not parse received pose");
-			System.err.println("Received String: " + poseString);
-			return;
-		}
-		mapper.addPose(pose, connector.getNXTInfo().name);
-		pathFinder.nextAction(pose, this);
 	}
 	
 	/**
