@@ -9,6 +9,13 @@ import lejos.robotics.mapping.LineMap;
 
 public class ConverterV2 {
 
+	/**
+	 * This method converts a MapGrid into a LineMap which can be used for path finding.
+	 * 
+	 * @param gridMap the grid map to convert
+	 * @param halfRoboterSize the half robot size, which will be added to the grid positions to avoid collisions
+	 * @return the line map which represents the grid map
+	 */
 	public static LineMap convertGridToLineMap(MapGrid gridMap, int halfRoboterSize) {
 		int maxAbsValue = gridMap.getGridSize() / 2;
 		Rectangle bounds = new Rectangle(-maxAbsValue, maxAbsValue, 2 * maxAbsValue, 2 * maxAbsValue);
@@ -17,9 +24,7 @@ public class ConverterV2 {
 		bytes = flipArray(bytes);
 		int arrayLength = bytes.length; //value for both dimensions
 		for (int j = 0; j < arrayLength; ++j) {
-//			System.out.println();
 			for (int i = 0; i < arrayLength; ++i) {
-//				System.out.print(bytes[i][j] + " ");
 				if (bytes[i][j] != 0 && !partOfLine(lineList, i, j)) { //something on field (i,j) that is not recognised yet
 					int x = i;
 					int y = j;
@@ -57,6 +62,8 @@ public class ConverterV2 {
 						lineList.add(horizontalLine);
 					if (verticalLine != null)
 						lineList.add(verticalLine);
+					if (horizontalLine == null && verticalLine == null) //only a single point was found
+						lineList.add(new Line(i, j, i, j));
 				}
 			}
 		}		
