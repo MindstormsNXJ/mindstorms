@@ -29,8 +29,9 @@ public class Parser {
 	 * The command has to finish with a number in order to parse it correctly.
 	 * 
 	 * @param command the command to parse and execute
+	 * @throws IllegalArgumentException if the command is unknown
 	 */
-	public void parseCommand(String command) {
+	public void parseCommand(String command) throws IllegalArgumentException {
 		String operation = "", value = "";
 		int index = 0;
 		//get the operation (fw, bw, left or right)
@@ -71,7 +72,7 @@ public class Parser {
 			NXT.shutDown();
 			break;
 		default:
-			System.err.println("The received command is unknown");
+			throw new IllegalArgumentException("Unknown command");
 		}
 	}
 	
