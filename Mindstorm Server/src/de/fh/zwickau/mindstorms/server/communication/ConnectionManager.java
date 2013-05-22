@@ -74,29 +74,6 @@ public class ConnectionManager {
 	
 	//TODO remove for final version
 	private void localTest() {
-//		Line[] lines = new Line[6];
-//		lines[0] = new Line(-5,5,5,5);
-//		lines[1] = new Line(-5,5,-5,31);
-//		lines[2] = new Line(5,5,5,-5);
-//		lines[3] = new Line(0,-10,10,-10);
-//		lines[4] = new Line(0,-10,0,-20);
-//		lines[5] = new Line(-11,10,-11,-15);
-//		LineMap lineMap = new LineMap(lines, new Rectangle(-31, 31, 62, 62));
-//		pathFinder = new PathFinder(lineMap, robotName);
-//		pathFinder.nextAction(new Pose(0,0,0), this);
-//		pathFinder.nextAction(new Pose(0,0,225), this);
-//		pathFinder.nextAction(new Pose(5,-5,225), this);
-//		pathFinder.nextAction(new Pose(5,-5,251), this);
-//		pathFinder.nextAction(new Pose(-10,-10,251), this);
-//		pathFinder.nextAction(new Pose(-10,-10,154), this);
-//		pathFinder.nextAction(new Pose(0,-30,154), this);
-//		pathFinder.nextAction(new Pose(0,-30,45), this);
-//		pathFinder.nextAction(new Pose(20,-10,45), this);
-//		pathFinder.nextAction(new Pose(20,-10,342), this);
-//		pathFinder.nextAction(new Pose(15,5,342), this);
-//		pathFinder.nextAction(new Pose(15,5,315), this);
-//		pathFinder.nextAction(new Pose(10,10,315), this);
-		
 		LineMap lineMap = mapper.getLineMap();
 		pathFinder = new PathFinder(lineMap, robotName);
 		//long way
@@ -135,7 +112,6 @@ public class ConnectionManager {
 	private boolean establishConnection() {
 		connector = new NXTConnector();
 		boolean success = connector.connectTo(robotName, null, NXTCommFactory.BLUETOOTH);
-//		boolean success = connector.connectTo(null, null, NXTCommFactory.BLUETOOTH);
 		if (success) {
 			System.out.println("Connection established via bluetooth");
 			commandSender = new DataOutputStream(connector.getOutputStream());
@@ -279,7 +255,7 @@ public class ConnectionManager {
 	 */
 	public void terminate() {
 		sendCommand("exit0");
-		System.out.println("NXT " + robotName + "is shutting down");
+		System.out.println("NXT " + robotName + " is shutting down");
 		try {
 			commandSender.close();
 			stringReceiver.close();
