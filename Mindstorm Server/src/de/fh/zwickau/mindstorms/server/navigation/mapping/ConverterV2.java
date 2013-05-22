@@ -115,22 +115,22 @@ public class ConverterV2 {
 		int index = 0;
 		for (Line line : lineList) {
 			if (isHorizontalLine(line)) {
-				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 - halfRoboterSize, line.x2 + halfRoboterSize, line.y2 - halfRoboterSize);
+				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1, line.x2 + halfRoboterSize, line.y2 - halfRoboterSize + 1);
 				++index;
-				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 - halfRoboterSize, line.x2 + halfRoboterSize, line.y2 + halfRoboterSize);
+				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 - halfRoboterSize + 1, line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1);
 				++index;
-				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 + halfRoboterSize, line.x1 - halfRoboterSize, line.y1 + halfRoboterSize);
+				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1, line.x1 - halfRoboterSize, line.y1 + halfRoboterSize + 1);
 				++index;
-				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 + halfRoboterSize, line.x1 - halfRoboterSize, line.y1 - halfRoboterSize);
+				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 + halfRoboterSize + 1, line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1);
 				++index;
 			} else {
-				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 - halfRoboterSize, line.x1 + halfRoboterSize, line.y1 - halfRoboterSize);
+				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1, line.x1 + halfRoboterSize, line.y1 - halfRoboterSize + 1);
 				++index;
-				lines[index] = new Line(line.x1 + halfRoboterSize, line.y1 - halfRoboterSize, line.x2 + halfRoboterSize, line.y2 + halfRoboterSize);
+				lines[index] = new Line(line.x1 + halfRoboterSize, line.y1 - halfRoboterSize + 1, line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1);
 				++index;
-				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 + halfRoboterSize, line.x2 - halfRoboterSize, line.y2 + halfRoboterSize);
+				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1, line.x2 - halfRoboterSize, line.y2 + halfRoboterSize + 1);
 				++index;
-				lines[index] = new Line(line.x2 - halfRoboterSize, line.y2 + halfRoboterSize, line.x1 - halfRoboterSize, line.y1 - halfRoboterSize);
+				lines[index] = new Line(line.x2 - halfRoboterSize, line.y2 + halfRoboterSize + 1, line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1);
 				++index;
 			}
 		}
