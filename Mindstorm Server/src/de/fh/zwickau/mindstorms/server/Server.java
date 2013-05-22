@@ -46,8 +46,8 @@ public class Server {
 	
 	public void mapChanged(){
 		view.mapChanged();
-//		for (ConnectionManager manager : connectionManagers)
-//			manager.mapChaged();
+		for (ConnectionManager manager : connectionManagers)
+			manager.mapChaged();
 	}
 	
 	public void targetChanged(String robotName){

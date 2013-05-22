@@ -292,8 +292,7 @@ public class ConnectionManager {
 	}
 	
 	public void mapChaged(){
-		//TODO: Map has changed. Update PathFinder with new LineMap.
-		//update new LineMap with mapper.getLineMap();
+		pathFinder.mapChanged(mapper.getLineMap());
 	}
 	
 }
