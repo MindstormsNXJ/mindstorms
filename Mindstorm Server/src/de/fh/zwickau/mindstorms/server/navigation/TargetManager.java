@@ -158,11 +158,26 @@ public class TargetManager {
 		//add new path
 		currentPath.addAll(path);
 		robotPaths.put(robotName, currentPath);
-		controller.targetChanged(); // notify view that new targets arrived
+		controller.targetChanged(robotName); // notify view that new targets arrived
 	}
 		
 	public void setController(Server controller) {
 		this.controller = controller;
+	}
+
+	/**
+	 * Removes a robot.
+	 * 
+	 * @param robotName the robot's friendly name
+	 */
+	public void removeRobot(String robotName) {
+		Path currentPath = robotPaths.get(robotName);
+		//remove remaining waypoints
+		for (int i = currentRobotWaypointNumber.get(robotName); i < currentPath.size(); ++i)
+			currentPath.remove(i);
+		//remove robot from watched robots - it's path will remain in the map
+		currentRobotWaypointNumber.remove(robotName);
+		controller.targetChanged(robotName);
 	}
 	
 }

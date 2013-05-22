@@ -287,6 +287,7 @@ public class ConnectionManager {
 		} catch (IOException e) {
 			System.err.println("Could not close sockets to NXT");
 		}
+		targetManager.removeRobot(robotName);
 		server.removeConnection(this);
 	}
 	

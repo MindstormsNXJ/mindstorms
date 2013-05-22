@@ -50,7 +50,8 @@ public class Server {
 //			manager.mapChaged();
 	}
 	
-	public void targetChanged(){
+	public void targetChanged(String robotName){
+		//TODO forward the robot name was well
 		view.targetChanged();
 	}
 	
