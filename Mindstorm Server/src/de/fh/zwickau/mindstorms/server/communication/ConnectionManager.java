@@ -29,7 +29,7 @@ public class ConnectionManager {
 	private TargetManager targetManager;
 	private PathFinder pathFinder;
 	private DataOutputStream commandSender;
-	private DataInputStream poseReceiver;
+	private DataInputStream stringReceiver;
 	private String robotName;
 	
 	//TODO remove for final version
@@ -135,7 +135,7 @@ public class ConnectionManager {
 		if (success) {
 			System.out.println("Connection established via bluetooth");
 			commandSender = new DataOutputStream(connector.getOutputStream());
-			poseReceiver = new DataInputStream(connector.getInputStream());
+			stringReceiver = new DataInputStream(connector.getInputStream());
 		} else {
 			System.err.println("Could not establish connection to NXT");
 		}
@@ -149,7 +149,7 @@ public class ConnectionManager {
 		while (true) {
 			try {
 				System.out.println("Waiting to receive Pose...");
-				String receivedString = poseReceiver.readUTF();
+				String receivedString = stringReceiver.readUTF();
 				System.out.println("String received: " + receivedString);
 				decodeString(receivedString);
 			} catch (EOFException ex) {
@@ -179,7 +179,7 @@ public class ConnectionManager {
 	 */
 	private void decodeString(String receivedString) {
 		if (receivedString.charAt(0) == 'o') { //something should be printed on the console
-			System.out.println("Output from NXT: " + receivedString.substring(1));
+			System.out.println("Output from NXT " + robotName + ": " + receivedString.substring(1));
 		} else if (receivedString.charAt(0) == 'x') { //a pose was received
 			int index = 1; //skip 'x'
 			String xPos = "", yPos = "", dir = "";
@@ -275,8 +275,7 @@ public class ConnectionManager {
 	 */
 	public void terminate() {
 		sendCommand("exit0");
-		System.out.println("Server and NXT are shutting down");
-		System.exit(0); //TODO there should be a smarter way to do this
+		System.out.println("NXT " + robotName + "is shutting down");
 	}
 	
 	public void mapChaged(){
