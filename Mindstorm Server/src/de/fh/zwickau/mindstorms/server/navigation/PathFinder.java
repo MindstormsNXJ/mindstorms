@@ -25,7 +25,7 @@ public class PathFinder {
 	private boolean robotHasBall = false;
 	private String robotName;
 	
-	//two values which will be used for the lengthenLines() method
+	//two values which will be used for the line map converting process
 	public static final int ROBOT_LENGTH_CM = 6;
 	public static final int ROBOT_WIDTH_CM = 4;
 	
@@ -38,8 +38,7 @@ public class PathFinder {
 	 */
 	public PathFinder(LineMap map, String robotName) {
 		finder = new ShortestPathFinder(map);
-//		if (finder instanceof ShortestPathFinder)
-//			((ShortestPathFinder) finder).lengthenLines((ROBOT_LENGTH_CM > ROBOT_WIDTH_CM) ? ROBOT_LENGTH_CM / 2 : ROBOT_WIDTH_CM / 2);
+//		((ShortestPathFinder) finder).lengthenLines((float) 0.01); //not necessary I think
 		this.targetManager = TargetManager.getInstance();
 		this.robotName = robotName;
 	}

@@ -11,6 +11,7 @@ import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
 
+import de.fh.zwickau.mindstorms.server.Server;
 import de.fh.zwickau.mindstorms.server.navigation.PathFinder;
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
@@ -31,6 +32,7 @@ public class ConnectionManager {
 	private DataOutputStream commandSender;
 	private DataInputStream stringReceiver;
 	private String robotName;
+	private Server server;
 	
 	//TODO remove for final version
 	private final boolean NO_NXT = true; //true, if there is no NXT available - PathFinding only
@@ -41,10 +43,12 @@ public class ConnectionManager {
 	 * 
 	 * @param mapper the Mapper that gets notified about the robot's current Pose
 	 * @param robotName the robot's friendly name
+	 * @param server the server to tell that this connections is terminated at the end
 	 */
-	public ConnectionManager(final Mapper mapper, final String robotName) {
+	public ConnectionManager(final Mapper mapper, final String robotName, final Server server) {
 		this.mapper = mapper;
 		this.robotName = robotName;
+		this.server = server;
 		new Thread(new Runnable(){
 			
 			@Override
@@ -271,11 +275,19 @@ public class ConnectionManager {
 	}
 	
 	/**
-	 * Terminates the whole server.
+	 * Terminates the NXT and closes this connection.
 	 */
 	public void terminate() {
 		sendCommand("exit0");
 		System.out.println("NXT " + robotName + "is shutting down");
+		try {
+			commandSender.close();
+			stringReceiver.close();
+			connector.close();
+		} catch (IOException e) {
+			System.err.println("Could not close sockets to NXT");
+		}
+		server.removeConnection(this);
 	}
 	
 	public void mapChaged(){

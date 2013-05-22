@@ -28,7 +28,7 @@ public class Server {
 		
 		view.start();	//new Thread for view
 		
-		connectionManagers.add(new ConnectionManager(mapper, "Picker"));
+		connectionManagers.add(new ConnectionManager(mapper, "Picker", this));
 	}
 	
 	private void registerObjects(){
@@ -53,4 +53,14 @@ public class Server {
 	public void targetChanged(){
 		view.targetChanged();
 	}
+	
+	/**
+	 * Removes a ConnectionManager ones the connection is terminated. The call will be made by the 
+	 * manager itself.
+	 * @param manager
+	 */
+	public void removeConnection(ConnectionManager manager) {
+		connectionManagers.remove(manager);
+	}
+	
 }
