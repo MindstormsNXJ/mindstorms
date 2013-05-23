@@ -12,7 +12,13 @@ import org.lwjgl.BufferUtils;
 
 import de.fh.zwickau.mindstorms.server.view.graphic.shape.Rectangle;
 
-
+/**
+ * A RenderTarget can draw pixels
+ * to a Texture.
+ * 
+ * @author Andre Furchner
+ *
+ */
 public class RenderTarget
 {
     private Rectangle quad;
@@ -20,6 +26,11 @@ public class RenderTarget
     private Texture[] textureBuffers;
 
 
+    /**
+     * New RenderTarget with Texture to draw on it.
+     * 
+     * @param textureBuffer Texture to draw on it.
+     */
     public RenderTarget(Texture textureBuffer){
     	textureBuffers = new Texture[1];
     	textureBuffers[1] = textureBuffer;
@@ -28,15 +39,23 @@ public class RenderTarget
     	setupFrameBuffer();
     }
 
+    /**
+     * New RenderTarget with multiple Textures
+     * to draw on it.
+     * @param textureBuffers Textures to draw on it.
+     */
     public RenderTarget(Texture[] textureBuffers)
     {
         this.textureBuffers = textureBuffers;
 
-        Initialize();
+        initialize();
         setupFrameBuffer();
     }
 
-    private void Initialize()
+    /**
+     * Generate Memory Objects on GPU
+     */
+    private void initialize()
     {
     	
     	depthBuffer = glGenRenderbuffers();
@@ -46,6 +65,10 @@ public class RenderTarget
 
     }
 
+    /**
+     * Define RenderTarget size and pixel formats on GPU
+     * and bind textures to outputs. 
+     */
     private void setupFrameBuffer()
     {
         // setup Depth Buffer
@@ -75,18 +98,18 @@ public class RenderTarget
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    /// <summary>
-    /// Activate RenderTarget all suff that you
-    /// draw now is burned in this RenderTarget
-    /// </summary>
+    /**
+     *  Activate RenderTarget all that now will be drawn
+     *  is going into the TextureBuffers.
+     */
     public void Bind()
     {
         glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
     }
 
-    /// <summary>
-    /// Clearing Buffers
-    /// </summary>
+    /**
+     * Clear all TextureBuffers
+     */
     public void Clear()
     {
         Bind();
@@ -94,9 +117,9 @@ public class RenderTarget
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    /// <summary>
-    /// Binding and Activate all used FrameBuffer Textures
-    /// </summary>
+    /**
+     * Binding and Activate all used FrameBuffer Textures.
+     */
     private void bindTextures()
     {
         for(int i = 0; i < textureBuffers.length; i++) {
@@ -104,9 +127,9 @@ public class RenderTarget
         } 
     }
 
-    /// <summary>
-    /// Unbind all Textures
-    /// </summary>
+    /**
+     * Unbind all Textures
+     */
     private void unbindTextures()
     {
         for(int i = 0; i < textureBuffers.length; i++) {
@@ -114,9 +137,10 @@ public class RenderTarget
         }
     }
 
-    /// <summary>
-    /// Draw the RenderTarget Quad
-    /// </summary>
+    /**
+     * Draw the RenterTarget as Rectangle
+     * direct to the user screen.
+     */
     public void DrawToScreen()
     {
         glViewport(0, 0, textureBuffers[0].getWidth(), textureBuffers[0].getHeight());
@@ -125,6 +149,9 @@ public class RenderTarget
         Draw();
     }
 
+    /**
+     * Draw RenderTarget.
+     */
     public void Draw()
     {
         bindTextures();
