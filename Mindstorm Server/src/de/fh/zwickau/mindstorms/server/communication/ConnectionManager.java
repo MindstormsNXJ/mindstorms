@@ -79,20 +79,20 @@ public class ConnectionManager {
 		LineMap lineMap = mapper.getLineMap();
 		pathFinder = new PathFinder(lineMap, robotName);
 		//long way
-		pathFinder.nextAction(new Pose(0,0,0), this);
-		pathFinder.nextAction(new Pose(0,0,200), this);
-		pathFinder.nextAction(new Pose(-3,-8,200), this);
-		pathFinder.nextAction(new Pose(-3,-8,180), this);
-		pathFinder.nextAction(new Pose(-3,-14,180), this);
-		pathFinder.nextAction(new Pose(-3,-22,180), this);
-		pathFinder.nextAction(new Pose(-3,-22,90), this);
-		pathFinder.nextAction(new Pose(3,-22,90), this);
-		pathFinder.nextAction(new Pose(3,-22,48), this);
-		pathFinder.nextAction(new Pose(12,-14,48), this);
-		pathFinder.nextAction(new Pose(12,-14,0), this);
-		pathFinder.nextAction(new Pose(12,-8,0), this);
-		pathFinder.nextAction(new Pose(12,-6,354), this);
-		pathFinder.nextAction(new Pose(10,10,354), this); //pick command was sent
+//		pathFinder.nextAction(new Pose(0,0,0), this);
+//		pathFinder.nextAction(new Pose(0,0,200), this);
+//		pathFinder.nextAction(new Pose(-3,-8,200), this);
+//		pathFinder.nextAction(new Pose(-3,-8,180), this);
+//		pathFinder.nextAction(new Pose(-3,-14,180), this);
+//		pathFinder.nextAction(new Pose(-3,-22,180), this);
+//		pathFinder.nextAction(new Pose(-3,-22,90), this);
+//		pathFinder.nextAction(new Pose(3,-22,90), this);
+//		pathFinder.nextAction(new Pose(3,-22,48), this);
+//		pathFinder.nextAction(new Pose(12,-14,48), this);
+//		pathFinder.nextAction(new Pose(12,-14,0), this);
+//		pathFinder.nextAction(new Pose(12,-8,0), this);
+//		pathFinder.nextAction(new Pose(12,-6,354), this);
+//		pathFinder.nextAction(new Pose(10,10,354), this); //pick command was sent
 		//short way
 //		pathFinder.nextAction(new Pose(0,0,0), this);
 //		pathFinder.nextAction(new Pose(0,0,200), this);
@@ -165,8 +165,8 @@ public class ConnectionManager {
 			if (receivedString.contains("Ball dropped")) {
 				Pose pose = decodePose(receivedString.split(":")[1]);
 				mapper.addPose(pose, robotName);
-				terminate();
 				System.out.println("Sending terminate command");
+				terminate();
 			}
 		} else if (receivedString.charAt(0) == 'x') { //a pose was received
 			Pose pose = decodePose(receivedString);

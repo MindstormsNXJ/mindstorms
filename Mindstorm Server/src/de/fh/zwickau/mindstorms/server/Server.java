@@ -18,7 +18,7 @@ public class Server {
 		connectionManagers = new ArrayList<ConnectionManager>();
 		
 		view = new View();
-		mapper = new Mapper(1);
+		mapper = new Mapper(4);
 		targetManager = TargetManager.getInstance();
 		
 		mapper.setBallPosition(targetManager.getBallWaypoint());
