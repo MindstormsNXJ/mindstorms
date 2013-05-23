@@ -74,7 +74,7 @@ public class ConverterV2 {
 			}
 		}		
 		Line[] lines = broadenLines(lineList, halfRoboterSize); //add the necessary buffer to avoid collisions
-		lines = movePointsToWorldCoordinates(lines, maxAbsValue);
+		lines = movePointsToWorldCoordinates(lines, maxAbsValue, gridMap.getTileSize());
 		LineMap lineMap = new LineMap(lines, bounds);
 		return lineMap;
 	}
@@ -200,9 +200,10 @@ public class ConverterV2 {
 	 * 
 	 * @param lines the line array to convert
 	 * @param maxAbsValue the maximal absolute value to both sides for the point (0,0)
+	 * @param tileSize the MapGrid's tile size to calculate the correct coordinates
 	 * @return the converted line array
 	 */
-	private static Line[] movePointsToWorldCoordinates(Line[] lines, int maxAbsValue) {
+	private static Line[] movePointsToWorldCoordinates(Line[] lines, int maxAbsValue, float tileSize) {
 		Line[] returnArray = new Line[lines.length];
 		int index = 0;
 		for (Line line : lines) {
@@ -212,7 +213,7 @@ public class ConverterV2 {
 			Quadrant q2 = getQuadrant(p2, maxAbsValue);
 			p1 = getPointInWorldCoordinates(p1, q1, maxAbsValue);
 			p2 = getPointInWorldCoordinates(p2, q2, maxAbsValue);
-			returnArray[index] = new Line(p1.x, p1.y, p2.x, p2.y);
+			returnArray[index] = new Line(p1.x * tileSize, p1.y * tileSize, p2.x * tileSize, p2.y * tileSize);
 			++index;
 		}
 		return returnArray;
