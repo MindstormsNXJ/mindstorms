@@ -69,7 +69,8 @@ public class MovementManager implements Manager {
 		/**
 		 * Corrects the drive Angle
 		 */
-		while (driving == true) {
+		boolean isDriving = false;
+		while (isDriving == true) {
 			if (Math.abs(angelCorrection(startdegrees, robot.getDirection())) > 5) {
 				robot.stop();
 				double newrtdl = rotToDriveLeft
@@ -96,7 +97,7 @@ public class MovementManager implements Manager {
 					|| !forward
 					&& (rotToDriveRight >= robot.rightMotor.getTachoCount() || rotToDriveLeft >= robot.leftMotor
 							.getTachoCount())) {
-				driving = false;
+				isDriving = false;
 			}
 		}
 		robot.stop();
