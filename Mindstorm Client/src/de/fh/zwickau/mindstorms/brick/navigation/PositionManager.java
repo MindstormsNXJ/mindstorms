@@ -50,7 +50,8 @@ public class PositionManager implements Manager {
 	 */
 	public void rotateTo(int degree) {
 		int startdegrees = robot.getDirection();
-		int calculatedAngle = directionManager.calculateAngle(startdegrees, degree);
+		int calculatedAngle = directionManager.calculateAngle(startdegrees,
+				degree);
 		int toRotate = Math.abs(calculatedAngle);
 		if (calculatedAngle <= 0) {
 			rotate(toRotate, Direction.LEFT);
@@ -68,7 +69,6 @@ public class PositionManager implements Manager {
 	 */
 	public void rotate(int degree, Direction direction) {
 		directionManager.rotateInDirection(degree, direction);
-		updateRotation(robot.getDirection());
 	}
 
 	private void updateRotation(int direction) {
@@ -105,8 +105,13 @@ public class PositionManager implements Manager {
 	public int stop() {
 		robot.rightMotor.stop(true);
 		robot.leftMotor.stop(false);
-		updatePosition(movementManager.stop());
-		updateRotation(directionManager.stop());
+		if (movementManager.isMoving()) {
+			updatePosition(movementManager.stop());
+		} else if (directionManager.isRotating()){
+			updateRotation(directionManager.stop());
+		} else {
+			System.err.println("Something is wrong with moving");
+		}
 		return 0;
 	}
 }
