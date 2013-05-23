@@ -1,6 +1,6 @@
 package de.fh.zwickau.mindstorms.brick.navigation;
 
-import lejos.nxt.NXTRegulatedMotor;
+import ch.aplu.nxtsim.*;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.util.Manager;
 
@@ -55,9 +55,6 @@ public class DirectionManager implements Manager {
 		if (targetdirection < 0) {
 			targetdirection += 360;
 		}
-		if (targetdirection == 360) {
-			targetdirection = 0;
-		}
 
 		while (isRotating == true) {
 			int currentDirection = robot.getDirection();
@@ -69,9 +66,9 @@ public class DirectionManager implements Manager {
 	}
 
 	private int activateMotors(int degrees, Direction direction) {
-		NXTRegulatedMotor forwardMotor;
-		NXTRegulatedMotor backwardMotor;
-		if (degrees <= 5) { // use lower value of rotationSpeed for 15 degree
+		Motor forwardMotor;
+		Motor backwardMotor;
+		if (degrees <= 15) { // use lower value of rotationSpeed for 15 degree
 			robot.setMotorSpeed(robot.rotationSpeed / 10);
 		}
 		if (direction == Direction.RIGHT) {
@@ -93,24 +90,8 @@ public class DirectionManager implements Manager {
 
 	@Override
 	public int stop() {
+		robot.stop();
 		isRotating = false;
-		return robot.getDirection();
-	}
-
-	/**
-	 * Calculates the direction to rotate from the current position.
-	 * 
-	 * @param currentDegree
-	 * @param targetDegree
-	 * @return the angle to rotate (positive for right, negative for left)
-	 */
-	public int calculateAngle(int currentDegree, int targetDegree) {
-		int angleDiff = targetDegree - currentDegree;
-		if (angleDiff >= 180) {
-			angleDiff -= 360;
-		} else if (angleDiff < -180) {
-			angleDiff += 360;
-		}
-		return angleDiff;
+		return 0; // get the current heading from the compass sensor
 	}
 }

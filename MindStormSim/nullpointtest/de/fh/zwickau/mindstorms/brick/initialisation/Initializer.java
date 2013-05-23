@@ -1,12 +1,7 @@
 package de.fh.zwickau.mindstorms.brick.initialisation;
 
-import lejos.nxt.Button;
-import lejos.nxt.ButtonListener;
-import lejos.nxt.NXT;
-import lejos.nxt.Sound;
-import lejos.robotics.navigation.Pose;
+import ch.aplu.nxtsim.*;
 import de.fh.zwickau.mindstorms.brick.Robot;
-import de.fh.zwickau.mindstorms.brick.communication.ConnectionManager;
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
 import de.fh.zwickau.mindstorms.brick.sensors.ObjectCentralisation;
 
@@ -25,7 +20,7 @@ public class Initializer implements ButtonListener {
 	}
 
 	private Robot robot;
-	private final double STD_DRIVE_TRANSLATION = 38.0 / 10;
+	private final double STD_DRIVE_TRANSLATION = 38.0;
 
 	// config Flags and Enums
 	private boolean hasToCalibrate = false;
@@ -42,10 +37,10 @@ public class Initializer implements ButtonListener {
 		// establish connection to the server
 		if (mode == Mode.SERVERMODE) {
 			robot.positionManager.rotateTo(0);
-			new ConnectionManager(robot);
+//			new ConnectionManager(robot);
 		}
 
-		// try to centralize the Object in front of
+//		// try to centralize the Object in front of
 		if (mode == Mode.CENTRALISATION) {
 			new ObjectCentralisation(robot);
 		}
@@ -55,59 +50,50 @@ public class Initializer implements ButtonListener {
 
 		}
 
-		if (mode == Mode.PICKERTEST) {
-			for (int i = 0 ; i < 1 ; i++ ){
-				robot.pickItem();
-//				robot.picker.pickerDown();
-				robot.dropItem();
-				robot.positionManager.move(-20);
-			}
-//			robot.picker.pickerUp();
-//			robot.picker.pickerDown();
-//			robot.picker.pickerUp();
-//			robot.picker.pickerDown();
-//			robot.picker.pickerUp();
-//			robot.picker.pickerDown();
+//		if (mode == Mode.PICKERTEST) {
+////			Pick p = new Pick(robot);
+//			robot.pickItem();
 //			robot.positionManager.rotate(90, Direction.RIGHT);
-//			robot.putDown();
+////			robot.putDown();
 //			robot.positionManager.move(-10);
-		}
+//		}
 	}
 
 	@Override
 	public void buttonPressed(Button b) {
 		robot.compassSensor.stopCalibration();
-		NXT.shutDown();
+	//	NXT.shutDown();
 	}
 
 	public void initialize() {
-		Button.ESCAPE.addButtonListener(this);
-		calibrate();
+		//Button.ESCAPE.addButtonListener(this);
+		//calibrate();
 		robot.positionManager = new PositionManager(new Pose(0, 0, robot.getDirection()), robot);
 	}
 
 	private void calibrate() {
-		{
-			if (hasToCalibrate) {
-				System.out.println("calibrate");
-				{
-					// calculate driveTranslation
-					DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(
-							robot.leftMotor, robot.rightMotor, robot.ultrasonicSensor);
-					robot.driveTranslation = driveTranslationCalibrator.getDriveTranslation() / 10;
-
-					// calibrate compass sensor
-					new CompassCalibrator(
-							robot.leftMotor, robot.rightMotor, robot.compassSensor);
-
-				}
-				System.out.println("calibrated");
-			} else {
-				System.out.println("not calibrated");
-				robot.driveTranslation = STD_DRIVE_TRANSLATION;
-			}
-			Sound.beep();
-		}
+//		{
+//			if (hasToCalibrate) {
+//				System.out.println("calibrate");
+//				{
+//					// calculate driveTranslation
+//					DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(
+//							robot.leftMotor, robot.rightMotor, robot.ultrasonicSensor);
+//					robot.driveTranslation = driveTranslationCalibrator
+//							.getDriveTranslation();
+//
+//					// calibrate compass sensor
+//					new CompassCalibrator(
+//							robot.leftMotor, robot.rightMotor, robot.compassSensor);
+//
+//				}
+//				System.out.println("calibrated");
+//			} else {
+//				System.out.println("not calibrated");
+//				robot.driveTranslation = STD_DRIVE_TRANSLATION;
+//			}
+//			Sound.beep();
+//		}
 	}
 
 	public Robot getRobot() {

@@ -1,8 +1,9 @@
 package de.fh.zwickau.mindstorms.brick.navigation;
 
 import de.fh.zwickau.mindstorms.brick.Robot;
+import de.fh.zwickau.mindstorms.brick.initialisation.Pose;
 import de.fh.zwickau.mindstorms.brick.util.Manager;
-import lejos.robotics.navigation.Pose;
+import ch.aplu.nxtsim.*;
 
 /**
  * With the PositionManager the position of the robot can be changed. It's
@@ -50,7 +51,7 @@ public class PositionManager implements Manager {
 	 */
 	public void rotateTo(int degree) {
 		int startdegrees = robot.getDirection();
-		int calculatedAngle = directionManager.calculateAngle(startdegrees, degree);
+		int calculatedAngle = calculateAngle(startdegrees, degree);
 		int toRotate = Math.abs(calculatedAngle);
 		if (calculatedAngle <= 0) {
 			rotate(toRotate, Direction.LEFT);
@@ -68,12 +69,12 @@ public class PositionManager implements Manager {
 	 */
 	public void rotate(int degree, Direction direction) {
 		directionManager.rotateInDirection(degree, direction);
-		updateRotation(robot.getDirection());
+		updateRotation();
 	}
 
-	private void updateRotation(int direction) {
+	private void updateRotation() {
 		if (!isPositioning()) {
-			pose.setHeading(direction);
+			pose.setHeading(robot.getDirection());
 		} else {
 			System.err.println("Still rotating... something went wrong!");
 		}
@@ -83,7 +84,7 @@ public class PositionManager implements Manager {
 		if (!isPositioning()) {
 			float x = (float) (Math.sin(Math.toRadians(pose.getHeading())) * distance);
 			float y = (float) (Math.cos(Math.toRadians(pose.getHeading())) * distance);
-			pose.setLocation(pose.getX() + x, pose.getY() + y);
+			pose.setLocation(pose.getY() + x, pose.getX() + y);
 		} else {
 			System.err.println("Still moving... something went wrong!");
 		}
@@ -94,7 +95,7 @@ public class PositionManager implements Manager {
 	 * backwards (negative values)
 	 * 
 	 * @param distance
-	 *            the distance to move in mm
+	 *            the distance to move in cm
 	 */
 	public void move(int distance) {
 		movementManager.move(distance);
@@ -103,10 +104,27 @@ public class PositionManager implements Manager {
 
 	@Override
 	public int stop() {
-		robot.rightMotor.stop(true);
-		robot.leftMotor.stop(false);
-		updatePosition(movementManager.stop());
-		updateRotation(directionManager.stop());
+		movementManager.stop();
+		// TODO updatePosition for the movement
+		directionManager.stop();
+		updateRotation();
 		return 0;
+	}
+
+	/**
+	 * Calculates the direction to rotate from the current position.
+	 * 
+	 * @param currentDegree
+	 * @param targetDegree
+	 * @return the angle to rotate (positive for right, negative for left)
+	 */
+	private int calculateAngle(int currentDegree, int targetDegree) {
+		int angleDiff = targetDegree - currentDegree;
+		if (angleDiff >= 180) {
+			angleDiff -= 360;
+		} else if (angleDiff < -180) {
+			angleDiff += 360;
+		}
+		return angleDiff;
 	}
 }

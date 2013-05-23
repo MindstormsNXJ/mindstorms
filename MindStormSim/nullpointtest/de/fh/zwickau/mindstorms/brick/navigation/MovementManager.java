@@ -2,6 +2,7 @@ package de.fh.zwickau.mindstorms.brick.navigation;
 
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.util.Manager;
+import ch.aplu.nxtsim.*;
 
 /**
  * The MovementManager implements the movement of the robot by cm back an
@@ -19,9 +20,6 @@ public class MovementManager implements Manager {
 	private boolean driving;
 	/** the intern Position Manager for correcting the Driving angle */
 	private PositionManager positionManager;
-	private double rotToDriveLeft;
-	private double rotToDriveRight;
-	private int dist;
 
 	/**
 	 * The Constructor of the MovementManager
@@ -48,16 +46,16 @@ public class MovementManager implements Manager {
 		if (dist == 0) {
 			return;
 		}
-		this.dist = dist;
 		// the angle where the robot stands at start
 		int startdegrees = robot.getDirection();
 		driving = true;
+
 		// the tachocounts from the motors on the start of the moving process
-		int tachoRight = robot.rightMotor.getTachoCount();
-		int tachoLeft = robot.leftMotor.getTachoCount();
+		int tachoRight = robot.rightMotor.getRotationIndex();
+		int tachoLeft = robot.leftMotor.getRotationIndex();
 		// the angle which is the robot driving in real
-		rotToDriveRight = dist * robot.driveTranslation + tachoRight;
-		rotToDriveLeft = dist * robot.driveTranslation + tachoLeft;
+		double rotToDriveRight = dist * robot.driveTranslation + tachoRight;
+		double rotToDriveLeft = dist * robot.driveTranslation + tachoLeft;
 
 		// the boolean who shows if the robot drives for- or backward
 		boolean forward = false;
@@ -73,17 +71,17 @@ public class MovementManager implements Manager {
 			if (Math.abs(angelCorrection(startdegrees, robot.getDirection())) > 5) {
 				robot.stop();
 				double newrtdl = rotToDriveLeft
-						- robot.leftMotor.getTachoCount();
+						- robot.leftMotor.getRotationIndex();
 				double newrtdr = rotToDriveRight
-						- robot.rightMotor.getTachoCount();
+						- robot.rightMotor.getRotationIndex();
 				/**
 				 * the doubles saving the distance which was driven before
 				 * correcting the angle with rotating
 				 */
 				positionManager.rotateTo(startdegrees);
 				/** reinitialize the distance for motor */
-				rotToDriveLeft = robot.leftMotor.getTachoCount() + newrtdl;
-				rotToDriveRight = robot.rightMotor.getTachoCount() + newrtdr;
+				rotToDriveLeft = robot.leftMotor.getRotationIndex() + newrtdl;
+				rotToDriveRight = robot.rightMotor.getRotationIndex() + newrtdr;
 				drive(forward);
 			}
 
@@ -91,11 +89,11 @@ public class MovementManager implements Manager {
 			 * stops the moving when the right Tachocount is reached
 			 */
 			if (forward
-					&& (rotToDriveRight <= robot.rightMotor.getTachoCount() || rotToDriveRight <= robot.rightMotor
-							.getTachoCount())
+					&& (rotToDriveRight <= robot.rightMotor.getRotationIndex() || rotToDriveRight <= robot.rightMotor
+							.getRotationIndex())
 					|| !forward
-					&& (rotToDriveRight >= robot.rightMotor.getTachoCount() || rotToDriveLeft >= robot.leftMotor
-							.getTachoCount())) {
+					&& (rotToDriveRight >= robot.rightMotor.getRotationIndex() || rotToDriveLeft >= robot.leftMotor
+							.getRotationIndex())) {
 				driving = false;
 			}
 		}
@@ -107,12 +105,9 @@ public class MovementManager implements Manager {
 	 */
 	@Override
 	public int stop() {
+		robot.stop();
 		driving = false;
-		double wayNotDrived = ((rotToDriveLeft - robot.leftMotor
-				.getTachoCount()) + (rotToDriveRight - robot.rightMotor
-				.getTachoCount()))
-				/ (2 * robot.driveTranslation);
-		return (int) (dist - wayNotDrived);
+		return 0;
 	}
 
 	public boolean isMoving() {

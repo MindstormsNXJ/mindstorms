@@ -1,87 +1,183 @@
 package de.fh.zwickau.mindstorms.server.navigation;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
-import de.fh.zwickau.mindstorms.server.view.View;
+import de.fh.zwickau.mindstorms.server.Server;
 
-import lejos.geom.Point;
+import lejos.robotics.navigation.Waypoint;
+import lejos.robotics.pathfinding.Path;
 
 /**
- * This class is responsible for managing the target points the robot 
- * should move to.
+ * This class is responsible for managing the target points the robot should move to.
+ * Targets are the real physical targets (ball and finish) as well as the waypoints which where calculated by the path finder.
  * 
  * @author Tobias Schießl, Patrick Rosenkranz
- * @version 1.0
+ * @version 2.0
  */
 public class TargetManager {
-	private View observer;
-	private ArrayList<Point> targets;
-	private int currentTargetNumber;
+	
+	private Server controller;
+	private HashMap<String, Path> robotPaths; //assigns every robot name to it's current path
+	private HashMap<String, Integer> currentRobotWaypointNumber; //assigns every robot name to it's current waypoint number
+	private Waypoint ball;
+	private Waypoint target;
+	
+	private static TargetManager instance;
 	
 	/**
 	 * Initialises a new target manager.
 	 */
-	public TargetManager() {
-		targets = new ArrayList<Point>();
-		currentTargetNumber = 0;
+	private TargetManager() {
+		robotPaths = new HashMap<String, Path>();
+		currentRobotWaypointNumber = new HashMap<String, Integer>();
 		initTargets();
 	}
 	
 	/**
-	 * Initialises all targets, which are represented by Points.
-	 * Currently, there are only two targets: the ball and the final target.
+	 * Returns the TargetManager instance for the current session.
 	 */
-	private void initTargets() {
-		Point ball = new Point(10, 10);
-		targets.add(ball);
-		Point target = new Point(0, 0);
-		targets.add(target);
+	public synchronized static TargetManager getInstance() {
+		if (instance == null)
+			instance = new TargetManager();
+		return instance;
 	}
 	
-
+	/**
+	 * Initialises the ball and the finish target. //TODO these targets should be stored in the mapper
+	 */
+	private void initTargets() {
+		ball = new Waypoint(10, 10);
+		target = new Waypoint(-20, -10);
+	}
 	
 	/**
-	 * Says whether there are more targets or not.
+	 * Adds another robot to the maps. Robots are identified by there bluetooth friendly names.
 	 * 
-	 * @return true if there are no more targets
+	 * @param robotName the robot's friendly name
 	 */
-	public boolean hasMoreTargets() {
-		return !(currentTargetNumber == targets.size());
+	public void addRobot(String robotName) {
+		robotPaths.put(robotName, new Path());
+		currentRobotWaypointNumber.put(robotName, 0);
+	}
+	
+	/**
+	 * Says whether a given waypoint is the ball or not.
+	 * 
+	 * @param waypoint the given waypoint
+	 * @return true if the waypoint is the ball, false otherwise
+	 */
+	public boolean isBallWaypoint(Waypoint waypoint) {
+		if ((int) waypoint.x == (int) ball.x && (int) waypoint.y == (int) ball.y)
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Says whether a given waypoint is the final target or not.
+	 * 
+	 * @param waypoint the given waypoint
+	 * @return true if the waypoint is the target, false otherwise
+	 */
+	public boolean isFinalTarget(Waypoint waypoint) {
+		if ((int) waypoint.x == (int) target.x && (int) waypoint.y == (int) target.y)
+			return true;
+		return false;
+	}
+	
+	/**
+	 * Returns the waypoint where the ball can be found.
+	 * 
+	 * @return the ball's waypoint
+	 */
+	public Waypoint getBallWaypoint() {
+		return ball;
+	}
+	
+	/**
+	 * Returns the waypoint where the final target can be found.
+	 * 
+	 * @return the final target's waypoint
+	 */
+	public Waypoint getFinalTarget() {
+		return target;
+	}
+	
+	/**
+	 * Says whether there are more waypoints or not.
+	 * 
+	 * @param robotName the robots friendly name
+	 * @return true if there are more waypoints, false otherwise
+	 */
+	public boolean hasMoreWaypoints(String robotName) {
+		return !(currentRobotWaypointNumber.get(robotName) == robotPaths.get(robotName).size());
 	}
 	
 	/**
 	 * Returns the current target as a point. Note, that this method 
 	 * will return the same target until targetReached is called.
 	 * 
+	 * @param robotName the robots friendly name
 	 * @return the target point
 	 */
-	public Point getCurrentTarget() {
-		return targets.get(currentTargetNumber);
+	public Waypoint getCurrentWaypoint(String robotName) {
+		return robotPaths.get(robotName).get(currentRobotWaypointNumber.get(robotName));
 	}
 	
 	/**
-	 * Returns all known Targets
-	 * @return the targets
+	 * Returns the robot's path.
+	 * 
+	 * @param robotName the robots friendly name
+	 * @return the targets as a path
 	 */
-	public ArrayList<Point> getTargets() {
-		return targets;
+	public Path getPath(String robotName) {
+		return robotPaths.get(robotName);
 	}
 	
 	/**
 	 * Method that has to be called once a target is reached. getCurrentTarget()
 	 * will return the next one after this call, as far as there are more.
+	 * 
+	 * @param robotName the robot's friendly name
 	 */
-	public void targetReached() {
-		++currentTargetNumber;
+	public void waypointReached(String robotName) {
+		currentRobotWaypointNumber.put(robotName, currentRobotWaypointNumber.get(robotName) + 1);
 	}
 	
-	public void addTarget(Point target) {
-		targets.add(target);
-		observer.targetChanged();							// notify view that new targets arrived
+	/**
+	 * Sets a new path for the specified robot. The remaining waypoints of the old path will be removed and the fiven path
+	 * appended to the already reached waypoints.
+	 * 
+	 * @param path the path to append
+	 * @param robotName the robot's friendly name
+	 */
+	public void setNewPath(Path path, String robotName) {		
+		Path currentPath = robotPaths.get(robotName);
+		//remove old waypoints
+		for (int i = currentRobotWaypointNumber.get(robotName); i < currentPath.size(); ++i)
+			currentPath.remove(i);
+		//add new path
+		currentPath.addAll(path);
+		robotPaths.put(robotName, currentPath);
+		controller.targetChanged(robotName); // notify view that new targets arrived
 	}
 		
-	public void setObserverView(View observer) {
-		this.observer = observer;
+	public void setController(Server controller) {
+		this.controller = controller;
+	}
+
+	/**
+	 * Removes a robot.
+	 * 
+	 * @param robotName the robot's friendly name
+	 */
+	public void removeRobot(String robotName) {
+		Path currentPath = robotPaths.get(robotName);
+		//remove remaining waypoints
+		for (int i = currentRobotWaypointNumber.get(robotName); i < currentPath.size(); ++i)
+			currentPath.remove(i);
+		//remove robot from watched robots - it's path will remain in the map
+		currentRobotWaypointNumber.remove(robotName);
+		controller.targetChanged(robotName);
 	}
 	
 }

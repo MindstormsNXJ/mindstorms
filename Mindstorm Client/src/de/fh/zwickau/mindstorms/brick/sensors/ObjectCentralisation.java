@@ -24,18 +24,18 @@ public class ObjectCentralisation implements FeatureListener {
 		robot.positionManager.rotate(10,Direction.LEFT);
 		Button.ENTER.waitForPressAndRelease();
 		
-		int targetAngel = calcAngel(scanLeft(), scanRight());
-		System.out.println(targetAngel);
-		robot.positionManager.rotateTo(targetAngel);
+		int targetAngle = calcAngle(scanLeft(), scanRight());
+		System.out.println(targetAngle);
+		robot.positionManager.rotateTo(targetAngle);
 	}
 
-	private int calcAngel(int leftAngel, int rightAngel) {
-		int centralAngel = 0;
-		centralAngel = (leftAngel + rightAngel) / 2;
-		if (leftAngel > rightAngel) {
-			centralAngel += 180;
+	private int calcAngle(int leftAngle, int rightAngle) {
+		int centralAngle = 0;
+		centralAngle = (leftAngle + rightAngle) / 2;
+		if (leftAngle > rightAngle) {
+			centralAngle += 180;
 		}
-		return centralAngel;
+		return centralAngle;
 	}
 
 	private int scanRight() {

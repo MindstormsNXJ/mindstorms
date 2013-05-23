@@ -2,13 +2,7 @@ package de.fh.zwickau.mindstorms.brick;
 
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
 import de.fh.zwickau.mindstorms.brick.task.Pick;
-import lejos.nxt.ColorSensor;
-import lejos.nxt.Motor;
-import lejos.nxt.NXTRegulatedMotor;
-import lejos.nxt.SensorPort;
-import lejos.nxt.TouchSensor;
-import lejos.nxt.UltrasonicSensor;
-import lejos.nxt.addon.CompassHTSensor;
+import ch.aplu.nxtsim.*;
 
 /**
  * This class is the abstract superclass for the two robot types, namely
@@ -18,18 +12,18 @@ import lejos.nxt.addon.CompassHTSensor;
  * @author Tobias Schießl
  * @version 1.0
  */
-public class Robot {
+public class Robot extends NxtRobot{
 	// Motors
-	public NXTRegulatedMotor leftMotor;
-	public NXTRegulatedMotor rightMotor;
-	public NXTRegulatedMotor grabberMotor;
+	public Motor leftMotor;
+	public Motor rightMotor;
+	public Motor grabberMotor;
 	// Sensors
 	public CompassHTSensor compassSensor;
 	public UltrasonicSensor ultrasonicSensor;
 	public TouchSensor touchSensor;
 	public ColorSensor colorSensor;
 
-	public double driveTranslation; // angel in degrees per mm
+	public double driveTranslation; // angel in degrees per cm
 	public PositionManager positionManager;
 
 	public int rotationSpeed = 100; // standard values, will be changed after
@@ -37,19 +31,17 @@ public class Robot {
 	public int driveSpeed = 200;
 	public final int STANDARD_ROTATE_ACC = 5000;
 	public final int STANDARD_DRIVE_ACC = 500;
-	
-	public Pick picker;
 
 	public Robot() {
-		leftMotor = Motor.A;
-		rightMotor = Motor.B;
-		grabberMotor = Motor.C;
+		leftMotor = new Motor(MotorPort.A);
+		rightMotor = new Motor(MotorPort.B);
+		grabberMotor = new Motor(MotorPort.C);
 		ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
 		compassSensor = new CompassHTSensor(SensorPort.S2);
-		touchSensor = new TouchSensor(SensorPort.S3);
-		colorSensor = new ColorSensor(SensorPort.S4);
-		picker = new Pick(this);
-		picker.pickerUp();
+	//	touchSensor = new TouchSensor(SensorPort.S3);
+		colorSensor = new ColorSensor(SensorPort.S3);
+		this.addPart(leftMotor);
+		this.addPart(rightMotor);
 	}
 
 	/**
@@ -68,8 +60,8 @@ public class Robot {
 	 * @param acc
 	 */
 	public void setAcc(int acc) {
-		leftMotor.setAcceleration(acc);
-		rightMotor.setAcceleration(acc);
+//		leftMotor.setAcceleration(acc);
+//		rightMotor.setAcceleration(acc);
 	}
 
 	/**
@@ -109,7 +101,8 @@ public class Robot {
 	 * This method stops the two motors of the robot.
 	 */
 	public void stop() {
-		positionManager.stop();
+		rightMotor.stop();
+		leftMotor.stop();
 	}
 
 	/**
@@ -117,13 +110,8 @@ public class Robot {
 	 * the grabber.
 	 */
 	public void pickItem() {
-		// do centralisation first
-		if( ! picker.pickItem() )
-			pickItem();		// attention, this could be an infinite loop, should be changed
-	}
-	
-	public void dropItem(){
-		picker.dropItem();
+		Pick p = new Pick(this);
+		p.pickItem();
 	}
 
 }

@@ -63,8 +63,12 @@ public class ConnectionManager {
 							Delay.msDelay(100);
 						String command = commandReceiver.readUTF();
 						System.out.println("Command received: " + command);
-						parser.parseCommand(command);
-						sendPose();
+						try {
+							parser.parseCommand(command);
+							sendPose();
+						} catch (IllegalArgumentException ex) {
+							sendOutputMessage("The received command was unknown: " + command);
+						} //can be extended by further catch blocks if more errors may occur
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -72,6 +76,18 @@ public class ConnectionManager {
 			}
 			
 		}).start();
+	}
+	
+	private void sendOutputMessage(String outputMessage) {
+		System.out.println("Sending message: " + outputMessage);
+		try {
+			positionSender.writeUTF("o" + outputMessage);
+			positionSender.flush();
+		} catch (IOException e) {
+			System.err.println("Error sending message, retrying...");
+			Delay.msDelay(1000);
+			sendOutputMessage(outputMessage);
+		}
 	}
 	
 	/**
