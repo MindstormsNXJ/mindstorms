@@ -65,7 +65,7 @@ public class DirectionManager implements Manager {
 				isRotating = false;
 			}
 		}
-		stop();
+		robot.stop();
 	}
 
 	private int activateMotors(int degrees, Direction direction) {
