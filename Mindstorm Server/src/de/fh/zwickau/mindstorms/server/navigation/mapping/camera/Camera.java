@@ -4,13 +4,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
 import javax.imageio.ImageIO;
-
 import org.lwjgl.BufferUtils;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
-
+/**
+ * The camera is used to create/load images from the
+ * Environment.
+ * 
+ * @author Martin Pezold
+ *
+ */
 public class Camera {
     
 	ByteBuffer byteBuffer = null;
@@ -19,17 +22,17 @@ public class Camera {
     }
     
     
+    /**
+     * Read a new Image from disk.
+     * @param input filename
+     */
     public void readNewPhoto(String input){
 		
     	BufferedImage image = null;
     	
         try {
-
-              
             File imagefile = new File("content/photos/"+input);
             image = ImageIO.read(imagefile);
-
-            
 
         } catch (IOException e) {
               e.printStackTrace();
@@ -37,7 +40,12 @@ public class Camera {
         byteBuffer=makeByteBuffer(image);
         System.out.println("Success");
     }
-    
+
+    /**
+     * Convert an Image to a ByteBuffer.
+     * @param image Image
+     * @return ByteBuffer from image
+     */
     public static ByteBuffer makeByteBuffer(BufferedImage image){
        
        int[] pixels = new int[image.getWidth() * image.getHeight()];
@@ -49,11 +57,8 @@ public class Camera {
              for(int x = 0; x < image.getWidth(); x++){
                  int pixel = pixels[y * image.getWidth() + x];
                  buffer.put((byte) ((pixel >> 16) & 0xFF));     // Red component
-//                 System.out.println(((pixel >> 16) & 0xFF));
                  buffer.put((byte) ((pixel >> 8) & 0xFF));      // Green component
-//                 System.out.println(((pixel >> 8) & 0xFF));
-                 buffer.put((byte) (pixel & 0xFF));               // Blue component
-//                 System.out.println((pixel & 0xFF));
+                 buffer.put((byte) (pixel & 0xFF));             // Blue component
              }
          }
          buffer.rewind();
