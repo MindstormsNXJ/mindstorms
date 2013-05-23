@@ -99,7 +99,7 @@ public class MovementManager implements Manager {
 				driving = false;
 			}
 		}
-		robot.positionManager.stop();
+		robot.stop();
 	}
 
 	/**
