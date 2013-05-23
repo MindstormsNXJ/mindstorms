@@ -51,8 +51,8 @@ public class ConverterV2 {
 						}
 					}
 					{
-						//find bottom end of line
-						++y; //one field under the found field
+						//find top end of line
+						++y; //one field over the found field
 						while (bytes[i][y] != 0) {
 							++y; //the line continues
 						}
@@ -159,22 +159,25 @@ public class ConverterV2 {
 		int index = 0;
 		for (Line line : lineList) {
 			if (isHorizontalLine(line)) {
-				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1, line.x2 + halfRoboterSize, line.y2 - halfRoboterSize + 1);
+				int leftAddtion = checkLeftSideOfLine((int) line.x1 - 1 - halfRoboterSize, (int) line.y1, lines);
+				lines[index] = new Line(line.x1 - halfRoboterSize - leftAddtion, line.y1 - halfRoboterSize + 1, line.x2 + halfRoboterSize, line.y2 - halfRoboterSize + 1);
 				++index;
 				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 - halfRoboterSize + 1, line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1);
 				++index;
-				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1, line.x1 - halfRoboterSize, line.y1 + halfRoboterSize + 1);
+				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1, line.x1 - halfRoboterSize - leftAddtion, line.y1 + halfRoboterSize + 1);
 				++index;
-				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 + halfRoboterSize + 1, line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1);
+				lines[index] = new Line(line.x1 - halfRoboterSize - leftAddtion, line.y1 + halfRoboterSize + 1, line.x1 - halfRoboterSize - leftAddtion, line.y1 - halfRoboterSize + 1);
 				++index;
 			} else {
-				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1, line.x1 + halfRoboterSize, line.y1 - halfRoboterSize + 1);
+				int topAddition = checkTopSideOfLine((int) line.x2, (int) line.y1 + halfRoboterSize, lines);
+				System.out.println(topAddition);
+				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1 - topAddition, line.x1 + halfRoboterSize, line.y1 - halfRoboterSize + 1 - topAddition);
 				++index;
-				lines[index] = new Line(line.x1 + halfRoboterSize, line.y1 - halfRoboterSize + 1, line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1);
+				lines[index] = new Line(line.x1 + halfRoboterSize, line.y1 - halfRoboterSize + 1 - topAddition, line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1);
 				++index;
 				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1, line.x2 - halfRoboterSize, line.y2 + halfRoboterSize + 1);
 				++index;
-				lines[index] = new Line(line.x2 - halfRoboterSize, line.y2 + halfRoboterSize + 1, line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1);
+				lines[index] = new Line(line.x2 - halfRoboterSize, line.y2 + halfRoboterSize + 1, line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1 - topAddition);
 				++index;
 			}
 		}
@@ -192,6 +195,40 @@ public class ConverterV2 {
 			return true;
 		else
 			return false;
+	}
+	
+	/**
+	 * Only for horizontal lines!
+	 * This methods checks if there is another line point at the left end of a horizontal line.
+	 * 
+	 * @param x the lines left end x coordinate minus 1 and the tile half robot size
+	 * @param y the lines left end y coordinate
+	 * @param lines an array of already found lines (would contain the specific line)
+	 * @return 0 if not a point of another line, 1 otherwise
+	 */
+	private static int checkLeftSideOfLine(int x, int y, Line[] lines) {
+		for (Line line : lines) {
+			if (line != null && containsPoint(line, x, y))
+				return 1;
+		}
+		return 0;
+	}
+	
+	/**
+	 * Only for vertical lines!
+	 * This methods checks if there is another line point at the top end of a vertical line.
+	 * 
+	 * @param x the lines top end x coordinate
+	 * @param y the lines top end y coordinate plus the half robot size
+	 * @param lines an array of already found lines (would contain the specific line)
+	 * @return 0 if not a point of another line, 1 otherwise
+	 */
+	private static int checkTopSideOfLine(int x, int y, Line[] lines) {
+		for (Line line : lines) {
+			if (line != null && containsPoint(line, x, y))
+				return 1;
+		}
+		return 0;
 	}
 	
 	/**

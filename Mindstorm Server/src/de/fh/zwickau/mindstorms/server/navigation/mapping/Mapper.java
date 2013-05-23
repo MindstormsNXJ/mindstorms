@@ -109,7 +109,7 @@ public class Mapper {
 	 * generate a new LineMap
 	 */
 	private void buildLineMap() {
-		lineMap = ConverterV2.convertGridToLineMap(mapGrid, (PathFinder.ROBOT_LENGTH_CM > PathFinder.ROBOT_WIDTH_CM) ? PathFinder.ROBOT_LENGTH_CM / 2 : PathFinder.ROBOT_WIDTH_CM / 2);
+		lineMap = ConverterV2.convertGridToLineMap(mapGrid, (PathFinder.ROBOT_LENGTH_IN_TILES > PathFinder.ROBOT_WIDTH_IN_TILES) ? PathFinder.ROBOT_LENGTH_IN_TILES / 2 : PathFinder.ROBOT_WIDTH_IN_TILES / 2);
 	}
 
 	public void loadMap(){

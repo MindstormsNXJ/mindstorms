@@ -137,7 +137,7 @@ public class ConnectionManager {
 			} catch (EOFException ex) {
 				System.err.println("Connection terminated by NXT");
 				if (!terminate && targetManager.hasMoreWaypoints(robotName)) {
-					System.out.println("Resetting connection");
+					System.err.println("Resetting connection");
 					while (!establishConnection())
 						Delay.msDelay(2000);
 				} else {

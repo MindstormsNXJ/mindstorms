@@ -15,7 +15,7 @@ import lejos.robotics.pathfinding.ShortestPathFinder;
  * finding to path to it's current target using a Dijkstra algorithm.
  * 
  * @author Tobias Schießl
- * @version 1.3
+ * @version 1.4
  */
 public class PathFinder {
 	
@@ -26,8 +26,8 @@ public class PathFinder {
 	private boolean mapChanged = true;
 	
 	//two values which will be used for the line map converting process
-	public static final int ROBOT_LENGTH_CM = 6;
-	public static final int ROBOT_WIDTH_CM = 4;
+	public static final int ROBOT_LENGTH_IN_TILES = 30 / 4; //30 cm
+	public static final int ROBOT_WIDTH_IN_TILES = 20 / 4; //20 cm
 	
 	/**
 	 * Initialises a PathFinder with the LineMap to use from now on.
