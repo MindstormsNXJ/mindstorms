@@ -63,9 +63,13 @@ public class Parser {
 			robot.positionManager.rotateTo(valueAsInt);
 			break;
 		case "pick":
+			if (valueAsInt != 0)
+				robot.positionManager.move(valueAsInt);
 			robot.pickItem();
 			break;
 		case "drop":
+			if (valueAsInt != 0)
+				robot.positionManager.move(valueAsInt);
 			robot.dropItem();
 			break;
 		case "exit":

@@ -106,23 +106,25 @@ public class PathFinder {
 			else { //move robot forward
 				if (targetManager.isBallWaypoint(currentWaypoint) || (robotHasBall && targetManager.isFinalTarget(currentWaypoint))) {
 					distanceToMove -= 300; //to leave enough distance for the pick and drop procedures
-					if (distanceToMove < 0) {
-						//TODO maybe we should move backwards, but that could cause trouble if a wall gets in the ultrasonic sensors range
-	//					manager.sendBackwardCommand(Math.abs(distanceToMove));
-	//					System.out.println("Sending backward command - distance: " + Math.abs(distanceToMove));
-					} else {
-						manager.sendForwardCommand(distanceToMove);
-						System.out.println("Sending forward command - distance: " + distanceToMove);
-					}
-					Delay.msDelay(2000);
+//					if (distanceToMove < 0) {
+//						//TODO maybe we should move backwards, but that could cause trouble if a wall gets in the ultrasonic sensors range
+////						manager.sendBackwardCommand(Math.abs(distanceToMove));
+////						System.out.println("Sending backward command - distance: " + Math.abs(distanceToMove));
+//					} else {
+//						manager.sendForwardCommand(distanceToMove);
+//						System.out.println("Sending forward command - distance: " + distanceToMove);
+//					}
+//					Delay.msDelay(2000);
+					if (distanceToMove < 0)
+						distanceToMove = 0;
 					if (targetManager.isBallWaypoint(currentWaypoint)) {
-						manager.sendPickCommand();
+						manager.sendPickCommand(distanceToMove);
 						robotHasBall = true;
-						System.out.println("Sending pick command");
+						System.out.println("Sending pick command - distance: " + distanceToMove);
 						targetManager.waypointReached(robotName);
 					} else {
-						manager.sendDropCommand();
-						System.out.println("Sending drop command");
+						manager.sendDropCommand(distanceToMove);
+						System.out.println("Sending drop command - distance: " + distanceToMove);
 						Delay.msDelay(2000);
 						manager.terminate();
 						System.out.println("Sending terminate command");

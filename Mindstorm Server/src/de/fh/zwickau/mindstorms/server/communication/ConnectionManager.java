@@ -240,16 +240,20 @@ public class ConnectionManager {
 	/**
 	 * Sends a pick-command. We assume that the robot has the ball after
 	 * sending this command, at least he should.
+	 * 
+	 * @param restDistanceToMove the rest distance to move, after which the robot have be 30 cm to the ball
 	 */
-	public void sendPickCommand() {
-		sendCommand("pick0");
+	public void sendPickCommand(int restDistanceToMove) {
+		sendCommand("pick" + restDistanceToMove);
 	}
 	
 	/**
 	 * Sends a drop-ball-command.
+	 * 
+	 * @param restDistanceToMove the rest distance to move, after which the robot have be 30 cm to the target
 	 */
-	public void sendDropCommand() {
-		sendCommand("drop0");
+	public void sendDropCommand(int restDistanceToMove) {
+		sendCommand("drop" + restDistanceToMove);
 	}
 	
 	/**
