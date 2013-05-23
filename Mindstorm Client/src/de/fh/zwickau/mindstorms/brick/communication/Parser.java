@@ -76,13 +76,12 @@ public class Parser {
 			return false;
 		case "exit":
 			NXT.shutDown();
-			break;
+			return false;
 		case "query":
 			return true; //nothing to do, the pose will be send in the next step
 		default:
 			throw new IllegalArgumentException("Unknown command");
 		}
-		return true; //not relevant - method will return in switch statement or throw Exception
 	}
 	
 	/**

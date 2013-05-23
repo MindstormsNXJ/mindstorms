@@ -67,6 +67,8 @@ public class ConnectionManager {
 							boolean shouldSendPose = parser.parseCommand(command);
 							if (shouldSendPose)
 								sendPose();
+							else
+								sendOutputMessage("ball dropped");
 						} catch (IllegalArgumentException ex) {
 							sendOutputMessage("The received command was unknown: " + command);
 						} //can be extended by further catch blocks if more errors may occur

@@ -9,7 +9,6 @@ import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
 import lejos.robotics.pathfinding.ShortestPathFinder;
-import lejos.util.Delay;
 
 /**
  * This PathFinder class decides which command has to be send next by
@@ -125,9 +124,7 @@ public class PathFinder {
 					} else {
 						manager.sendDropCommand(distanceToMove);
 						System.out.println("Sending drop command - distance: " + distanceToMove);
-						Delay.msDelay(2000);
-						manager.terminate();
-						System.out.println("Sending terminate command");
+						targetManager.waypointReached(robotName);
 					}
 				} else {
 					manager.sendForwardCommand(distanceToMove);

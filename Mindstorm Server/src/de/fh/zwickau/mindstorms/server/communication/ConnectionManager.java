@@ -162,6 +162,10 @@ public class ConnectionManager {
 	private void decodeString(String receivedString) {
 		if (receivedString.charAt(0) == 'o') { //something should be printed on the console
 			System.out.println("Output from NXT " + robotName + ": " + receivedString.substring(1));
+			if (receivedString.substring(1).equals("ball dropped")) {
+				terminate();
+				System.out.println("Sending terminate command");
+			}
 		} else if (receivedString.charAt(0) == 'x') { //a pose was received
 			int index = 1; //skip 'x'
 			String xPos = "", yPos = "", dir = "";
