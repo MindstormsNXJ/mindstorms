@@ -68,7 +68,6 @@ public class PositionManager implements Manager {
 	 */
 	public void rotate(int degree, Direction direction) {
 		directionManager.rotateInDirection(degree, direction);
-		updateRotation(robot.getDirection());
 	}
 
 	private void updateRotation(int direction) {
@@ -98,7 +97,6 @@ public class PositionManager implements Manager {
 	 */
 	public void move(int distance) {
 		movementManager.move(distance);
-		updatePosition(distance);
 	}
 
 	@Override
