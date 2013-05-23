@@ -31,7 +31,7 @@ public class Server {
 		
 		view.start();	//new Thread for view
 		
-		connectionManagers.add(new ConnectionManager(mapper, "Picker"));
+		connectionManagers.add(new ConnectionManager(mapper, "Picker", this));
 	}
 	
 	private void registerObjects(){
@@ -50,11 +50,22 @@ public class Server {
 	
 	public void mapChanged(){
 		view.mapChanged();
-//		for (ConnectionManager manager : connectionManagers)
-//			manager.mapChaged();
+		for (ConnectionManager manager : connectionManagers)
+			manager.mapChaged();
 	}
 	
-	public void targetChanged(){
+	public void targetChanged(String robotName){
+		//TODO forward the robot name was well
 		view.targetChanged();
 	}
+	
+	/**
+	 * Removes a ConnectionManager ones the connection is terminated. The call will be made by the 
+	 * manager itself.
+	 * @param manager
+	 */
+	public void removeConnection(ConnectionManager manager) {
+		connectionManagers.remove(manager);
+	}
+	
 }

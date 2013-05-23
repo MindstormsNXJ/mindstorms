@@ -8,7 +8,6 @@ import lejos.robotics.objectdetection.Feature;
 import lejos.robotics.objectdetection.FeatureDetector;
 import lejos.robotics.objectdetection.FeatureListener;
 import lejos.robotics.objectdetection.RangeFeatureDetector;
-import de.fh.zwickau.mindstorms.brick.Robot;
 
 public class DriveTranslationCalibrator implements FeatureListener {
 	private final int motAcc, rotations, minDistance, maxDistance, interval;
@@ -39,7 +38,7 @@ public class DriveTranslationCalibrator implements FeatureListener {
 		rightMotor.resetTachoCount();
 	}
 
-	public void calibrate() {
+	private void calibrate() {
 		FeatureDetector scanner = new RangeFeatureDetector(ultrasonicSensor,
 				maxDistance, interval);
 		scanner.addListener(this);

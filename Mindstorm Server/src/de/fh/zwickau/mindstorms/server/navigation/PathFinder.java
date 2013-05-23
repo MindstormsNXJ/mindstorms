@@ -24,8 +24,9 @@ public class PathFinder {
 	private TargetManager targetManager;
 	private boolean robotHasBall = false;
 	private String robotName;
+	private boolean mapChanged = true;
 	
-	//two values which will be used for the lengthenLines() method
+	//two values which will be used for the line map converting process
 	public static final int ROBOT_LENGTH_CM = 6;
 	public static final int ROBOT_WIDTH_CM = 4;
 	
@@ -38,8 +39,7 @@ public class PathFinder {
 	 */
 	public PathFinder(LineMap map, String robotName) {
 		finder = new ShortestPathFinder(map);
-//		if (finder instanceof ShortestPathFinder)
-//			((ShortestPathFinder) finder).lengthenLines((ROBOT_LENGTH_CM > ROBOT_WIDTH_CM) ? ROBOT_LENGTH_CM / 2 : ROBOT_WIDTH_CM / 2);
+//		((ShortestPathFinder) finder).lengthenLines((float) 0.01); //not necessary I think
 		this.targetManager = TargetManager.getInstance();
 		this.robotName = robotName;
 	}
@@ -53,25 +53,12 @@ public class PathFinder {
 	 * @param robotName the robot's friendly name
 	 */
 	public void nextAction(Pose currentPose, ConnectionManager manager) {
-		if (!targetManager.hasMoreWaypoints(robotName)) {
-			//find new path - will happen if method is called for the first time and after the ball has been picked up
-			Path path = null;
-			if (!robotHasBall) {
-				try {
-					path = finder.findRoute(currentPose, targetManager.getBallWaypoint());
-				} catch (DestinationUnreachableException e) {
-					System.err.println("Error in finding path: destination is unreachable");
+		if (mapChanged || !targetManager.hasMoreWaypoints(robotName)) { //calculate (new) path
+			Path path = calculatePath(currentPose);
+			if (path == null)
 					return;
-				}
-			} else {
-				try {
-					path = finder.findRoute(currentPose, targetManager.getFinalTarget());
-				} catch (DestinationUnreachableException e) {
-					System.err.println("Error in finding path: destination is unreachable");
-					return;
-				}
-			}
 			System.out.println("Path calculated:\n" + path + "\n");
+			mapChanged = false;
 			targetManager.setNewPath(path, robotName);
 			targetManager.waypointReached(robotName); //necessary because the first waypoint of the found path will be the current pose
 		}
@@ -147,6 +134,38 @@ public class PathFinder {
 			}
 			System.out.println();
 		}
+	}
+	
+	/**
+	 * Calculates the path to ball or target from the current pose on.
+	 * 
+	 * @param currentPose the robot's current pose
+	 * @return the calculated path or null if destination is unreachable
+	 */
+	private Path calculatePath(Pose currentPose) {
+		Path path = null;
+		if (!robotHasBall) {
+			try {
+				path = finder.findRoute(currentPose, targetManager.getBallWaypoint());
+			} catch (DestinationUnreachableException e) {
+				System.err.println("Error in finding path: destination is unreachable");
+			}
+		} else {
+			try {
+				path = finder.findRoute(currentPose, targetManager.getFinalTarget());
+			} catch (DestinationUnreachableException e) {
+				System.err.println("Error in finding path: destination is unreachable");
+			}
+		}
+		return path;
+	}
+	
+	/**
+	 * Should be called once the map changes.
+	 */
+	public void mapChanged(LineMap newMap) {
+		mapChanged = true;
+		((ShortestPathFinder) finder).setMap(newMap);
 	}
 	
 }

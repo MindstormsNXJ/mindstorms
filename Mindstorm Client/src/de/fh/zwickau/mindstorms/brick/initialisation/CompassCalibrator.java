@@ -1,23 +1,23 @@
 package de.fh.zwickau.mindstorms.brick.initialisation;
 
-import de.fh.zwickau.mindstorms.brick.Robot;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.addon.CompassHTSensor;
 import lejos.util.Delay;
 
 public class CompassCalibrator {
 
-//	private Robot robot;
+	// private Robot robot;
 	private int rotationSpeed;
 	private boolean preCalibrationSuccessful;
 	private CompassHTSensor compassSensor;
 	private NXTRegulatedMotor rightMotor;
 	private NXTRegulatedMotor leftMotor;
-	
-	public CompassCalibrator(NXTRegulatedMotor leftMotor, NXTRegulatedMotor rightMotor, CompassHTSensor compassSensor) {
-		this.leftMotor=leftMotor;
-		this.rightMotor=rightMotor;
-		this.compassSensor=compassSensor;
+
+	public CompassCalibrator(NXTRegulatedMotor leftMotor,
+			NXTRegulatedMotor rightMotor, CompassHTSensor compassSensor) {
+		this.leftMotor = leftMotor;
+		this.rightMotor = rightMotor;
+		this.compassSensor = compassSensor;
 		System.out.println("starting compass calibration");
 		preCalibrationSuccessful = false;
 		preCalibrate();
@@ -27,7 +27,7 @@ public class CompassCalibrator {
 	public void preCalibrate() {
 		leftMotor.setAcceleration(5000);
 		rightMotor.setAcceleration(5000);
-		long before = System.currentTimeMillis();		
+		long before = System.currentTimeMillis();
 		final float startDirection = compassSensor.getDegrees();
 		if (startDirection == 506) {
 			System.out.println("pre calibration failed, please restart NXT");
@@ -36,7 +36,7 @@ public class CompassCalibrator {
 		leftMotor.forward();
 		rightMotor.backward();
 		Thread check = new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				Delay.msDelay(1000);
@@ -49,7 +49,7 @@ public class CompassCalibrator {
 					Delay.msDelay(10);
 				}
 			}
-			
+
 		});
 		check.start();
 		try {
@@ -65,7 +65,8 @@ public class CompassCalibrator {
 
 	public void calibrate() {
 		if (!preCalibrationSuccessful) {
-			System.out.println("pre calibration is necessary before calibration compass sensor");
+			System.out
+					.println("pre calibration is necessary before calibration compass sensor");
 			return;
 		}
 		leftMotor.setSpeed(rotationSpeed);
@@ -75,15 +76,15 @@ public class CompassCalibrator {
 		compassSensor.startCalibration();
 		rightMotor.forward();
 		leftMotor.backward();
-			try {
-				Thread.sleep(40000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+		try {
+			Thread.sleep(40000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		compassSensor.stopCalibration();
 		leftMotor.stop(true);
 		rightMotor.stop(false);
 		System.out.println("compass calibration finished");
 	}
-	
+
 }
