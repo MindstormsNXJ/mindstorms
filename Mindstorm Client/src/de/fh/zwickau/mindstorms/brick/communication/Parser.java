@@ -27,11 +27,13 @@ public class Parser {
 	/**
 	 * Parses a received command and starts it's execution.
 	 * The command has to finish with a number in order to parse it correctly.
+	 * If the command was drop, the return value will be false.
 	 * 
 	 * @param command the command to parse and execute
+	 * @return true, if the ConnectionManager should send the current pose
 	 * @throws IllegalArgumentException if the command is unknown
 	 */
-	public void parseCommand(String command) throws IllegalArgumentException {
+	public boolean parseCommand(String command) throws IllegalArgumentException {
 		String operation = "", value = "";
 		int index = 0;
 		//get the operation (fw, bw, left or right)
@@ -49,37 +51,38 @@ public class Parser {
 			valueAsInt = Integer.parseInt(value);
 		} catch (NumberFormatException ex) {
 			System.err.println("No parameter was send with command");
-			return;
+			return true;
 		}
 		//process command
 		switch (operation) {
 		case "fw":
 			robot.positionManager.move(valueAsInt);
-			break;
+			return true;
 		case "bw":
 			robot.positionManager.move(-valueAsInt);
-			break;
+			return true;
 		case "turn":
 			robot.positionManager.rotateTo(valueAsInt);
-			break;
+			return true;
 		case "pick":
 			if (valueAsInt != 0)
 				robot.positionManager.move(valueAsInt);
 			robot.pickItem();
-			break;
+			return true;
 		case "drop":
 			if (valueAsInt != 0)
 				robot.positionManager.move(valueAsInt);
 			robot.dropItem();
-			break;
+			return false;
 		case "exit":
 			NXT.shutDown();
 			break;
 		case "query":
-			break; //nothing to do, the pose will be send in the next step
+			return true; //nothing to do, the pose will be send in the next step
 		default:
 			throw new IllegalArgumentException("Unknown command");
 		}
+		return true; //not relevant - method will return in switch statement or throw Exception
 	}
 	
 	/**

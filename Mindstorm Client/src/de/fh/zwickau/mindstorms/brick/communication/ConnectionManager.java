@@ -64,8 +64,9 @@ public class ConnectionManager {
 						String command = commandReceiver.readUTF();
 						System.out.println("Command received: " + command);
 						try {
-							parser.parseCommand(command);
-							sendPose();
+							boolean shouldSendPose = parser.parseCommand(command);
+							if (shouldSendPose)
+								sendPose();
 						} catch (IllegalArgumentException ex) {
 							sendOutputMessage("The received command was unknown: " + command);
 						} //can be extended by further catch blocks if more errors may occur
