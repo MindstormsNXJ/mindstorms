@@ -1,6 +1,5 @@
 package de.fh.zwickau.mindstorms.brick.task;
 
-import lejos.nxt.ColorSensor.Color;
 import lejos.nxt.NXTRegulatedMotor;
 import lejos.nxt.Sound;
 import lejos.nxt.TouchSensor;
@@ -72,8 +71,8 @@ public class Pick {
 	 */
 	public boolean pickItem(){
 		pickerUp();
-		int distance = sensor.getDistance();
-		if(distance < 250){
+		int distance = sensor.getDistance() * 10;	// for mm
+		if(distance < 25000){
 			int driveDist = distance - itemDistance;
 			System.out.println(driveDist);
 			robot.positionManager.move(driveDist);
@@ -99,7 +98,6 @@ public class Pick {
 		}
 		else{	// no item was found
 			System.out.println("nothing to pick");
-//			Sound.beepSequence();
 			return false;
 		}
 		
