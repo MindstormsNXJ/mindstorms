@@ -10,9 +10,13 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 
-/// <summary>
-/// A simple rectangle for UI building
-/// </summary>
+/**
+ * Rectangle to draw render targets
+ * or textures to screen
+ * 
+ * @author Andre Furchner
+ *
+ */
 public class Rectangle
 {
 	private static boolean BufferIsUploaded = false;
@@ -35,20 +39,24 @@ public class Rectangle
          1.0f, 1.0f
     };
 
+    /**
+     * New Rectangle that is on the GPU
+     */
     public Rectangle() 
     {
-
         if(!BufferIsUploaded){
         	vertices.put(verticesf);
         	uv.put(uvf);
         	
         	vertices.rewind();
         	uv.rewind();
-            UploadToGPU();
-            
+            uploadToGPU();       
         }
     }
 
+    /**
+     * Draw it to the screen.
+     */
     public void Draw()
     {
         glBindVertexArray(vao);  
@@ -56,7 +64,10 @@ public class Rectangle
         glBindVertexArray(0);
     }
 
-    public void UploadToGPU()
+    /**
+     * Upload rectangle date to GPU memory.
+     */
+    public void uploadToGPU()
     {
         glGenBuffers(vbos);
         vao = glGenVertexArrays();
@@ -78,6 +89,9 @@ public class Rectangle
         BufferIsUploaded = true;
     }
 
+    /**
+     * Delete Memory Object on GPU
+     */
     public void DeleteOnGPU()
     {
         if (BufferIsUploaded) {
@@ -85,5 +99,3 @@ public class Rectangle
         }
     }
 }
-
-
