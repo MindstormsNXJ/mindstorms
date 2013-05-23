@@ -72,7 +72,7 @@ public class Pick {
 	public boolean pickItem(){
 		pickerUp();
 		int distance = sensor.getDistance() * 10;	// for mm
-		if(distance < 25000){
+		if(distance < 2500){
 			int driveDist = distance - itemDistance;
 			System.out.println(driveDist);
 			robot.positionManager.move(driveDist);
