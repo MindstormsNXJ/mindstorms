@@ -107,8 +107,6 @@ public class MovementManager implements Manager {
 	 */
 	@Override
 	public int stop() {
-		robot.rightMotor.stop(true);
-		robot.leftMotor.stop(false);
 		driving = false;
 		double wayNotDrived = ((rotToDriveLeft - robot.leftMotor
 				.getTachoCount()) + (rotToDriveRight - robot.rightMotor

@@ -97,14 +97,13 @@ public class PositionManager implements Manager {
 	 */
 	public void move(int distance) {
 		movementManager.move(distance);
-		updatePosition(distance);
 	}
 
 	@Override
 	public int stop() {
 		robot.rightMotor.stop(true);
 		robot.leftMotor.stop(false);
-		//updatePosition(movementManager.stop());
+		updatePosition(movementManager.stop());
 		updateRotation(directionManager.stop());
 		return 0;
 	}

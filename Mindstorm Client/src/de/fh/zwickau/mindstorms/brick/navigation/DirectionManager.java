@@ -94,8 +94,6 @@ public class DirectionManager implements Manager {
 	@Override
 	public int stop() {
 		isRotating = false;
-		robot.rightMotor.stop(true);
-		robot.leftMotor.stop(false);
 		return robot.getDirection();
 	}
 
