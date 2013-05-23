@@ -71,6 +71,8 @@ public class Parser {
 		case "exit":
 			NXT.shutDown();
 			break;
+		case "query":
+			break; //nothing to do, the pose will be send in the next step
 		default:
 			throw new IllegalArgumentException("Unknown command");
 		}

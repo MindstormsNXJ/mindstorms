@@ -119,6 +119,7 @@ public class PathFinder {
 						manager.sendPickCommand();
 						robotHasBall = true;
 						System.out.println("Sending pick command");
+						targetManager.waypointReached(robotName);
 					} else {
 						manager.sendDropCommand();
 						System.out.println("Sending drop command");
@@ -129,8 +130,8 @@ public class PathFinder {
 				} else {
 					manager.sendForwardCommand(distanceToMove);
 					System.out.println("Sending forward command - distance: " + distanceToMove);
+					targetManager.waypointReached(robotName);
 				}
-				targetManager.waypointReached(robotName);
 			}
 			System.out.println();
 		}

@@ -33,9 +33,10 @@ public class ConnectionManager {
 	private DataInputStream stringReceiver;
 	private String robotName;
 	private Server server;
+	private boolean terminate;
 	
 	//TODO remove for final version
-	private final boolean NO_NXT = true; //true, if there is no NXT available - PathFinding only
+	private final boolean NO_NXT = false; //true, if there is no NXT available - PathFinding only
 	
 	/**
 	 * Initialises a ConnectionManager, including the connection itself as well as
@@ -53,6 +54,7 @@ public class ConnectionManager {
 			
 			@Override
 			public void run() {
+				terminate = false;
 				targetManager = TargetManager.getInstance();
 				targetManager.addRobot(robotName);
 				
@@ -126,7 +128,7 @@ public class ConnectionManager {
 	 * Starts the Thread that will listen for received Poses and process them afterwards.
 	 */
 	private void receiveAndProcessPoses() {
-		while (true) {
+		while (!terminate) {
 			try {
 				System.out.println("Waiting to receive Pose...");
 				String receivedString = stringReceiver.readUTF();
@@ -134,7 +136,7 @@ public class ConnectionManager {
 				decodeString(receivedString);
 			} catch (EOFException ex) {
 				System.err.println("Connection terminated by NXT");
-				if (targetManager.hasMoreWaypoints(robotName)) {
+				if (!terminate && targetManager.hasMoreWaypoints(robotName)) {
 					System.out.println("Resetting connection");
 					while (!establishConnection())
 						Delay.msDelay(2000);
@@ -265,6 +267,14 @@ public class ConnectionManager {
 		}
 		targetManager.removeRobot(robotName);
 		server.removeConnection(this);
+		terminate = true;
+	}
+	
+	/**
+	 * Sends a command to the NXT to query it's current pose.
+	 */
+	public void sendQueryPoseCommand() {
+		sendCommand("query0");
 	}
 	
 	public void mapChaged(){
