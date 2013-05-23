@@ -130,9 +130,9 @@ public class ConnectionManager {
 	private void receiveAndProcessPoses() {
 		while (!terminate) {
 			try {
-				System.out.println("Waiting to receive Pose...");
+				System.out.println("Waiting to receive String or Pose...");
 				String receivedString = stringReceiver.readUTF();
-				System.out.println("String received: " + receivedString);
+				System.out.println("Received: " + receivedString);
 				decodeString(receivedString);
 			} catch (EOFException ex) {
 				System.err.println("Connection terminated by NXT");
@@ -162,40 +162,51 @@ public class ConnectionManager {
 	private void decodeString(String receivedString) {
 		if (receivedString.charAt(0) == 'o') { //something should be printed on the console
 			System.out.println("Output from NXT " + robotName + ": " + receivedString.substring(1));
-			if (receivedString.substring(1).equals("ball dropped")) {
+			if (receivedString.contains("Ball dropped")) {
+				Pose pose = decodePose(receivedString.split(":")[1]);
+				mapper.addPose(pose, robotName);
 				terminate();
 				System.out.println("Sending terminate command");
 			}
 		} else if (receivedString.charAt(0) == 'x') { //a pose was received
-			int index = 1; //skip 'x'
-			String xPos = "", yPos = "", dir = "";
-			while (receivedString.charAt(index) != 'y') {
-				xPos += receivedString.charAt(index);
-				++index;
-			}
-			++index; //skip 'y'
-			while (receivedString.charAt(index) != 'd') {
-				yPos += receivedString.charAt(index);
-				++index;
-			}
-			index += 3; // skip 'dir'
-			while (receivedString.charAt(index) != 'e') {
-				dir += receivedString.charAt(index);
-				++index;
-			}
-			Pose pose = null;
-			try {
-				pose = new Pose(Integer.parseInt(xPos) / 10, Integer.parseInt(yPos) / 10, Integer.parseInt(dir));
-			} catch (NumberFormatException ex) {
-				System.err.println("Could not parse received pose");
-				System.err.println("Received String: " + receivedString);
-				return;
-			}
+			Pose pose = decodePose(receivedString);
 			mapper.addPose(pose, connector.getNXTInfo().name);
 			pathFinder.nextAction(pose, this);
 		} else {
 			System.err.println("The received String could not be decoded.");
 		}
+	}
+	
+	/**
+	 * Decodes a given String into a pose.
+	 * 
+	 * @param poseString the String representing the pose
+	 * @return the parsed pose
+	 */
+	private Pose decodePose(String poseString) {
+		int index = 1; //skip 'x'
+		String xPos = "", yPos = "", dir = "";
+		while (poseString.charAt(index) != 'y') {
+			xPos += poseString.charAt(index);
+			++index;
+		}
+		++index; //skip 'y'
+		while (poseString.charAt(index) != 'd') {
+			yPos += poseString.charAt(index);
+			++index;
+		}
+		index += 3; // skip 'dir'
+		while (poseString.charAt(index) != 'e') {
+			dir += poseString.charAt(index);
+			++index;
+		}
+		Pose pose = null;
+		try {
+			pose = new Pose(Integer.parseInt(xPos) / 10, Integer.parseInt(yPos) / 10, Integer.parseInt(dir));
+		} catch (NumberFormatException ex) {
+			System.err.println("Could not parse received pose");
+		}
+		return pose;
 	}
 	
 	/**
