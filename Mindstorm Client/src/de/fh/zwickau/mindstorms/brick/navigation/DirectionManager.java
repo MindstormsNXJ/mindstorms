@@ -59,7 +59,7 @@ public class DirectionManager implements Manager {
 			targetdirection = 0;
 		}
 
-		boolean isRotating2 = false;
+		boolean isRotating2 = true;
 		while (isRotating2 == true) {
 			int currentDirection = robot.getDirection();
 			if (currentDirection == targetdirection) {

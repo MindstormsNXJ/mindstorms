@@ -69,7 +69,7 @@ public class MovementManager implements Manager {
 		/**
 		 * Corrects the drive Angle
 		 */
-		boolean isDriving = false;
+		boolean isDriving = true;
 		while (isDriving == true) {
 			if (Math.abs(angelCorrection(startdegrees, robot.getDirection())) > 5) {
 				robot.stop();
