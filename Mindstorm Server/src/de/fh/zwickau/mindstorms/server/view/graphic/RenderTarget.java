@@ -35,7 +35,7 @@ public class RenderTarget
     	textureBuffers = new Texture[1];
     	textureBuffers[1] = textureBuffer;
     	
-    	Initialize();
+    	initialize();
     	setupFrameBuffer();
     }
 
