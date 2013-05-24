@@ -218,7 +218,7 @@ public class GraphicCanvas extends Thread {
     
     private void updateCamera(){
     	
-    	tex_camera = new Texture(32, 32, "tex");
+    	tex_camera = new Texture(camera.getImageWidth(), camera.getImageHeight(), "tex");
     	tex_camera.SetupTextures(camera.getByteBuffer());
     	//tex_camera.UploadPixelsToGPU(camera.getByteBuffer());
     }
