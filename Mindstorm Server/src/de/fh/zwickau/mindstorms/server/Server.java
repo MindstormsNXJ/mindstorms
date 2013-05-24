@@ -20,8 +20,8 @@ public class Server {
 		connectionManagers = new ArrayList<ConnectionManager>();
 		
 		view = new View();
-		mapper = new Mapper(1);
-		camera = new Camera();
+		mapper = new Mapper(4);
+        camera = new Camera();
 		targetManager = TargetManager.getInstance();
 		
 		mapper.setBallPosition(targetManager.getBallWaypoint());

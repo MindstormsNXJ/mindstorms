@@ -33,9 +33,10 @@ public class ConnectionManager {
 	private DataInputStream stringReceiver;
 	private String robotName;
 	private Server server;
+	private boolean terminate;
 	
 	//TODO remove for final version
-	private final boolean NO_NXT = true; //true, if there is no NXT available - PathFinding only
+	private final boolean NO_NXT = false; //true, if there is no NXT available - PathFinding only
 	
 	/**
 	 * Initialises a ConnectionManager, including the connection itself as well as
@@ -53,6 +54,7 @@ public class ConnectionManager {
 			
 			@Override
 			public void run() {
+				terminate = false;
 				targetManager = TargetManager.getInstance();
 				targetManager.addRobot(robotName);
 				
@@ -77,20 +79,20 @@ public class ConnectionManager {
 		LineMap lineMap = mapper.getLineMap();
 		pathFinder = new PathFinder(lineMap, robotName);
 		//long way
-		pathFinder.nextAction(new Pose(0,0,0), this);
-		pathFinder.nextAction(new Pose(0,0,200), this);
-		pathFinder.nextAction(new Pose(-3,-8,200), this);
-		pathFinder.nextAction(new Pose(-3,-8,180), this);
-		pathFinder.nextAction(new Pose(-3,-14,180), this);
-		pathFinder.nextAction(new Pose(-3,-22,180), this);
-		pathFinder.nextAction(new Pose(-3,-22,90), this);
-		pathFinder.nextAction(new Pose(3,-22,90), this);
-		pathFinder.nextAction(new Pose(3,-22,48), this);
-		pathFinder.nextAction(new Pose(12,-14,48), this);
-		pathFinder.nextAction(new Pose(12,-14,0), this);
-		pathFinder.nextAction(new Pose(12,-8,0), this);
-		pathFinder.nextAction(new Pose(12,-6,354), this);
-		pathFinder.nextAction(new Pose(10,10,354), this); //pick command was sent
+//		pathFinder.nextAction(new Pose(0,0,0), this);
+//		pathFinder.nextAction(new Pose(0,0,200), this);
+//		pathFinder.nextAction(new Pose(-3,-8,200), this);
+//		pathFinder.nextAction(new Pose(-3,-8,180), this);
+//		pathFinder.nextAction(new Pose(-3,-14,180), this);
+//		pathFinder.nextAction(new Pose(-3,-22,180), this);
+//		pathFinder.nextAction(new Pose(-3,-22,90), this);
+//		pathFinder.nextAction(new Pose(3,-22,90), this);
+//		pathFinder.nextAction(new Pose(3,-22,48), this);
+//		pathFinder.nextAction(new Pose(12,-14,48), this);
+//		pathFinder.nextAction(new Pose(12,-14,0), this);
+//		pathFinder.nextAction(new Pose(12,-8,0), this);
+//		pathFinder.nextAction(new Pose(12,-6,354), this);
+//		pathFinder.nextAction(new Pose(10,10,354), this); //pick command was sent
 		//short way
 //		pathFinder.nextAction(new Pose(0,0,0), this);
 //		pathFinder.nextAction(new Pose(0,0,200), this);
@@ -126,16 +128,16 @@ public class ConnectionManager {
 	 * Starts the Thread that will listen for received Poses and process them afterwards.
 	 */
 	private void receiveAndProcessPoses() {
-		while (true) {
+		while (!terminate) {
 			try {
-				System.out.println("Waiting to receive Pose...");
+				System.out.println("Waiting to receive String or Pose...");
 				String receivedString = stringReceiver.readUTF();
-				System.out.println("String received: " + receivedString);
+				System.out.println("Received: " + receivedString);
 				decodeString(receivedString);
 			} catch (EOFException ex) {
 				System.err.println("Connection terminated by NXT");
-				if (targetManager.hasMoreWaypoints(robotName)) {
-					System.out.println("Resetting connection");
+				if (!terminate && targetManager.hasMoreWaypoints(robotName)) {
+					System.err.println("Resetting connection");
 					while (!establishConnection())
 						Delay.msDelay(2000);
 				} else {
@@ -160,36 +162,51 @@ public class ConnectionManager {
 	private void decodeString(String receivedString) {
 		if (receivedString.charAt(0) == 'o') { //something should be printed on the console
 			System.out.println("Output from NXT " + robotName + ": " + receivedString.substring(1));
+			if (receivedString.contains("Ball dropped")) {
+				Pose pose = decodePose(receivedString.split(":")[1]);
+				mapper.addPose(pose, robotName);
+				System.out.println("Sending terminate command");
+				terminate();
+			}
 		} else if (receivedString.charAt(0) == 'x') { //a pose was received
-			int index = 1; //skip 'x'
-			String xPos = "", yPos = "", dir = "";
-			while (receivedString.charAt(index) != 'y') {
-				xPos += receivedString.charAt(index);
-				++index;
-			}
-			++index; //skip 'y'
-			while (receivedString.charAt(index) != 'd') {
-				yPos += receivedString.charAt(index);
-				++index;
-			}
-			index += 3; // skip 'dir'
-			while (receivedString.charAt(index) != 'e') {
-				dir += receivedString.charAt(index);
-				++index;
-			}
-			Pose pose = null;
-			try {
-				pose = new Pose(Integer.parseInt(xPos) / 10, Integer.parseInt(yPos) / 10, Integer.parseInt(dir));
-			} catch (NumberFormatException ex) {
-				System.err.println("Could not parse received pose");
-				System.err.println("Received String: " + receivedString);
-				return;
-			}
+			Pose pose = decodePose(receivedString);
 			mapper.addPose(pose, connector.getNXTInfo().name);
 			pathFinder.nextAction(pose, this);
 		} else {
 			System.err.println("The received String could not be decoded.");
 		}
+	}
+	
+	/**
+	 * Decodes a given String into a pose.
+	 * 
+	 * @param poseString the String representing the pose
+	 * @return the parsed pose
+	 */
+	private Pose decodePose(String poseString) {
+		int index = 1; //skip 'x'
+		String xPos = "", yPos = "", dir = "";
+		while (poseString.charAt(index) != 'y') {
+			xPos += poseString.charAt(index);
+			++index;
+		}
+		++index; //skip 'y'
+		while (poseString.charAt(index) != 'd') {
+			yPos += poseString.charAt(index);
+			++index;
+		}
+		index += 3; // skip 'dir'
+		while (poseString.charAt(index) != 'e') {
+			dir += poseString.charAt(index);
+			++index;
+		}
+		Pose pose = null;
+		try {
+			pose = new Pose(Integer.parseInt(xPos) / 10, Integer.parseInt(yPos) / 10, Integer.parseInt(dir));
+		} catch (NumberFormatException ex) {
+			System.err.println("Could not parse received pose");
+		}
+		return pose;
 	}
 	
 	/**
@@ -238,16 +255,20 @@ public class ConnectionManager {
 	/**
 	 * Sends a pick-command. We assume that the robot has the ball after
 	 * sending this command, at least he should.
+	 * 
+	 * @param restDistanceToMove the rest distance to move, after which the robot have be 30 cm to the ball
 	 */
-	public void sendPickCommand() {
-		sendCommand("pick0");
+	public void sendPickCommand(int restDistanceToMove) {
+		sendCommand("pick" + restDistanceToMove);
 	}
 	
 	/**
 	 * Sends a drop-ball-command.
+	 * 
+	 * @param restDistanceToMove the rest distance to move, after which the robot have be 30 cm to the target
 	 */
-	public void sendDropCommand() {
-		sendCommand("drop0");
+	public void sendDropCommand(int restDistanceToMove) {
+		sendCommand("drop" + restDistanceToMove);
 	}
 	
 	/**
@@ -265,6 +286,14 @@ public class ConnectionManager {
 		}
 		targetManager.removeRobot(robotName);
 		server.removeConnection(this);
+		terminate = true;
+	}
+	
+	/**
+	 * Sends a command to the NXT to query it's current pose.
+	 */
+	public void sendQueryPoseCommand() {
+		sendCommand("query0");
 	}
 	
 	public void mapChaged(){

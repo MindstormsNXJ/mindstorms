@@ -51,8 +51,8 @@ public class ConverterV2 {
 						}
 					}
 					{
-						//find bottom end of line
-						++y; //one field under the found field
+						//find top end of line
+						++y; //one field over the found field
 						while (bytes[i][y] != 0) {
 							++y; //the line continues
 						}
@@ -74,7 +74,7 @@ public class ConverterV2 {
 			}
 		}		
 		Line[] lines = broadenLines(lineList, halfRoboterSize); //add the necessary buffer to avoid collisions
-		lines = movePointsToWorldCoordinates(lines, maxAbsValue);
+		lines = movePointsToWorldCoordinates(lines, maxAbsValue, gridMap.getTileSize());
 		LineMap lineMap = new LineMap(lines, bounds);
 		return lineMap;
 	}
@@ -159,22 +159,25 @@ public class ConverterV2 {
 		int index = 0;
 		for (Line line : lineList) {
 			if (isHorizontalLine(line)) {
-				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1, line.x2 + halfRoboterSize, line.y2 - halfRoboterSize + 1);
+				int leftAddtion = checkLeftSideOfLine((int) line.x1 - 1 - halfRoboterSize, (int) line.y1, lines);
+				lines[index] = new Line(line.x1 - halfRoboterSize - leftAddtion, line.y1 - halfRoboterSize + 1, line.x2 + halfRoboterSize, line.y2 - halfRoboterSize + 1);
 				++index;
 				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 - halfRoboterSize + 1, line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1);
 				++index;
-				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1, line.x1 - halfRoboterSize, line.y1 + halfRoboterSize + 1);
+				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1, line.x1 - halfRoboterSize - leftAddtion, line.y1 + halfRoboterSize + 1);
 				++index;
-				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 + halfRoboterSize + 1, line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1);
+				lines[index] = new Line(line.x1 - halfRoboterSize - leftAddtion, line.y1 + halfRoboterSize + 1, line.x1 - halfRoboterSize - leftAddtion, line.y1 - halfRoboterSize + 1);
 				++index;
 			} else {
-				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1, line.x1 + halfRoboterSize, line.y1 - halfRoboterSize + 1);
+				int topAddition = checkTopSideOfLine((int) line.x2, (int) line.y1 + halfRoboterSize, lines);
+				System.out.println(topAddition);
+				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1 - topAddition, line.x1 + halfRoboterSize, line.y1 - halfRoboterSize + 1 - topAddition);
 				++index;
-				lines[index] = new Line(line.x1 + halfRoboterSize, line.y1 - halfRoboterSize + 1, line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1);
+				lines[index] = new Line(line.x1 + halfRoboterSize, line.y1 - halfRoboterSize + 1 - topAddition, line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1);
 				++index;
 				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1, line.x2 - halfRoboterSize, line.y2 + halfRoboterSize + 1);
 				++index;
-				lines[index] = new Line(line.x2 - halfRoboterSize, line.y2 + halfRoboterSize + 1, line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1);
+				lines[index] = new Line(line.x2 - halfRoboterSize, line.y2 + halfRoboterSize + 1, line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1 - topAddition);
 				++index;
 			}
 		}
@@ -195,14 +198,49 @@ public class ConverterV2 {
 	}
 	
 	/**
+	 * Only for horizontal lines!
+	 * This methods checks if there is another line point at the left end of a horizontal line.
+	 * 
+	 * @param x the lines left end x coordinate minus 1 and the tile half robot size
+	 * @param y the lines left end y coordinate
+	 * @param lines an array of already found lines (would contain the specific line)
+	 * @return 0 if not a point of another line, 1 otherwise
+	 */
+	private static int checkLeftSideOfLine(int x, int y, Line[] lines) {
+		for (Line line : lines) {
+			if (line != null && containsPoint(line, x, y))
+				return 1;
+		}
+		return 0;
+	}
+	
+	/**
+	 * Only for vertical lines!
+	 * This methods checks if there is another line point at the top end of a vertical line.
+	 * 
+	 * @param x the lines top end x coordinate
+	 * @param y the lines top end y coordinate plus the half robot size
+	 * @param lines an array of already found lines (would contain the specific line)
+	 * @return 0 if not a point of another line, 1 otherwise
+	 */
+	private static int checkTopSideOfLine(int x, int y, Line[] lines) {
+		for (Line line : lines) {
+			if (line != null && containsPoint(line, x, y))
+				return 1;
+		}
+		return 0;
+	}
+	
+	/**
 	 * Converts the given array of lines into world coordinates (so far, they are all relative to the point (0,0) in the bottom
 	 * left corner). We assume, that the max absolute value is equal on both sides.
 	 * 
 	 * @param lines the line array to convert
 	 * @param maxAbsValue the maximal absolute value to both sides for the point (0,0)
+	 * @param tileSize the MapGrid's tile size to calculate the correct coordinates
 	 * @return the converted line array
 	 */
-	private static Line[] movePointsToWorldCoordinates(Line[] lines, int maxAbsValue) {
+	private static Line[] movePointsToWorldCoordinates(Line[] lines, int maxAbsValue, float tileSize) {
 		Line[] returnArray = new Line[lines.length];
 		int index = 0;
 		for (Line line : lines) {
@@ -212,7 +250,7 @@ public class ConverterV2 {
 			Quadrant q2 = getQuadrant(p2, maxAbsValue);
 			p1 = getPointInWorldCoordinates(p1, q1, maxAbsValue);
 			p2 = getPointInWorldCoordinates(p2, q2, maxAbsValue);
-			returnArray[index] = new Line(p1.x, p1.y, p2.x, p2.y);
+			returnArray[index] = new Line(p1.x * tileSize, p1.y * tileSize, p2.x * tileSize, p2.y * tileSize);
 			++index;
 		}
 		return returnArray;

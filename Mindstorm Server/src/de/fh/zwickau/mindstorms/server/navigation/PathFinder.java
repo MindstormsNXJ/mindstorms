@@ -9,14 +9,13 @@ import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
 import lejos.robotics.pathfinding.ShortestPathFinder;
-import lejos.util.Delay;
 
 /**
  * This PathFinder class decides which command has to be send next by
  * finding to path to it's current target using a Dijkstra algorithm.
  * 
  * @author Tobias Schießl
- * @version 1.3
+ * @version 1.4
  */
 public class PathFinder {
 	
@@ -27,8 +26,8 @@ public class PathFinder {
 	private boolean mapChanged = true;
 	
 	//two values which will be used for the line map converting process
-	public static final int ROBOT_LENGTH_CM = 6;
-	public static final int ROBOT_WIDTH_CM = 4;
+	public static final int ROBOT_LENGTH_IN_TILES = 30 / 4; //30 cm
+	public static final int ROBOT_WIDTH_IN_TILES = 20 / 4; //20 cm
 	
 	/**
 	 * Initialises a PathFinder with the LineMap to use from now on.
@@ -106,31 +105,32 @@ public class PathFinder {
 			else { //move robot forward
 				if (targetManager.isBallWaypoint(currentWaypoint) || (robotHasBall && targetManager.isFinalTarget(currentWaypoint))) {
 					distanceToMove -= 300; //to leave enough distance for the pick and drop procedures
-					if (distanceToMove < 0) {
-						//TODO maybe we should move backwards, but that could cause trouble if a wall gets in the ultrasonic sensors range
-	//					manager.sendBackwardCommand(Math.abs(distanceToMove));
-	//					System.out.println("Sending backward command - distance: " + Math.abs(distanceToMove));
-					} else {
-						manager.sendForwardCommand(distanceToMove);
-						System.out.println("Sending forward command - distance: " + distanceToMove);
-					}
-					Delay.msDelay(2000);
+//					if (distanceToMove < 0) {
+//						//TODO maybe we should move backwards, but that could cause trouble if a wall gets in the ultrasonic sensors range
+////						manager.sendBackwardCommand(Math.abs(distanceToMove));
+////						System.out.println("Sending backward command - distance: " + Math.abs(distanceToMove));
+//					} else {
+//						manager.sendForwardCommand(distanceToMove);
+//						System.out.println("Sending forward command - distance: " + distanceToMove);
+//					}
+//					Delay.msDelay(2000);
+					if (distanceToMove < 0)
+						distanceToMove = 0;
 					if (targetManager.isBallWaypoint(currentWaypoint)) {
-						manager.sendPickCommand();
+						manager.sendPickCommand(distanceToMove);
 						robotHasBall = true;
-						System.out.println("Sending pick command");
+						System.out.println("Sending pick command - distance: " + distanceToMove);
+						targetManager.waypointReached(robotName);
 					} else {
-						manager.sendDropCommand();
-						System.out.println("Sending drop command");
-						Delay.msDelay(2000);
-						manager.terminate();
-						System.out.println("Sending terminate command");
+						manager.sendDropCommand(distanceToMove);
+						System.out.println("Sending drop command - distance: " + distanceToMove);
+						targetManager.waypointReached(robotName);
 					}
 				} else {
 					manager.sendForwardCommand(distanceToMove);
 					System.out.println("Sending forward command - distance: " + distanceToMove);
+					targetManager.waypointReached(robotName);
 				}
-				targetManager.waypointReached(robotName);
 			}
 			System.out.println();
 		}
