@@ -170,7 +170,6 @@ public class ConverterV2 {
 				++index;
 			} else {
 				int topAddition = checkTopSideOfLine((int) line.x2, (int) line.y1 + halfRoboterSize, lines);
-				System.out.println(topAddition);
 				lines[index] = new Line(line.x1 - halfRoboterSize, line.y1 - halfRoboterSize + 1 - topAddition, line.x1 + halfRoboterSize, line.y1 - halfRoboterSize + 1 - topAddition);
 				++index;
 				lines[index] = new Line(line.x1 + halfRoboterSize, line.y1 - halfRoboterSize + 1 - topAddition, line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1);

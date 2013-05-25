@@ -26,8 +26,8 @@ public class PathFinder {
 	private boolean mapChanged = true;
 	
 	//two values which will be used for the line map converting process
-	public static final int ROBOT_LENGTH_IN_TILES = 30 / 4; //30 cm
-	public static final int ROBOT_WIDTH_IN_TILES = 20 / 4; //20 cm
+	public static final float ROBOT_LENGTH_IN_TILES = 30 / 4; //30 cm
+	public static final float ROBOT_WIDTH_IN_TILES = 20 / 4; //20 cm
 	
 	/**
 	 * Initialises a PathFinder with the LineMap to use from now on.
@@ -98,7 +98,7 @@ public class PathFinder {
 			nextAction(currentPose, manager);
 		} else {
 			int deltaDir = (int) Math.abs(targetDir - currentPose.getHeading());
-			if (deltaDir > 2) {//turn robot
+			if (deltaDir > 2 && deltaDir < 358) {//turn robot
 				manager.sendTurnCommand(targetDir);
 				System.out.println("Sending turn command - degrees: " + targetDir);
 			}
@@ -113,7 +113,6 @@ public class PathFinder {
 //						manager.sendForwardCommand(distanceToMove);
 //						System.out.println("Sending forward command - distance: " + distanceToMove);
 //					}
-//					Delay.msDelay(2000);
 					if (distanceToMove < 0)
 						distanceToMove = 0;
 					if (targetManager.isBallWaypoint(currentWaypoint)) {
