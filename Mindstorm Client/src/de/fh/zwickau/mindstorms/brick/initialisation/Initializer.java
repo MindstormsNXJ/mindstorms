@@ -25,7 +25,7 @@ public class Initializer implements ButtonListener {
 	}
 
 	private Robot robot;
-	private final double STD_DRIVE_TRANSLATION = 38.0 / 10;
+	private final double STD_DRIVE_TRANSLATION = 35.0 / 10;
 
 	// config Flags and Enums
 	private boolean hasToCalibrate = false;

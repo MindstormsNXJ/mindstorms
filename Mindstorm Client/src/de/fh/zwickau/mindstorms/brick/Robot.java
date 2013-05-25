@@ -1,6 +1,7 @@
 package de.fh.zwickau.mindstorms.brick;
 
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
+import de.fh.zwickau.mindstorms.brick.sensors.MyObjectCentralisation;
 import de.fh.zwickau.mindstorms.brick.task.Pick;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.Motor;
@@ -117,7 +118,7 @@ public class Robot {
 	 * the grabber.
 	 */
 	public void pickItem() {
-		// do centralisation first
+		new MyObjectCentralisation(this);
 		if( ! picker.pickItem() )
 			pickItem();		// attention, this could be an infinite loop, should be changed
 	}
