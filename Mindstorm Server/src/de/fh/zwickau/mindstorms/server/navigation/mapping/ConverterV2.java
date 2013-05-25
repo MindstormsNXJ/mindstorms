@@ -52,7 +52,7 @@ public class ConverterV2 {
 					}
 					{
 						//find top end of line
-						++y; //one field over the found field
+						++y; //one field under the found field
 						while (bytes[i][y] != 0) {
 							++y; //the line continues
 						}
@@ -73,14 +73,14 @@ public class ConverterV2 {
 				}
 			}
 		}		
-		Line[] lines = broadenLines(lineList, (int) halfRoboterSize + 1); //add the necessary buffer to avoid collisions; +1 to always round up
+		Line[] lines = broadenLines(lineList, (int) halfRoboterSize + 1); //add the necessary buffer to avoid collisions; +1 for always round up
 		lines = movePointsToWorldCoordinates(lines, maxAbsValue, gridMap.getTileSize());
 		LineMap lineMap = new LineMap(lines, bounds);
 		return lineMap;
 	}
 	
 	/**
-	 * This method flips the byte array upside down - necessary because for my algorithm the point (0,0) is in the bottom left
+	 * This method flips the byte array upside down - necessary because for my algorithm the point (0,0) is in the top left
 	 * corner, not in the top left like in the MapGrid.
 	 * 
 	 * @param bytes the byte array to flip
@@ -231,7 +231,7 @@ public class ConverterV2 {
 	}
 	
 	/**
-	 * Converts the given array of lines into world coordinates (so far, they are all relative to the point (0,0) in the bottom
+	 * Converts the given array of lines into world coordinates (so far, they are all relative to the point (0,0) in the top
 	 * left corner). We assume, that the max absolute value is equal on both sides.
 	 * 
 	 * @param lines the line array to convert
@@ -256,9 +256,9 @@ public class ConverterV2 {
 	}
 	
 	/**
-	 * Calculates the quadrant a point would have in a 2D coordinate system. The point is still relative to the bottom left corner.
+	 * Calculates the quadrant a point would have in a 2D coordinate system. The point is still relative to the top left corner.
 	 * 
-	 * @param point the point which's quadrant is needed, relative to the bottom left corner
+	 * @param point the point which's quadrant is needed, relative to the top left corner
 	 * @param maxAbsValue the maximal absolute value to both sides in the coordinate system
 	 * @return the quadrant of the given point
 	 */
@@ -277,9 +277,9 @@ public class ConverterV2 {
 	}
 	
 	/**
-	 * Returns a new point which represents the old one (relative to the bottom left corner) in world coordinates.
+	 * Returns a new point which represents the old one (relative to the top left corner) in world coordinates.
 	 * 
-	 * @param point the old point to convert, relative to the bottom left corner
+	 * @param point the old point to convert, relative to the top left corner
 	 * @param quadrant the new points theoretical quadrant
 	 * @param maxAbsValue the maximal absolute value to both sides of the coordinate system
 	 * @return the new point in the 2D coordinate system
