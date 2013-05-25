@@ -22,7 +22,7 @@ public class ConverterV2 {
 	 * @param halfRoboterSize the half robot size, which will be added to the grid positions to avoid collisions
 	 * @return the line map which represents the grid map
 	 */
-	public static LineMap convertGridToLineMap(MapGrid gridMap, int halfRoboterSize) {
+	public static LineMap convertGridToLineMap(MapGrid gridMap, float halfRoboterSize) {
 		int maxAbsValue = gridMap.getGridSize() / 2;
 		Rectangle bounds = new Rectangle(-maxAbsValue, maxAbsValue, 2 * maxAbsValue, 2 * maxAbsValue);
 		ArrayList<Line> lineList = new ArrayList<Line>();
@@ -73,7 +73,7 @@ public class ConverterV2 {
 				}
 			}
 		}		
-		Line[] lines = broadenLines(lineList, halfRoboterSize); //add the necessary buffer to avoid collisions
+		Line[] lines = broadenLines(lineList, (int) halfRoboterSize + 1); //add the necessary buffer to avoid collisions; +1 to always round up
 		lines = movePointsToWorldCoordinates(lines, maxAbsValue, gridMap.getTileSize());
 		LineMap lineMap = new LineMap(lines, bounds);
 		return lineMap;
