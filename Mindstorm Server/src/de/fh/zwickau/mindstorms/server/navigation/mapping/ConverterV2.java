@@ -120,7 +120,12 @@ public class ConverterV2 {
 	 */
 	private static boolean containsPoint(Line line, int xCor, int yCor) {
 		//only to use for our horizontal and vertical lines
-		if (line.y1 == line.y2) { //horizontal line
+		if (line.x1 == line.x2 && line.y1 == line.y2) { //the line is only one point
+			if ((int) line.x1 == xCor && (int) line.y1 == yCor)
+				return true;
+			else
+				return false;
+		} else if (line.y1 == line.y2) { //horizontal line
 			if (yCor != line.y1)
 				return false;
 			else {
