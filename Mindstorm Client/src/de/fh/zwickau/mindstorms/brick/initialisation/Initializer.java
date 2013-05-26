@@ -39,23 +39,22 @@ public class Initializer implements ButtonListener {
 
 		robot = new Robot();
 		initialize();
-		// establish connection to the server
-		if (mode == Mode.SERVERMODE) {
+		
+		switch (mode) {
+		case SERVERMODE:
+			// establish connection to the server
 			robot.positionManager.rotateTo(0);
 			new ConnectionManager(robot);
-		}
-
-		// try to centralize the Object in front of
-		if (mode == Mode.CENTRALISATION) {
+			break;
+		case CENTRALISATION:
+			// try to centralize the Object in front of
 			new ObjectCentralisation(robot);
-		}
-
-		// place testing here
-		if (mode == Mode.TEST) {
-
-		}
-
-		if (mode == Mode.PICKERTEST) {
+			break;
+		case TEST:
+			// place testing her
+			break;
+		case PICKERTEST:
+			// testing for the pick and drop mechanism
 			for (int i = 0 ; i < 1 ; i++ ){
 				robot.pickItem();
 //				robot.picker.pickerDown();
@@ -71,6 +70,7 @@ public class Initializer implements ButtonListener {
 //			robot.positionManager.rotate(90, Direction.RIGHT);
 //			robot.putDown();
 //			robot.positionManager.move(-10);
+			break;
 		}
 	}
 
@@ -108,10 +108,6 @@ public class Initializer implements ButtonListener {
 			}
 			Sound.beep();
 		}
-	}
-
-	public Robot getRobot() {
-		return robot;
 	}
 
 	@Override
