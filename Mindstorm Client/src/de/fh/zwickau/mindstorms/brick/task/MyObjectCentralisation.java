@@ -54,7 +54,7 @@ public class MyObjectCentralisation {
 				isdetected = checkReallyOutOfRange();
 			Delay.msDelay(50);
 		}
-		Delay.msDelay(3000); //to stop the vibration of the compass sensor
+		Delay.msDelay(5000); //to stop the vibration of the compass sensor
 		int rightBorderAngle = (int) robot.compassSensor.getDegrees();
 		return rightBorderAngle;
 	}
@@ -67,7 +67,7 @@ public class MyObjectCentralisation {
 				isdetected = checkReallyOutOfRange();
 			Delay.msDelay(50);
 		}
-		Delay.msDelay(3000); //to stop the vibration of the compass sensor
+		Delay.msDelay(5000); //to stop the vibration of the compass sensor
 		int leftBorderAngle = (int) robot.compassSensor.getDegrees();
 		return leftBorderAngle;
 	}
@@ -79,11 +79,10 @@ public class MyObjectCentralisation {
 			if (Math.abs(newDistance - distance) >= 5)
 				++out;
 		}
-		if (out > 2)
+		if (out > 4)
 			return false;
 		else
 			return true;
-			
 	}
 
 }

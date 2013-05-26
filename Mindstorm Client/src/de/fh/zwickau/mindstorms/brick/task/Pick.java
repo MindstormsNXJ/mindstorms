@@ -93,6 +93,9 @@ public class Pick {
 			}
 			else{
 				System.out.println("no color");
+				pickerDown();
+				robot.positionManager.move(-50);
+				pickerUp();
 				return false;
 			}
 		}
