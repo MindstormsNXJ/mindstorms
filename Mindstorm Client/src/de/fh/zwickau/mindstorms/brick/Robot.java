@@ -90,6 +90,7 @@ public class Robot {
 	}
 
 	/**
+	 * This method returns the current direction, already casted to an integer.
 	 * 
 	 * @return current degrees directly from the compass sensor
 	 */
@@ -98,9 +99,9 @@ public class Robot {
 	}
 
 	/**
-	 * Sets the current driveTranslation used to control the motors
+	 * Sets the current driveTranslation used to control the motors.
 	 * 
-	 * @param driveTranslation
+	 * @param driveTranslation the drive translation to set
 	 */
 	public void setDriveTranslation(double driveTranslation) {
 		this.driveTranslation = driveTranslation;
@@ -127,8 +128,16 @@ public class Robot {
 		}
 	}
 	
+	/**
+	 * This method moves the robot in front of the target and drops the item.
+	 */
 	public void dropItem(){
-		picker.dropItem();
+		try {
+			new MyObjectCentralisation(this);
+			picker.dropItem();
+		} catch (IllegalStateException ex) {
+			System.err.println("Nothing to centralize on"); //TODO find a solution if this happens
+		}
 	}
 
 }
