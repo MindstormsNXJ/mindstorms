@@ -1,4 +1,4 @@
-package de.fh.zwickau.mindstorms.brick.sensors;
+package de.fh.zwickau.mindstorms.brick.task;
 
 import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
@@ -11,20 +11,38 @@ public class MyObjectCentralisation {
 	private boolean isdetected = true;
 	private int startAngle;
 
-	public MyObjectCentralisation(Robot robot) {
+	public MyObjectCentralisation(Robot robot) throws IllegalStateException {
 		this.robot = robot;
 		startAngle = (int) robot.compassSensor.getDegrees();
-		int targetAngle = calcAngle(scanLeft(), scanRight());
+		initDistance();
+		int leftBorder = scanLeft();
+		reset();
+		int rightBorder = scanRight();
+		int targetAngle = calcAngle(leftBorder, rightBorder);
 		System.out.println(targetAngle);
 		robot.positionManager.rotateTo(targetAngle);
+	}
+	
+	private void initDistance() throws IllegalStateException {
+		long startTime = System.currentTimeMillis();
+		while ((distance = robot.ultrasonicSensor.getDistance()) == 255) {
+			if (System.currentTimeMillis() - startTime >= 10000) //10 seconds
+				throw new IllegalStateException("Nothing to centralize on");
+			Delay.msDelay(50);
+		}
+		System.out.println(distance);
+	}
+	
+	private void reset() {
+		robot.positionManager.rotateTo(startAngle);
+		isdetected = true;
 	}
 
 	private int calcAngle(int leftAngle, int rightAngle) {
 		int centralAngle = 0;
 		centralAngle = (leftAngle + rightAngle) / 2;
-		if (leftAngle > rightAngle) {
+		if (leftAngle > rightAngle) 
 			centralAngle += 180;
-		}
 		return centralAngle;
 	}
 
@@ -32,32 +50,25 @@ public class MyObjectCentralisation {
 		while (isdetected) {
 			robot.positionManager.rotate(3, Direction.RIGHT);
 			int newDistance = robot.ultrasonicSensor.getDistance();
-			if (Math.abs(newDistance - distance) >= 5) {
+			if (Math.abs(newDistance - distance) >= 5) 
 				isdetected = checkReallyOutOfRange();
-				System.out.println("Out: " + newDistance);
-			}
 			Delay.msDelay(50);
 		}
+		Delay.msDelay(3000); //to stop the vibration of the compass sensor
 		int rightBorderAngle = (int) robot.compassSensor.getDegrees();
 		return rightBorderAngle;
 	}
 
 	private int scanLeft() {
-		while ((distance = robot.ultrasonicSensor.getDistance()) == 255)
-			;
-		System.out.println(distance);
 		while (isdetected) {
 			robot.positionManager.rotate(3, Direction.LEFT);
 			int newDistance = robot.ultrasonicSensor.getDistance();
-			if (Math.abs(newDistance - distance) >= 5) {
+			if (Math.abs(newDistance - distance) >= 5) 
 				isdetected = checkReallyOutOfRange();
-				System.out.println("Out: " + newDistance);
-			}
 			Delay.msDelay(50);
 		}
+		Delay.msDelay(3000); //to stop the vibration of the compass sensor
 		int leftBorderAngle = (int) robot.compassSensor.getDegrees();
-		robot.positionManager.rotateTo(startAngle);
-		isdetected = true;
 		return leftBorderAngle;
 	}
 	
