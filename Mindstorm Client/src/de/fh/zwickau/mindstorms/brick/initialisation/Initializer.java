@@ -89,17 +89,14 @@ public class Initializer implements ButtonListener {
 	private void calibrate() {
 		{
 			if (hasToCalibrate) {
-				System.out.println("calibrate");
+				System.out.println("calibrating");
 				{
 					// calculate driveTranslation
-					DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(
-							robot.leftMotor, robot.rightMotor, robot.ultrasonicSensor);
+					DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(robot.leftMotor, robot.rightMotor, robot.ultrasonicSensor);
 					robot.driveTranslation = driveTranslationCalibrator.getDriveTranslation() / 10;
 
 					// calibrate compass sensor
-					new CompassCalibrator(
-							robot.leftMotor, robot.rightMotor, robot.compassSensor);
-
+					new CompassCalibrator(robot);
 				}
 				System.out.println("calibrated");
 			} else {
