@@ -9,9 +9,9 @@ uniform vec4 v4_goal;
 uniform vec4 v4_robot;
 
 bool isRelativeEqual(vec4 area_color, vec4 v4){
-	vec4 min = v4 - v4.a;
-	vec4 max = v4 + v4.a;
-	return (all(lessThanEqual(area_color, min)) && all(greaterThanEqual(area_color, max)));
+	vec3 min = v4.rgb - v4.a;
+	vec3 max = v4.rgb + v4.a;
+	return (all(greaterThanEqual(area_color.rgb, min)) && all(lessThanEqual(area_color.rgb, max)));
 }
 
 void main(void)

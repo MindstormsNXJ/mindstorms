@@ -227,7 +227,12 @@ public class GraphicCanvas extends Thread {
     	glClear(GL_COLOR_BUFFER_BIT);
     	
     	ShaderManager.useShader("compute");
-    	glUniform4f(ShaderManager.getUniformLocation("color"),0.5f,1.0f,0.0f,1.0f);
+    	glUniform4f(ShaderManager.getUniformLocation("color"),0.5f,1.0f,0.0f,1.0f); // not needed later
+    	
+    	glUniform4f(ShaderManager.getUniformLocation("v4_obstacle"), 0.0f, 0.5f, 1.0f, 0.25f);
+    	glUniform4f(ShaderManager.getUniformLocation("v4_ball"),     0.0f, 0.0f, 1.0f, 0.5f);
+    	glUniform4f(ShaderManager.getUniformLocation("v4_goal"),     0.0f, 1.0f, 0.0f, 0.5f);
+    	glUniform4f(ShaderManager.getUniformLocation("v4_robot"),    0.0f, 0.0f, 0.0f, 0.5f);
     	
     	tex_camera.Bind(0);
     	
