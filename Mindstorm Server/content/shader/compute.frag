@@ -3,6 +3,11 @@ varying vec2 ex_uv;
 
 uniform sampler2D tex;
 
+uniform vec4 v4_obstacle;
+uniform vec4 v4_ball;
+uniform vec4 v4_goal;
+uniform vec4 v4_robot;
+
 void main(void)
 { 
 	vec4 color = texture2D(tex,ex_uv);
