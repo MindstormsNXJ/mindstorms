@@ -25,7 +25,7 @@ public class Initializer implements ButtonListener {
 	}
 
 	private Robot robot;
-	private final double STD_DRIVE_TRANSLATION = 38.0 / 10;
+	private final double STD_DRIVE_TRANSLATION = 35.0 / 10;
 
 	// config Flags and Enums
 	private boolean hasToCalibrate = false;
@@ -39,23 +39,22 @@ public class Initializer implements ButtonListener {
 
 		robot = new Robot();
 		initialize();
-		// establish connection to the server
-		if (mode == Mode.SERVERMODE) {
+		
+		switch (mode) {
+		case SERVERMODE:
+			// establish connection to the server
 			robot.positionManager.rotateTo(0);
 			new ConnectionManager(robot);
-		}
-
-		// try to centralize the Object in front of
-		if (mode == Mode.CENTRALISATION) {
+			break;
+		case CENTRALISATION:
+			// try to centralize the Object in front of
 			new ObjectCentralisation(robot);
-		}
-
-		// place testing here
-		if (mode == Mode.TEST) {
-
-		}
-
-		if (mode == Mode.PICKERTEST) {
+			break;
+		case TEST:
+			// place testing her
+			break;
+		case PICKERTEST:
+			// testing for the pick and drop mechanism
 			for (int i = 0 ; i < 1 ; i++ ){
 				robot.pickItem();
 //				robot.picker.pickerDown();
@@ -71,6 +70,7 @@ public class Initializer implements ButtonListener {
 //			robot.positionManager.rotate(90, Direction.RIGHT);
 //			robot.putDown();
 //			robot.positionManager.move(-10);
+			break;
 		}
 	}
 
@@ -89,17 +89,14 @@ public class Initializer implements ButtonListener {
 	private void calibrate() {
 		{
 			if (hasToCalibrate) {
-				System.out.println("calibrate");
+				System.out.println("calibrating");
 				{
 					// calculate driveTranslation
-					DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(
-							robot.leftMotor, robot.rightMotor, robot.ultrasonicSensor);
+					DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(robot.leftMotor, robot.rightMotor, robot.ultrasonicSensor);
 					robot.driveTranslation = driveTranslationCalibrator.getDriveTranslation() / 10;
 
 					// calibrate compass sensor
-					new CompassCalibrator(
-							robot.leftMotor, robot.rightMotor, robot.compassSensor);
-
+					new CompassCalibrator(robot);
 				}
 				System.out.println("calibrated");
 			} else {
@@ -108,10 +105,6 @@ public class Initializer implements ButtonListener {
 			}
 			Sound.beep();
 		}
-	}
-
-	public Robot getRobot() {
-		return robot;
 	}
 
 	@Override
