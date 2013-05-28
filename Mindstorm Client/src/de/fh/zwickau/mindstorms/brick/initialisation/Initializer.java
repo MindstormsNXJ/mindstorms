@@ -28,7 +28,7 @@ public class Initializer implements ButtonListener {
 
 	// config Flags and Enums
 	private boolean hasToCalibrate = false;
-	private Mode mode = Mode.CENTRALISATION;
+	private Mode mode = Mode.SERVERMODE;
 
 	/**
 	 * Initialises the NXT and adds a button listener to the escape button, that

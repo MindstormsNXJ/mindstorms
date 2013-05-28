@@ -1,10 +1,8 @@
 package de.fh.zwickau.mindstorms.brick.task;
 
-import java.lang.annotation.Target;
-
-import lejos.nxt.Button;
 import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
+import de.fh.zwickau.mindstorms.brick.navigation.Direction;
 
 public class ObjectCentralisation {
 
@@ -15,6 +13,7 @@ public class ObjectCentralisation {
 	private boolean scanning, centralizing;
 	private int speed = 25;
 	private Runnable detector;
+
 	public ObjectCentralisation(Robot robot) {
 		this.robot = robot;
 	}
@@ -28,6 +27,26 @@ public class ObjectCentralisation {
 
 	}
 
+	private void preScan() {
+		distance = robot.ultrasonicSensor.getDistance();
+		startangle = robot.getDirection();
+//		System.out.println(distance);
+		for (int i = 1; ((distance > 40) && i<=4); i++) {
+			System.out.println(i);
+			if (distance > 40) {
+				robot.positionManager.rotateTo((startangle -i*10)%360);
+				distance = robot.ultrasonicSensor.getDistance();
+//				System.out.println(distance);
+			}
+			if (distance > 40) {
+				robot.positionManager.rotateTo((startangle+i*10)%360);
+				distance = robot.ultrasonicSensor.getDistance();
+//				System.out.println(distance);
+			}
+		}
+		startangle = robot.getDirection();
+	}
+
 	private void rotate(int targetAngle) {
 		System.out.println(targetAngle);
 		robot.positionManager.rotateTo(targetAngle);
@@ -35,33 +54,24 @@ public class ObjectCentralisation {
 
 	private int scan() {
 		int left = scanLeft();
+		robot.positionManager.rotateTo(startangle);
 		int right = scanRight();
 		return calcAngle(left, right);
-
 	}
 
 	private void initialize() {
-		startangle = robot.getDirection();
-		do {
-			distance = robot.ultrasonicSensor.getDistance();
-		} while (distance > 50);
+		preScan();
 		detector = new Runnable() {
 			@Override
 			public void run() {
-				System.out.println("run");
 				while (centralizing) {
-
 					if (scanning) {
 						int variance = (int) robot.ultrasonicSensor.getRange()
 								- distance;
-						System.out.println(distance + "\t" + variance);
-						// TODO make detection more flexible by reset distance
 						if (scanVariance < variance) {
-							System.out.println(" stop");
 							stop();
 							// robot.positionManager.stop();
 						} else {
-							System.out.println(" not stop");
 						}
 					}
 					Delay.msDelay(interval);
@@ -88,7 +98,6 @@ public class ObjectCentralisation {
 
 		scanning = false;
 		int right = robot.getDirection();
-		robot.positionManager.rotateTo(startangle);
 		return right;
 	}
 
@@ -98,7 +107,6 @@ public class ObjectCentralisation {
 		// robot.positionManager.rotate(90, Direction.LEFT);
 		scanning = false;
 		int left = robot.getDirection();
-		robot.positionManager.rotateTo(startangle);
 		return left;
 	}
 
