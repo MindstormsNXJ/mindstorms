@@ -67,7 +67,7 @@ public class ConnectionManager {
 						System.err.println("Connection failed, will retry in 10 seconds...");
 						Delay.msDelay(10000);
 					}
-					receiveAndProcessPoses();
+					receiveAndProceccStrings();
 				}
 			}
 			
@@ -125,9 +125,9 @@ public class ConnectionManager {
 	}
 	
 	/**
-	 * Starts the Thread that will listen for received Poses and process them afterwards.
+	 * Starts the Thread that will listen for received Strings and process them afterwards.
 	 */
-	private void receiveAndProcessPoses() {
+	private void receiveAndProceccStrings() {
 		while (!terminate) {
 			try {
 				System.out.println("Waiting to receive String or Pose...");
@@ -136,12 +136,12 @@ public class ConnectionManager {
 				decodeString(receivedString);
 			} catch (EOFException ex) {
 				System.err.println("Connection terminated by NXT");
-				if (!terminate && targetManager.hasMoreWaypoints(robotName)) {
+				if (!terminate && (targetManager.hasMoreWaypoints(robotName) || !pathFinder.hasRobotBall())) {
 					System.err.println("Resetting connection");
 					while (!establishConnection())
 						Delay.msDelay(2000);
 				} else {
-					terminate();
+					terminate(false);
 					break;
 				}
 			} catch (IOException ex) {
@@ -166,7 +166,7 @@ public class ConnectionManager {
 				Pose pose = decodePose(receivedString.split(":")[1]);
 				mapper.addPose(pose, robotName);
 				System.out.println("Sending terminate command");
-				terminate();
+				terminate(true);
 			}
 		} else if (receivedString.charAt(0) == 'x') { //a pose was received
 			Pose pose = decodePose(receivedString);
@@ -273,16 +273,20 @@ public class ConnectionManager {
 	
 	/**
 	 * Terminates the NXT and closes this connection.
+	 * 
+	 * @param connectionStillEstablished true, if a terminate command should be send to the robot
 	 */
-	public void terminate() {
-		sendCommand("exit0");
-		System.out.println("NXT " + robotName + " is shutting down");
-		try {
-			commandSender.close();
-			stringReceiver.close();
-			connector.close();
-		} catch (IOException e) {
-			System.err.println("Could not close sockets to NXT");
+	public void terminate(boolean connectionStillEstablished) {
+		if (connectionStillEstablished) {
+			sendCommand("exit0");
+			System.out.println("NXT " + robotName + " is shutting down");
+			try {
+				commandSender.close();
+				stringReceiver.close();
+				connector.close();
+			} catch (IOException e) {
+				System.err.println("Could not close sockets to NXT - already closed");
+			}
 		}
 		targetManager.removeRobot(robotName);
 		server.removeConnection(this);
@@ -296,6 +300,9 @@ public class ConnectionManager {
 		sendCommand("query0");
 	}
 	
+	/**
+	 * Should be called whenever the maps changes.
+	 */
 	public void mapChaged(){
 		pathFinder.mapChanged(mapper.getLineMap());
 	}

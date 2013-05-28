@@ -167,4 +167,13 @@ public class PathFinder {
 		((ShortestPathFinder) finder).setMap(newMap);
 	}
 	
+	/**
+	 * Says weather the robot has the ball or not.
+	 * 
+	 * @return true, if the robot already has the ball
+	 */
+	public boolean hasRobotBall() {
+		return robotHasBall;
+	}
+	
 }
