@@ -8,7 +8,6 @@ import lejos.robotics.navigation.Pose;
 import de.fh.zwickau.mindstorms.brick.Robot;
 import de.fh.zwickau.mindstorms.brick.communication.ConnectionManager;
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
-import de.fh.zwickau.mindstorms.brick.sensors.ObjectCentralisation;
 
 /**
  * This class is responsible for managing all tasks that have to be performed
@@ -29,7 +28,7 @@ public class Initializer implements ButtonListener {
 
 	// config Flags and Enums
 	private boolean hasToCalibrate = false;
-	private Mode mode = Mode.SERVERMODE;
+	private Mode mode = Mode.CENTRALISATION;
 
 	/**
 	 * Initialises the NXT and adds a button listener to the escape button, that
@@ -48,7 +47,11 @@ public class Initializer implements ButtonListener {
 			break;
 		case CENTRALISATION:
 			// try to centralize the Object in front of
-			new ObjectCentralisation(robot);
+			System.out.println("centralize");
+			Button.ENTER.waitForPressAndRelease();
+			robot.centralizer.centralize();
+			Button.ENTER.waitForPressAndRelease();
+//			robot.pickItem();
 			break;
 		case TEST:
 			// place testing her
