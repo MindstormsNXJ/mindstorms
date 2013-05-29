@@ -51,9 +51,9 @@ public class GraphicCanvas extends Thread {
     private Camera camera;
     private TargetManager targetM;
     
-    private Boolean mapChanged;
-    private Boolean targetChanged;
-    private Boolean cameraChanged;
+    private boolean mapChanged;
+    private boolean targetChanged;
+    private boolean cameraChanged;
     private Semaphore semaphore;
     
     
@@ -145,12 +145,37 @@ public class GraphicCanvas extends Thread {
         //Map update if it was changed
         if (mapChanged) {
             rebuildMap();
+            try {
+                semaphore.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            mapChanged = false;
+            semaphore.release();
         }
         if (targetChanged) {
             rebuildTargets();
+            try {
+                semaphore.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            targetChanged = false;
+            semaphore.release();
         }
         if (cameraChanged) {
         	updateCamera();
+            try {
+                semaphore.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            cameraChanged = false;
+            semaphore.release();
+        	
         }
         
         input();    
@@ -163,7 +188,6 @@ public class GraphicCanvas extends Thread {
      * And generate the new LineMap view.
      */
     private void rebuildMap() {
-        setFalse(mapChanged);
     
         MapGrid grid = mapper.getGrid();
         final int g_size = grid.getGridSize();
@@ -229,13 +253,13 @@ public class GraphicCanvas extends Thread {
     	ShaderManager.useShader("compute");
     	glUniform4f(ShaderManager.getUniformLocation("color"),0.5f,1.0f,0.0f,1.0f); // not needed later
     	
-    	glUniform4f(ShaderManager.getUniformLocation("v4_obstacle"), 0.0f, 0.5f, 1.0f, 0.25f);
-    	glUniform4f(ShaderManager.getUniformLocation("v4_ball"),     0.0f, 0.0f, 1.0f, 0.5f);
-    	glUniform4f(ShaderManager.getUniformLocation("v4_goal"),     0.0f, 1.0f, 0.0f, 0.5f);
+    	glUniform4f(ShaderManager.getUniformLocation("v4_obstacle"), 0.7f, 0.6f, 0.4f, 0.2f);
+    	glUniform4f(ShaderManager.getUniformLocation("v4_obstacle2"), 0.8f, 0.7f, 0.6f, 0.1f);
+    	glUniform4f(ShaderManager.getUniformLocation("v4_ball"),     1.0f, 0.3f, 0.3f, 0.30f);
+    	glUniform4f(ShaderManager.getUniformLocation("v4_goal"),     1.0f, 1.0f, 0.0f, 0.30f);
     	glUniform4f(ShaderManager.getUniformLocation("v4_robot"),    0.0f, 0.0f, 0.0f, 0.5f);
     	
     	tex_camera.Bind(0);
-    	
     	
     	Rectangle quad = new Rectangle();
     	quad.Draw();
@@ -447,14 +471,28 @@ public class GraphicCanvas extends Thread {
      * Tells view that the map has changed (Thread safe)
      */
     public void mapChanged() {
-        setTrue(mapChanged);
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        mapChanged = true;
+        semaphore.release();
     }
 
     /**
      * Tells view that the Target has changed (Thread safe)
      */
     public void targetChanged() {
-            setTrue(targetChanged);
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        targetChanged = true;
+        semaphore.release();
     }
     
     private void setTrue(Boolean bool){
@@ -464,20 +502,7 @@ public class GraphicCanvas extends Thread {
             e.printStackTrace();
         }
 
-        bool = true;
+        bool = new Boolean(true);
         semaphore.release();
     }
-    
-    private void setFalse(Boolean bool){
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        bool = false;
-        semaphore.release();
-    }   
-    
-
 }

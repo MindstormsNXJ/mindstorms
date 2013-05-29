@@ -21,7 +21,7 @@ public class Camera {
 	int width, height;
 	
     public Camera(){
-    	readNewPhoto("test.bmp");
+    	readNewPhoto("bild.bmp");
     }
     
     

@@ -4,6 +4,7 @@ varying vec2 ex_uv;
 uniform sampler2D tex;
 
 uniform vec4 v4_obstacle;
+uniform vec4 v4_obstacle2;
 uniform vec4 v4_ball;
 uniform vec4 v4_goal;
 uniform vec4 v4_robot;
@@ -24,7 +25,7 @@ void main(void)
 	vec4 area_color = texture2D(tex,ex_uv);
 
 	// Obstacle Check
-	if(isRelativeEqual(area_color, v4_obstacle)){
+	if(isRelativeEqual(area_color, v4_obstacle) || isRelativeEqual(area_color, v4_obstacle2)){
 		gl_FragColor = v4_obstacle_final;
 		return;
 	}
@@ -48,7 +49,7 @@ void main(void)
 	}
 	
 	// if we are here we had nothig detected
-	float m = (area_color.r + area_color.g + area_color.b) / 3.0;
-	gl_FragColor = vec4(m,m,m,1.0);
+	//float m = (area_color.r + area_color.g + area_color.b) / 3.0;
+	gl_FragColor = vec4(1.0,1.0,1.0,1.0);
 	
 }
