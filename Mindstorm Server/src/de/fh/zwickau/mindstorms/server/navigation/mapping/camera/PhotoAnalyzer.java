@@ -1,4 +1,4 @@
-package de.fh.zwickau.mindstorms.server.navigation.mapping;
+package de.fh.zwickau.mindstorms.server.navigation.mapping.camera;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -17,7 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.Camera;
 
 public class PhotoAnalyzer {
 

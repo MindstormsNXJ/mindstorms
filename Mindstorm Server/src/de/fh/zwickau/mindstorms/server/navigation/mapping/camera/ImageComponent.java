@@ -1,4 +1,4 @@
-package de.fh.zwickau.mindstorms.server.navigation.mapping;
+package de.fh.zwickau.mindstorms.server.navigation.mapping.camera;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
