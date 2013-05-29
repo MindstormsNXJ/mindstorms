@@ -17,6 +17,7 @@ import org.lwjgl.BufferUtils;
 public class Camera {
     
 	ByteBuffer byteBuffer = null;
+	BufferedImage image = null;
 	
 	int width, height;
 	
@@ -31,7 +32,7 @@ public class Camera {
      */
     public void readNewPhoto(String input){
 		
-    	BufferedImage image = null;
+    	
     	
         try {
             File imagefile = new File("content/photos/"+input);
@@ -80,6 +81,11 @@ public class Camera {
     
 	public ByteBuffer getByteBuffer() {
 		return byteBuffer;
+	}
+
+
+	public BufferedImage getImage() {
+		return image;
 	}
 
 }

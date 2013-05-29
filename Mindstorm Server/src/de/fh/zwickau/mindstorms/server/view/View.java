@@ -36,6 +36,7 @@ public class View {
     
     // Buttons
     private JButton buttonSaveMap;
+    private JButton buttonOpenPhotoAnalyzer;;
 
 	
 	public View() {
@@ -62,7 +63,7 @@ public class View {
 	    JPanel buttonPanel = new JPanel();
 	    
 	    buttonPanel.add(buttonSaveMap);
-	    
+	    buttonPanel.add(buttonOpenPhotoAnalyzer);
 	    mainPanel.add(buttonPanel);
 	    /////////////////////////////////////////////////////////////////////////
 	    jFrame.getContentPane().add(mainPanel);
@@ -77,6 +78,14 @@ public class View {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 controller.saveMap();
+            }
+	    });
+	    buttonOpenPhotoAnalyzer= new JButton("Analyze Photo");
+	    buttonOpenPhotoAnalyzer.addActionListener(new ActionListener() {
+            
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                controller.setPhotoAnalyzerVisible();
             }
 	    });
 

@@ -7,12 +7,14 @@ import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.Camera;
 import de.fh.zwickau.mindstorms.server.view.View;
+import de.fh.zwickau.mindstorms.server.navigation.mapping.PhotoAnalyzer;
 
 public class Server {
 	
 	private View view;
 	private Mapper mapper;
 	private Camera camera;
+	private PhotoAnalyzer photoAnalyzer;
 	private TargetManager targetManager;
 	private ArrayList<ConnectionManager> connectionManagers;
 
@@ -22,6 +24,7 @@ public class Server {
 		view = new View();
 		mapper = new Mapper(4);
         camera = new Camera();
+        photoAnalyzer= new PhotoAnalyzer(camera);
 		targetManager = TargetManager.getInstance();
 		
 		mapper.setBallPosition(targetManager.getBallWaypoint());
@@ -67,5 +70,9 @@ public class Server {
 	public void removeConnection(ConnectionManager manager) {
 		connectionManagers.remove(manager);
 	}
+	
+	 public void setPhotoAnalyzerVisible(){
+		 photoAnalyzer.setPhotoAnalyzerVisible();
+	 }
 	
 }
