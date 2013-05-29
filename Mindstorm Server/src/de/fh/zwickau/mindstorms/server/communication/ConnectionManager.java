@@ -18,7 +18,7 @@ import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 
 /**
  * The ConnectionManager is responsible for establishing the connection to the
- * NXT, receiving it's position as a Pose and sending commands to it.
+ * NXT, receiving Strings like Poses and sending commands to it.
  * 
  * @author Tobias Schießl
  * @version 2.0
@@ -64,7 +64,7 @@ public class ConnectionManager {
 					pathFinder = new PathFinder(mapper.getLineMap(), robotName);
 					
 					while (!establishConnection()) {
-						System.err.println("Connection failed, will retry in 10 seconds...");
+						System.err.println("Connection to " + robotName + " failed, will retry in 10 seconds...");
 						Delay.msDelay(10000);
 					}
 					receiveAndProceccStrings();
@@ -115,11 +115,9 @@ public class ConnectionManager {
 		connector = new NXTConnector();
 		boolean success = connector.connectTo(robotName, null, NXTCommFactory.BLUETOOTH);
 		if (success) {
-			System.out.println("Connection established via bluetooth");
+			System.out.println("Connection to " + robotName + " established via bluetooth");
 			commandSender = new DataOutputStream(connector.getOutputStream());
 			stringReceiver = new DataInputStream(connector.getInputStream());
-		} else {
-			System.err.println("Could not establish connection to NXT");
 		}
 		return success;
 	}
@@ -130,18 +128,18 @@ public class ConnectionManager {
 	private void receiveAndProceccStrings() {
 		while (!terminate) {
 			try {
-				System.out.println("Waiting to receive String or Pose...");
+				System.out.println("Waiting to receive String or Pose from " + robotName + "...");
 				String receivedString = stringReceiver.readUTF();
-				System.out.println("Received: " + receivedString);
+				System.out.println("Received from " + robotName + ": " + receivedString);
 				decodeString(receivedString);
 			} catch (EOFException ex) {
-				System.err.println("Connection terminated by NXT");
-				if (!terminate && (targetManager.hasMoreWaypoints(robotName) || !pathFinder.hasRobotBall())) {
-					System.err.println("Resetting connection");
+				System.err.println("Connection terminated by NXT " + robotName);
+				if (!terminate) {
+					System.err.println("Resetting connection to " + robotName);
 					while (!establishConnection())
 						Delay.msDelay(2000);
+					sendQueryPoseCommand();
 				} else {
-					terminate(false);
 					break;
 				}
 			} catch (IOException ex) {
@@ -165,8 +163,8 @@ public class ConnectionManager {
 			if (receivedString.contains("Ball dropped")) {
 				Pose pose = decodePose(receivedString.split(":")[1]);
 				mapper.addPose(pose, robotName);
-				System.out.println("Sending terminate command");
-				terminate(true);
+				System.out.println("Sending terminate command to " + robotName);
+				terminate();
 			}
 		} else if (receivedString.charAt(0) == 'x') { //a pose was received
 			Pose pose = decodePose(receivedString);
@@ -273,20 +271,16 @@ public class ConnectionManager {
 	
 	/**
 	 * Terminates the NXT and closes this connection.
-	 * 
-	 * @param connectionStillEstablished true, if a terminate command should be send to the robot
 	 */
-	public void terminate(boolean connectionStillEstablished) {
-		if (connectionStillEstablished) {
-			sendCommand("exit0");
-			System.out.println("NXT " + robotName + " is shutting down");
-			try {
-				commandSender.close();
-				stringReceiver.close();
-				connector.close();
-			} catch (IOException e) {
-				System.err.println("Could not close sockets to NXT - already closed");
-			}
+	public void terminate() {
+		sendCommand("exit0");
+		System.out.println("NXT " + robotName + " is shutting down");
+		try {
+			commandSender.close();
+			stringReceiver.close();
+			connector.close();
+		} catch (IOException e) { 
+			System.err.println("Could not close sockets to NXT - probably already closed");
 		}
 		targetManager.removeRobot(robotName);
 		server.removeConnection(this);
