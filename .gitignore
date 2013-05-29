@@ -13,5 +13,11 @@
 # MapFile
 *.bm
 
+# Images
+*.bmp
+*.png
+*.jpg
+
+
 # Metascheiße
 .metadata/
