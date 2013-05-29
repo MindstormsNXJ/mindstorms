@@ -1,7 +1,7 @@
 package de.fh.zwickau.mindstorms.brick;
 
 import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
-import de.fh.zwickau.mindstorms.brick.task.MyObjectCentralisation;
+import de.fh.zwickau.mindstorms.brick.task.ObjectCentralisation;
 import de.fh.zwickau.mindstorms.brick.task.Pick;
 import lejos.nxt.ColorSensor;
 import lejos.nxt.Motor;
@@ -40,6 +40,7 @@ public class Robot {
 	public final int STANDARD_DRIVE_ACC = 500;
 	
 	public Pick picker;
+	public ObjectCentralisation centralizer;
 
 	public Robot() {
 		leftMotor = Motor.A;
@@ -50,6 +51,7 @@ public class Robot {
 		touchSensor = new TouchSensor(SensorPort.S3);
 		colorSensor = new ColorSensor(SensorPort.S4);
 		picker = new Pick(this);
+		centralizer = new ObjectCentralisation(this);
 		picker.pickerUp();
 	}
 
@@ -120,7 +122,7 @@ public class Robot {
 	 */
 	public void pickItem() {
 		try {
-			new MyObjectCentralisation(this);
+			centralizer.centralize();
 			if(!picker.pickItem())
 				pickItem(); //attention, this could be an infinite loop, should be changed
 		} catch (IllegalStateException ex) {
@@ -133,7 +135,7 @@ public class Robot {
 	 */
 	public void dropItem(){
 		try {
-			new MyObjectCentralisation(this);
+			centralizer.centralize();
 			picker.dropItem();
 		} catch (IllegalStateException ex) {
 			System.err.println("Nothing to centralize on"); //TODO find a solution if this happens

@@ -18,7 +18,7 @@ import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 
 /**
  * The ConnectionManager is responsible for establishing the connection to the
- * NXT, receiving it's position as a Pose and sending commands to it.
+ * NXT, receiving Strings like Poses and sending commands to it.
  * 
  * @author Tobias Schießl
  * @version 2.0
@@ -64,10 +64,10 @@ public class ConnectionManager {
 					pathFinder = new PathFinder(mapper.getLineMap(), robotName);
 					
 					while (!establishConnection()) {
-						System.err.println("Connection failed, will retry in 10 seconds...");
+						System.err.println("Connection to " + robotName + " failed, will retry in 10 seconds...");
 						Delay.msDelay(10000);
 					}
-					receiveAndProcessPoses();
+					receiveAndProceccStrings();
 				}
 			}
 			
@@ -115,33 +115,31 @@ public class ConnectionManager {
 		connector = new NXTConnector();
 		boolean success = connector.connectTo(robotName, null, NXTCommFactory.BLUETOOTH);
 		if (success) {
-			System.out.println("Connection established via bluetooth");
+			System.out.println("Connection to " + robotName + " established via bluetooth");
 			commandSender = new DataOutputStream(connector.getOutputStream());
 			stringReceiver = new DataInputStream(connector.getInputStream());
-		} else {
-			System.err.println("Could not establish connection to NXT");
 		}
 		return success;
 	}
 	
 	/**
-	 * Starts the Thread that will listen for received Poses and process them afterwards.
+	 * Starts the Thread that will listen for received Strings and process them afterwards.
 	 */
-	private void receiveAndProcessPoses() {
+	private void receiveAndProceccStrings() {
 		while (!terminate) {
 			try {
-				System.out.println("Waiting to receive String or Pose...");
+				System.out.println("Waiting to receive String or Pose from " + robotName + "...");
 				String receivedString = stringReceiver.readUTF();
-				System.out.println("Received: " + receivedString);
+				System.out.println("Received from " + robotName + ": " + receivedString);
 				decodeString(receivedString);
 			} catch (EOFException ex) {
-				System.err.println("Connection terminated by NXT");
-				if (!terminate && targetManager.hasMoreWaypoints(robotName)) {
-					System.err.println("Resetting connection");
+				System.err.println("Connection terminated by NXT " + robotName);
+				if (!terminate) {
+					System.err.println("Resetting connection to " + robotName);
 					while (!establishConnection())
 						Delay.msDelay(2000);
+					sendQueryPoseCommand();
 				} else {
-					terminate();
 					break;
 				}
 			} catch (IOException ex) {
@@ -165,7 +163,7 @@ public class ConnectionManager {
 			if (receivedString.contains("Ball dropped")) {
 				Pose pose = decodePose(receivedString.split(":")[1]);
 				mapper.addPose(pose, robotName);
-				System.out.println("Sending terminate command");
+				System.out.println("Sending terminate command to " + robotName);
 				terminate();
 			}
 		} else if (receivedString.charAt(0) == 'x') { //a pose was received
@@ -281,8 +279,8 @@ public class ConnectionManager {
 			commandSender.close();
 			stringReceiver.close();
 			connector.close();
-		} catch (IOException e) {
-			System.err.println("Could not close sockets to NXT");
+		} catch (IOException e) { 
+			System.err.println("Could not close sockets to NXT - probably already closed");
 		}
 		targetManager.removeRobot(robotName);
 		server.removeConnection(this);
@@ -296,6 +294,9 @@ public class ConnectionManager {
 		sendCommand("query0");
 	}
 	
+	/**
+	 * Should be called whenever the maps changes.
+	 */
 	public void mapChaged(){
 		pathFinder.mapChanged(mapper.getLineMap());
 	}

@@ -75,6 +75,8 @@ public class Parser {
 			robot.dropItem();
 			return false;
 		case "exit":
+			robot.positionManager.move(-150);
+			robot.picker.pickerDown();
 			NXT.shutDown();
 			return false;
 		case "query":
