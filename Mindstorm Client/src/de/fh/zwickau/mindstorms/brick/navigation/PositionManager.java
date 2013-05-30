@@ -100,13 +100,27 @@ public class PositionManager implements Manager {
 		movementManager.move(distance);
 	}
 
+	public void checkMovedDistance(Pose oldPose) {
+		if (oldPose.getX() - pose.getX() < 6
+				&& oldPose.getY() - pose.getY() < 6) {
+			float distance = (float) (oldPose.getX() / (Math.sin(Math
+					.toRadians(pose.getHeading()))));
+			distance += (oldPose.getY() / (Math.cos(Math.toRadians(pose
+					.getHeading()))));
+			distance /= 2;
+			move((int) (distance - 0.5));
+		}
+	}
+
 	@Override
 	public int stop() {
 		robot.rightMotor.stop(true);
 		robot.leftMotor.stop(false);
 		if (movementManager.isMoving()) {
+			Pose oldPose = new Pose(pose.getX(), pose.getY(), pose.getHeading());
 			updatePosition(movementManager.stop());
-		} else if (directionManager.isRotating()){
+			checkMovedDistance(oldPose);
+		} else if (directionManager.isRotating()) {
 			updateRotation(directionManager.stop());
 		} else {
 			System.err.println("Something is wrong with moving");
