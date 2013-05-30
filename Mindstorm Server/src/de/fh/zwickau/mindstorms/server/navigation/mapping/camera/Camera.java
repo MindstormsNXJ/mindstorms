@@ -18,11 +18,11 @@ public class Camera {
     
 	ByteBuffer byteBuffer = null;
 	BufferedImage image = null;
-	float[] obstacle=new float[4];
-	float[] obstacle2=new float[4];
-	float[] ball=new float[4];
-	float[] robot=new float[4];
-	float[] goal=new float[4];
+	float[] obstacle={0,0,0,0};
+	float[] obstacle2={0,0,0,0};
+	float[] ball={0,0,0,0};
+	float[] robot={0,0,0,0};
+	float[] goal={0,0,0,0};
 	
 	public float[] getBall() {
 		return ball;
