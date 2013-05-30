@@ -14,7 +14,7 @@ import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
  * when the NXT starts, e.g. sensor calibration and connection establishment.
  * This includes also the initialisation of the sensors and motors.
  * 
- * @author Tobias Schießl
+ * @author Tobias Schießl, Markus Krummnacker
  * @version 1.0
  */
 public class Initializer implements ButtonListener {
@@ -48,11 +48,11 @@ public class Initializer implements ButtonListener {
 		case CENTRALISATION:
 			// try to centralize the Object in front of
 			System.out.println("centralize");
-			Button.ENTER.waitForPressAndRelease();
-			robot.centralizer.centralize();
-			Button.ENTER.waitForPressAndRelease();
+			while(true) {
+				Button.ENTER.waitForPressAndRelease();
+				robot.centralizer.centralize();
+			}
 //			robot.pickItem();
-			break;
 		case TEST:
 			// place testing her
 			break;
@@ -75,12 +75,6 @@ public class Initializer implements ButtonListener {
 //			robot.positionManager.move(-10);
 			break;
 		}
-	}
-
-	@Override
-	public void buttonPressed(Button b) {
-		robot.compassSensor.stopCalibration();
-		NXT.shutDown();
 	}
 
 	public void initialize() {
@@ -108,6 +102,12 @@ public class Initializer implements ButtonListener {
 			}
 			Sound.beep();
 		}
+	}
+
+	@Override
+	public void buttonPressed(Button b) {
+		robot.compassSensor.stopCalibration();
+		NXT.shutDown();
 	}
 
 	@Override

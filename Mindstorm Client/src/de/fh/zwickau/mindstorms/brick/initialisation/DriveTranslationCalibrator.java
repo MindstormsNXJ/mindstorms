@@ -9,6 +9,13 @@ import lejos.robotics.objectdetection.FeatureDetector;
 import lejos.robotics.objectdetection.FeatureListener;
 import lejos.robotics.objectdetection.RangeFeatureDetector;
 
+/**
+ * This class calibrate the ratio addicted from the underground nature by using
+ * the ultrasonic sensor and a vertacally wall in front of the robot
+ * 
+ * @author Markus Krummnacker
+ * @version 1.2
+ */
 public class DriveTranslationCalibrator implements FeatureListener {
 	private final int motAcc, rotations, minDistance, maxDistance, interval;
 	private int lastTacho;
@@ -18,6 +25,13 @@ public class DriveTranslationCalibrator implements FeatureListener {
 	private NXTRegulatedMotor rightMotor;
 	private NXTRegulatedMotor leftMotor;
 
+	/**
+	 * start the calibration
+	 * 
+	 * @param leftMotor
+	 * @param rightMotor
+	 * @param ultrasonicSensor
+	 */
 	public DriveTranslationCalibrator(NXTRegulatedMotor leftMotor,
 			NXTRegulatedMotor rightMotor, UltrasonicSensor ultrasonicSensor) {
 		this.leftMotor = leftMotor;
@@ -31,13 +45,10 @@ public class DriveTranslationCalibrator implements FeatureListener {
 		calibrate();
 	}
 
-	private void reset() {
-		leftMotor.setAcceleration(motAcc);
-		rightMotor.setAcceleration(motAcc);
-		leftMotor.resetTachoCount();
-		rightMotor.resetTachoCount();
-	}
-
+	/**
+	 * calibrate the ratio by scan rages during moving three times and evaluate
+	 * the correlate array
+	 */
 	private void calibrate() {
 		FeatureDetector scanner = new RangeFeatureDetector(ultrasonicSensor,
 				maxDistance, interval);
@@ -45,8 +56,8 @@ public class DriveTranslationCalibrator implements FeatureListener {
 		for (int i = 0; i < 3; i++) {
 			reset();
 			setSpeed(100 + i * 50);
-			rotate(-360 * rotations);
-			rotate(360 * rotations);
+			motorRotate(-360 * rotations);
+			motorRotate(360 * rotations);
 		}
 		double summe = 0;
 		for (double trans : translations) {
@@ -56,6 +67,16 @@ public class DriveTranslationCalibrator implements FeatureListener {
 		System.out.println("Translation: " + driveTranslation);
 	}
 
+	/*
+	 * (non-Javadoc) scan the distance of the wall to calibrate and if there is
+	 * an difference store this and the motor tacho count in an array for
+	 * evaluation
+	 * 
+	 * @see
+	 * lejos.robotics.objectdetection.FeatureListener#featureDetected(lejos.
+	 * robotics.objectdetection.Feature,
+	 * lejos.robotics.objectdetection.FeatureDetector)
+	 */
 	@Override
 	public void featureDetected(Feature feature, FeatureDetector detector) {
 		double range = feature.getRangeReading().getRange();
@@ -81,18 +102,35 @@ public class DriveTranslationCalibrator implements FeatureListener {
 		}
 	}
 
-	private void rotate(int angel) {
-		leftMotor.rotate(angel, true);
-		rightMotor.rotate(angel, false);
+	/**
+	 * move the robot by degrees of motor rotation
+	 * 
+	 * @param angle
+	 *            to rotate
+	 */
+	private void motorRotate(int angle) {
+		leftMotor.rotate(angle, true);
+		rightMotor.rotate(angle, false);
 	}
 
-	private int getTacho() {
-		return (leftMotor.getTachoCount() + rightMotor.getTachoCount()) / 2;
+	/**
+	 * set the motor tacho count back and set the acceleration speed to define
+	 * value (500)
+	 */
+	private void reset() {
+		leftMotor.setAcceleration(motAcc);
+		rightMotor.setAcceleration(motAcc);
+		leftMotor.resetTachoCount();
+		rightMotor.resetTachoCount();
 	}
 
 	private void setSpeed(int speed) {
 		leftMotor.setSpeed(speed);
 		rightMotor.setSpeed(speed);
+	}
+
+	private int getTacho() {
+		return (leftMotor.getTachoCount() + rightMotor.getTachoCount()) / 2;
 	}
 
 	public double getDriveTranslation() {
