@@ -42,7 +42,6 @@ public class Initializer implements ButtonListener {
 		switch (mode) {
 		case SERVERMODE:
 			// establish connection to the server
-			robot.positionManager.rotateTo(0);
 			new ConnectionManager(robot);
 			break;
 		case CENTRALISATION:
@@ -54,7 +53,10 @@ public class Initializer implements ButtonListener {
 			}
 //			robot.pickItem();
 		case TEST:
-			// place testing her
+			//try new rotation with own Cartesian zero
+			robot.positionManager.rotateTo(180);
+			robot.positionManager.rotateTo(90);
+			robot.positionManager.rotateTo(270);
 			break;
 		case PICKERTEST:
 			// testing for the pick and drop mechanism

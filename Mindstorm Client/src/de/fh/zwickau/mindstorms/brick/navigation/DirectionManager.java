@@ -46,7 +46,6 @@ public class DirectionManager implements Manager {
 
 		// the direction the robot stands at start
 		int startDirection = robot.getDirection();
-
 		int degrees = activateMotors(degree, direction);
 
 		// check when the target angle is reached and stop rotating
@@ -62,6 +61,7 @@ public class DirectionManager implements Manager {
 		boolean isRotating2 = true;
 		while (isRotating2 == true) {
 			int currentDirection = robot.getDirection();
+			System.out.println(currentDirection);
 			if (currentDirection == targetdirection) {
 				isRotating2 = false;
 			}

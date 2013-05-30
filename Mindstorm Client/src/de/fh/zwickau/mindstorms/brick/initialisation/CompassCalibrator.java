@@ -29,7 +29,7 @@ public class CompassCalibrator {
 
 	public void preCalibrate() {
 		long before = System.currentTimeMillis();
-		final float startDirection = compassSensor.getDegrees();
+		final float startDirection = robot.getDirection();
 		if (startDirection == 506) {
 			System.out.println("pre calibration failed, please restart NXT");
 			return;
@@ -38,7 +38,7 @@ public class CompassCalibrator {
 		rightMotor.backward();
 		Delay.msDelay(1000);
 		while (leftMotor.isMoving()) {
-			float direction = compassSensor.getDegrees();
+			float direction = robot.getDirection();
 			if (Math.abs(startDirection - direction) < 2) {
 				leftMotor.stop(true);
 				rightMotor.stop(false);

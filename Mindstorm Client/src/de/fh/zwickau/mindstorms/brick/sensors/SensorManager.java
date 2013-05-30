@@ -55,14 +55,14 @@ public class SensorManager {
 		private void scan() {
 			boolean change = false;
 			int startDistance = distance;
-			int startDirection = (int) robot.compassSensor.getDegrees();
+			int startDirection = robot.getDirection();
 			System.out.println("start direction: " + startDirection);
 			while (!change) {
 				robot.positionManager.rotate(2, Direction.LEFT);
 				if (Math.abs(distance - startDistance) >= 5)
 					change = true;
 			}
-			int leftBorder = (int) robot.compassSensor.getDegrees();
+			int leftBorder = robot.getDirection();
 			System.out.println("left border: " + leftBorder);
 			robot.positionManager.rotateTo(startDirection);
 			change = false;
@@ -71,7 +71,7 @@ public class SensorManager {
 				if (Math.abs(distance - startDistance) >= 5)
 					change = true;
 			}
-			int rightBorder = (int) robot.compassSensor.getDegrees();
+			int rightBorder = robot.getDirection();
 			System.out.println("right direction: " + rightBorder);
 			int middle = ((leftBorder + rightBorder) % 360) / 2;
 			System.out.println("middle: " + middle);
