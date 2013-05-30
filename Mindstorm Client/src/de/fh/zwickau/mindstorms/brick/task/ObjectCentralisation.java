@@ -18,6 +18,7 @@ public class ObjectCentralisation {
 	private int speed = 25;
 	private int interval = 20;
 	private int scanVariance = 3;
+	private int PreScanRange=50;
 	private int preScanSteps=5; // degrees
 	private boolean scanning, centralizing;
 	private Runnable detector;
@@ -47,19 +48,18 @@ public class ObjectCentralisation {
 	private void preScan() {
 		distance = getDistance();
 		startangle = robot.getDirection();
-		// System.out.println(distance);
-		for (int i = 1; ((distance > 40) && i <= 45/preScanSteps); i++) {
-			System.out.println(i);
-			if (distance > 40) {
+		for (int i = 1; ((distance > PreScanRange) && i <= 45/preScanSteps); i++) {
+			if (distance > PreScanRange) {
 				rotateTo((startangle - i * preScanSteps) % 360);
 				distance = getDistance();
-				// System.out.println(distance);
 			}
-			if (distance > 40) {
+			if (distance > PreScanRange) {
 				rotateTo((startangle + i * preScanSteps) % 360);
 				distance = getDistance();
-				// System.out.println(distance);
-			}
+			} 
+		}
+		if (distance >PreScanRange) {
+			throw new IllegalArgumentException("No Object in Range");
 		}
 		startangle = robot.getDirection();
 	}
