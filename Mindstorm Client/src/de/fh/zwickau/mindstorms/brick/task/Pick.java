@@ -107,7 +107,11 @@ public class Pick {
 	}
 	
 	public void dropItem(){
-		robot.positionManager.move(300);
+//		robot.positionManager.move(300);
+		int distance = sensor.getDistance() * 10; // for mm
+		int driveDist = distance - itemDistance;
+		// System.out.println(driveDist);
+		robot.positionManager.move(driveDist);
 		grabberMotor.resetTachoCount();
 		boolean down = true;
 		grabberMotor.setSpeed(50);
