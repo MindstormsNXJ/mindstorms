@@ -24,7 +24,7 @@ public class Initializer implements ButtonListener {
 	}
 
 	private Robot robot;
-	private final double STD_DRIVE_TRANSLATION = 38.0 / 10;
+	private final double STD_DRIVE_TRANSLATION = 34.6 / 10;
 
 	// config Flags and Enums
 	private boolean hasToCalibrate = false;
@@ -42,9 +42,8 @@ public class Initializer implements ButtonListener {
 		switch (mode) {
 		case SERVERMODE:
 			// establish connection to the server
-//			robot.positionManager.rotateTo(0);
-//			new ConnectionManager(robot);
-			robot.positionManager.move(500);
+			robot.positionManager.rotateTo(0);
+			new ConnectionManager(robot);
 			break;
 		case CENTRALISATION:
 			// try to centralize the Object in front of

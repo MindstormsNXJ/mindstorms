@@ -50,9 +50,9 @@ public class Robot {
 		compassSensor = new CompassHTSensor(SensorPort.S2);
 		touchSensor = new TouchSensor(SensorPort.S3);
 		colorSensor = new ColorSensor(SensorPort.S4);
-//		picker = new Pick(this);
+		picker = new Pick(this);
 		centralizer = new ObjectCentralisation(this);
-//		picker.pickerUp();
+		picker.pickerUp();
 	}
 
 	/**
