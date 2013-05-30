@@ -103,9 +103,10 @@ public class PositionManager implements Manager {
 	public void checkMovedDistance(Pose oldPose) {
 		if (oldPose.getX() - pose.getX() < 6
 				&& oldPose.getY() - pose.getY() < 6) {
-			float distance = (float) (oldPose.getX() / (Math.sin(Math
+			
+			float distance = (float) ((oldPose.getX() - pose.getX()) / (Math.sin(Math
 					.toRadians(pose.getHeading()))));
-			distance += (oldPose.getY() / (Math.cos(Math.toRadians(pose
+			distance += ((oldPose.getY() - pose.getY()) / (Math.cos(Math.toRadians(pose
 					.getHeading()))));
 			distance /= 2;
 			move((int) (distance - 0.5));
