@@ -107,6 +107,7 @@ public class Pick {
 	}
 	
 	public void dropItem(){
+		robot.positionManager.move(300);
 		grabberMotor.resetTachoCount();
 		boolean down = true;
 		grabberMotor.setSpeed(50);
@@ -115,6 +116,7 @@ public class Pick {
 			if(grabberMotor.getTachoCount() < - wayDown || robot.colorSensor.getColorID() != 2)
 				down = false;
 		}
+		robot.positionManager.move(-100);
 		pickerUp();
 	}
 
