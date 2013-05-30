@@ -45,7 +45,7 @@ public class ObjectCentralisation {
 	/**
 	 * roughly adjust the robot to the object
 	 */
-	private void preScan() {
+	private void preScan() throws IllegalStateException {
 		distance = getDistance();
 		startangle = robot.getDirection();
 		for (int i = 1; ((distance > PreScanRange) && i <= 45/preScanSteps); i++) {
@@ -59,7 +59,7 @@ public class ObjectCentralisation {
 			} 
 		}
 		if (distance >PreScanRange) {
-			throw new IllegalArgumentException("No Object in Range");
+			throw new IllegalStateException("No Object in Range");
 		}
 		startangle = robot.getDirection();
 	}
