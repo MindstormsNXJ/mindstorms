@@ -15,10 +15,11 @@ public class ObjectCentralisation {
 
 	private Robot robot;
 	private int startangle, distance;
+	private int speed = 25;
 	private int interval = 20;
 	private int scanVariance = 3;
+	private int preScanSteps=5; // degrees
 	private boolean scanning, centralizing;
-	private int speed = 25;
 	private Runnable detector;
 
 	/**
@@ -47,15 +48,15 @@ public class ObjectCentralisation {
 		distance = getDistance();
 		startangle = robot.getDirection();
 		// System.out.println(distance);
-		for (int i = 1; ((distance > 40) && i <= 4); i++) {
+		for (int i = 1; ((distance > 40) && i <= 45/preScanSteps); i++) {
 			System.out.println(i);
 			if (distance > 40) {
-				rotateTo((startangle - i * 10) % 360);
+				rotateTo((startangle - i * preScanSteps) % 360);
 				distance = getDistance();
 				// System.out.println(distance);
 			}
 			if (distance > 40) {
-				rotateTo((startangle + i * 10) % 360);
+				rotateTo((startangle + i * preScanSteps) % 360);
 				distance = getDistance();
 				// System.out.println(distance);
 			}
