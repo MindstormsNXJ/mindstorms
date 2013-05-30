@@ -18,7 +18,72 @@ public class Camera {
     
 	ByteBuffer byteBuffer = null;
 	BufferedImage image = null;
+	float[] obstacle=new float[4];
+	float[] obstacle2=new float[4];
+	float[] ball=new float[4];
+	float[] robot=new float[4];
+	float[] goal=new float[4];
 	
+	public float[] getBall() {
+		return ball;
+	}
+
+
+	public void setBall(float[] ball) {
+		this.ball = ball;
+	}
+
+
+	public float[] getObstacle() {
+		return obstacle;
+	}
+
+
+	public void setObstacle(float[] obstacle) {
+		this.obstacle = obstacle;
+	}
+
+
+	public float[] getObstacle2() {
+		return obstacle2;
+	}
+
+
+	public void setObstacle2(float[] obstacle2) {
+		this.obstacle2 = obstacle2;
+	}
+
+
+	public float[] getRobot() {
+		return robot;
+	}
+
+
+	public void setRobot(float[] robot) {
+		this.robot = robot;
+	}
+
+
+	public float[] getGoal() {
+		return goal;
+	}
+
+
+	public void setGoal(float[] goal) {
+		this.goal = goal;
+	}
+
+
+	public int getWidth() {
+		return width;
+	}
+
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+
 	int width, height;
 	
     public Camera(){

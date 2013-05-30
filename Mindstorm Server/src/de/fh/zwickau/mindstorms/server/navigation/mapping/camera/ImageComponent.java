@@ -23,7 +23,7 @@ class ImageComponent extends JComponent
    */
   public void setImage( BufferedImage imageIn )
   {
-    this.image = new BufferedImage(512, 512,  BufferedImage.TYPE_INT_ARGB);
+    this.image = new BufferedImage(512, 512,  BufferedImage.TYPE_INT_RGB);
     this.image.getGraphics().drawImage(imageIn, 0,0, 512,512, null);
     setPreferredSize( new Dimension(image.getWidth(), image.getHeight()) );
     scale=imageIn.getHeight()/512;
@@ -32,7 +32,11 @@ class ImageComponent extends JComponent
     invalidate();
   }
 
-  @Override
+  public BufferedImage getImage() {
+	return image;
+}
+
+@Override
   protected void paintComponent( Graphics g )
   {
     if ( image != null )
