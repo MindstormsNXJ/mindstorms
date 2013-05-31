@@ -12,9 +12,7 @@ import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.addon.CompassHTSensor;
 
 /**
- * This class is the abstract superclass for the two robot types, namely
- * WorkerRobot and PickerRobot. Therefore, it holds the fields that all robots
- * have in common and makes them accessible for other classes.
+ * This class makes the sensors ant motors accessible for other classes.
  * 
  * @author Tobias Schießl
  * @version 1.0
@@ -37,10 +35,12 @@ public class Robot {
 									// the calibration
 	public int driveSpeed = 200;
 	public final int STANDARD_ROTATE_ACC = 5000;
-	public final int STANDARD_DRIVE_ACC = 500;
+	public final int STANDARD_DRIVE_ACC = 5000;
 	
 	public Pick picker;
 	public ObjectCentralisation centralizer;
+	
+	private int deltaDirection;
 
 	public Robot() {
 		leftMotor = Motor.A;
@@ -53,6 +53,7 @@ public class Robot {
 		picker = new Pick(this);
 		centralizer = new ObjectCentralisation(this);
 		picker.pickerUp();
+		deltaDirection = (int) compassSensor.getDegrees(); //the delta to zero degrees
 	}
 
 	/**
@@ -97,7 +98,10 @@ public class Robot {
 	 * @return current degrees directly from the compass sensor
 	 */
 	public int getDirection() {
-		return (int) compassSensor.getDegrees();
+		int dir = (int) compassSensor.getDegrees() - deltaDirection;
+		if (dir < 0)
+			dir = 360 + dir;
+		return dir;
 	}
 
 	/**

@@ -97,7 +97,28 @@ public class PositionManager implements Manager {
 	 *            the distance to move in mm
 	 */
 	public void move(int distance) {
+//		float x = (float) (Math.sin(Math.toRadians(pose.getHeading())) * distance);
+//		float y = (float) (Math.cos(Math.toRadians(pose.getHeading())) * distance);
+//		Pose targetPose = new Pose(x, y, pose.getHeading());
 		movementManager.move(distance);
+//		if (Math.abs(pose.getX() - targetPose.getX()) > 5
+//				|| Math.abs(pose.getY() - targetPose.getY()) > 5) {
+//			int newDistance = (int) Math.sqrt(Math.pow(
+//					targetPose.getX() - pose.getX(), 2)
+//					+ Math.pow(targetPose.getY() - pose.getY(), 2)) / 2;
+//			if(pose.getHeading() >= 0 && pose.getHeading() < 180) {
+//				if (pose.getX() > targetPose.getX())
+//					movementManager.move(-newDistance);
+//				else 
+//					movementManager.move(newDistance);
+//			}
+//			if(pose.getHeading() >= 180 && pose.getHeading() < 360) {
+//				if (pose.getX() < targetPose.getX())
+//					movementManager.move(-newDistance);
+//				else 
+//					movementManager.move(newDistance);
+//			}
+//		}
 	}
 
 	@Override
@@ -106,7 +127,7 @@ public class PositionManager implements Manager {
 		robot.leftMotor.stop(false);
 		if (movementManager.isMoving()) {
 			updatePosition(movementManager.stop());
-		} else if (directionManager.isRotating()){
+		} else if (directionManager.isRotating()) {
 			updateRotation(directionManager.stop());
 		} else {
 			System.err.println("Something is wrong with moving");

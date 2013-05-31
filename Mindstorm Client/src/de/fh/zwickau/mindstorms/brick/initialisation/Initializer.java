@@ -14,7 +14,7 @@ import de.fh.zwickau.mindstorms.brick.navigation.PositionManager;
  * when the NXT starts, e.g. sensor calibration and connection establishment.
  * This includes also the initialisation of the sensors and motors.
  * 
- * @author Tobias Schießl
+ * @author Tobias Schießl, Markus Krummnacker
  * @version 1.0
  */
 public class Initializer implements ButtonListener {
@@ -24,7 +24,7 @@ public class Initializer implements ButtonListener {
 	}
 
 	private Robot robot;
-	private final double STD_DRIVE_TRANSLATION = 35.0 / 10;
+	private final double STD_DRIVE_TRANSLATION = 34.6 / 10;
 
 	// config Flags and Enums
 	private boolean hasToCalibrate = false;
@@ -42,19 +42,21 @@ public class Initializer implements ButtonListener {
 		switch (mode) {
 		case SERVERMODE:
 			// establish connection to the server
-			robot.positionManager.rotateTo(0);
 			new ConnectionManager(robot);
 			break;
 		case CENTRALISATION:
 			// try to centralize the Object in front of
 			System.out.println("centralize");
-			Button.ENTER.waitForPressAndRelease();
-			robot.centralizer.centralize();
-			Button.ENTER.waitForPressAndRelease();
+			while(true) {
+				Button.ENTER.waitForPressAndRelease();
+				robot.centralizer.centralize();
+			}
 //			robot.pickItem();
-			break;
 		case TEST:
-			// place testing her
+			//try new rotation with own Cartesian zero
+			robot.positionManager.rotateTo(180);
+			robot.positionManager.rotateTo(90);
+			robot.positionManager.rotateTo(270);
 			break;
 		case PICKERTEST:
 			// testing for the pick and drop mechanism
@@ -75,12 +77,6 @@ public class Initializer implements ButtonListener {
 //			robot.positionManager.move(-10);
 			break;
 		}
-	}
-
-	@Override
-	public void buttonPressed(Button b) {
-		robot.compassSensor.stopCalibration();
-		NXT.shutDown();
 	}
 
 	public void initialize() {
@@ -108,6 +104,12 @@ public class Initializer implements ButtonListener {
 			}
 			Sound.beep();
 		}
+	}
+
+	@Override
+	public void buttonPressed(Button b) {
+		robot.compassSensor.stopCalibration();
+		NXT.shutDown();
 	}
 
 	@Override
