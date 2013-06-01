@@ -33,8 +33,11 @@ public class PhotoAnalyzer {
 	protected float G;
 	protected float B;
 	private JButton buttonToChange;
+	private int count=0;
+	private Point[] scalePoints;
 
 	public PhotoAnalyzer(Camera camera) {
+		scalePoints=new Point[4];
 		this.camera = camera;
 		initButtons();
 		jFrame = new JFrame(); // main window
@@ -86,6 +89,7 @@ public class PhotoAnalyzer {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				makeScaling();
+				buttonMakeScaling.setForeground(Color.cyan);
 			}
 
 		});
@@ -95,7 +99,7 @@ public class PhotoAnalyzer {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				buttonTakeGoal.setForeground(Color.cyan);
-				takeSth(camera.getGoal(),buttonTakeGoal);
+				takeColorOfSomething(camera.getGoal(),buttonTakeGoal);
 				
 			}
 
@@ -106,7 +110,7 @@ public class PhotoAnalyzer {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				buttonTakeBall.setForeground(Color.cyan);
-				takeSth(camera.getBall(),buttonTakeBall);
+				takeColorOfSomething(camera.getBall(),buttonTakeBall);
 				
 			}
 
@@ -117,14 +121,14 @@ public class PhotoAnalyzer {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				buttonTakeObstacle.setForeground(Color.cyan);
-				takeSth(camera.getObstacle(),buttonTakeObstacle);
+				takeColorOfSomething(camera.getObstacle(),buttonTakeObstacle);
 				
 			}
 
 		});
 	}
 
-	protected void takeSth(float[] RGBCamera, JButton buttonToChange2) {
+	protected void takeColorOfSomething(float[] RGBCamera, JButton buttonToChange2) {
 		buttonToChange=buttonToChange2;
 		SC.addMouseListener(new MouseListener() {
 			@Override
@@ -161,6 +165,8 @@ public class PhotoAnalyzer {
 	
 
 	public void makeScaling() {
+		System.out.println("als erstes zwei Punkte der X Scalieung angeben");
+		System.out.println("danach zwei Punkte der Y Scalieung ");
 		SC.addMouseListener(new MouseListener() {
 
 			@Override
@@ -189,16 +195,38 @@ public class PhotoAnalyzer {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println(e.getX());
-				System.out.println(e.getY());
-				int pixel = IC.getImage().getRGB(e.getX(), e.getY());
-				System.out.println((float) ((pixel >> 16) & 0xFF) / 255); // Red
-																			// component
-				System.out.println(((pixel >> 8) & 0xFF)); // Green component
-				System.out.println((pixel & 0xFF)); // Blue component
+				
+				boolean onOff=true;
+				if(takeMouseCoordinates(e.getX(), e.getY())&onOff){
+					
+					onOff=false;
+				}else{
+				SC.removeMouseListener(this);
+				buttonMakeScaling.setForeground(Color.black);
+				count=0;
+				}
 			}
 		});
 		mainPanel.add(SC, BorderLayout.CENTER);
 	}
 
+	public boolean takeMouseCoordinates(double x,double y){
+		System.out.println(count);
+		scalePoints[count]=new Point(x, y);
+	if(count<3){
+		count++;
+		return true;
+	}else{
+		calculateScaling(scalePoints);
+		return false;
+	}
+	}
+	public void calculateScaling(Point[] choords){
+		double x =Math.abs(scalePoints[0].getX()-scalePoints[1].getX());
+		double y =Math.abs(scalePoints[2].getY()-scalePoints[3].getY());
+		camera.setxScale((x*IC.getScale())/60);
+		camera.setyScale((y*IC.getScale())/60);
+		System.out.println(camera.getxScale());
+		System.out.println(camera.getyScale());
+	}
 }
