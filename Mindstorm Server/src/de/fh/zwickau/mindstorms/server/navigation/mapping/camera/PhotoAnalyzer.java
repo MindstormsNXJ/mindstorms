@@ -35,6 +35,7 @@ public class PhotoAnalyzer {
 	private JButton buttonToChange;
 	private int count=0;
 	private Point[] scalePoints;
+	private boolean pickInprocess=false;
 
 	public PhotoAnalyzer(Camera camera) {
 		scalePoints=new Point[4];
@@ -89,7 +90,6 @@ public class PhotoAnalyzer {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				makeScaling();
-				buttonMakeScaling.setForeground(Color.cyan);
 			}
 
 		});
@@ -98,7 +98,6 @@ public class PhotoAnalyzer {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				buttonTakeGoal.setForeground(Color.cyan);
 				takeColorOfSomething(camera.getGoal(),buttonTakeGoal);
 				
 			}
@@ -109,7 +108,6 @@ public class PhotoAnalyzer {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				buttonTakeBall.setForeground(Color.cyan);
 				takeColorOfSomething(camera.getBall(),buttonTakeBall);
 				
 			}
@@ -120,7 +118,6 @@ public class PhotoAnalyzer {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				buttonTakeObstacle.setForeground(Color.cyan);
 				takeColorOfSomething(camera.getObstacle(),buttonTakeObstacle);
 				
 			}
@@ -129,6 +126,10 @@ public class PhotoAnalyzer {
 	}
 
 	protected void takeColorOfSomething(float[] RGBCamera, JButton buttonToChange2) {
+		final float[] camera=RGBCamera;
+		if(!pickInprocess){
+			pickInprocess=true;
+			buttonToChange2.setForeground(Color.cyan);
 		buttonToChange=buttonToChange2;
 		SC.addMouseListener(new MouseListener() {
 			@Override
@@ -152,19 +153,27 @@ public class PhotoAnalyzer {
 				System.out.println("pick");
 				SC.removeMouseListener(this);
 				buttonToChange.setForeground(Color.black);
+				pickInprocess=false;
+				camera[0]=R;
+				camera[1]=G;
+				camera[2]=B;
+		
 						// component
 			}
 		});
 		mainPanel.add(SC, BorderLayout.CENTER);
-		RGBCamera[0]=R;
-		RGBCamera[1]=G;
-		RGBCamera[2]=B;
+	
+		}
 	}
 		
 	
 	
 
 	public void makeScaling() {
+		
+		if(!pickInprocess){
+			pickInprocess=true;
+			buttonMakeScaling.setForeground(Color.cyan);
 		System.out.println("als erstes zwei Punkte der X Scalieung angeben");
 		System.out.println("danach zwei Punkte der Y Scalieung ");
 		SC.addMouseListener(new MouseListener() {
@@ -205,9 +214,11 @@ public class PhotoAnalyzer {
 				buttonMakeScaling.setForeground(Color.black);
 				count=0;
 				}
+				pickInprocess=false;
 			}
 		});
 		mainPanel.add(SC, BorderLayout.CENTER);
+		}
 	}
 
 	public boolean takeMouseCoordinates(double x,double y){
