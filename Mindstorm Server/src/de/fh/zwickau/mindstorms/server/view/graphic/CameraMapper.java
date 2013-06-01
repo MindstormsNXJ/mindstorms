@@ -29,15 +29,16 @@ public class CameraMapper {
     }
     
     public void draw(){
+        float[] ball = camera.getBall();
+        float[] goal = camera.getGoal();
+        float[] obst = camera.getObstacle();
+
         glClear(GL_COLOR_BUFFER_BIT);
         
         ShaderManager.useShader("compute");
-        glUniform4f(ShaderManager.getUniformLocation("color"),0.5f,1.0f,0.0f,1.0f); // not needed later
-        glUniform4f(ShaderManager.getUniformLocation("v4_obstacle"), camera.getObstacle()[0],  camera.getObstacle()[1],  camera.getObstacle()[2], 0.2f);
-        glUniform4f(ShaderManager.getUniformLocation("v4_obstacle2"),camera.getObstacle()[0],  camera.getObstacle()[1],  camera.getObstacle()[2], 0.1f);
-        glUniform4f(ShaderManager.getUniformLocation("v4_ball"),    camera.getBall()[0],  camera.getBall()[1],  camera.getBall()[2], 0.30f);
-        glUniform4f(ShaderManager.getUniformLocation("v4_goal"),    camera.getGoal()[0],  camera.getGoal()[1],  camera.getGoal()[2], 0.30f);
-        glUniform4f(ShaderManager.getUniformLocation("v4_robot"),    0.0f, 0.0f, 0.0f, 0.5f);
+        glUniform4f(ShaderManager.getUniformLocation("v4_obstacle"), obst[0], obst[1], obst[2], 0.2f);
+        glUniform4f(ShaderManager.getUniformLocation("v4_ball"), ball[0], ball[1], ball[2], 0.20f);
+        glUniform4f(ShaderManager.getUniformLocation("v4_goal"), goal[0], goal[1], goal[2], 0.20f);
         
         tex_camera.Bind(0);
         
