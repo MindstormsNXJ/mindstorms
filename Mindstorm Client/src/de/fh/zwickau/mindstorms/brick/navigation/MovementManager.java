@@ -55,7 +55,7 @@ public class MovementManager implements Manager {
 		// the tachocounts from the motors on the start of the moving process
 		int tachoRight = robot.rightMotor.getTachoCount();
 		int tachoLeft = robot.leftMotor.getTachoCount();
-		// the angle which is the robot driving in real
+		// the target tachocounts
 		rotToDriveRight = dist * robot.driveTranslation + tachoRight;
 		rotToDriveLeft = dist * robot.driveTranslation + tachoLeft;
 
@@ -72,17 +72,24 @@ public class MovementManager implements Manager {
 		boolean isDriving = true;
 		while (isDriving == true) {
 			if (Math.abs(angelCorrection(startdegrees, robot.getDirection())) > 5) {
-				robot.stop();
+				robot.stopMotors();
+				/*
+				 * these double values save the remaining tachocount before 
+				 * the rotation starts
+				 */
 				double newrtdl = rotToDriveLeft
 						- robot.leftMotor.getTachoCount();
 				double newrtdr = rotToDriveRight
 						- robot.rightMotor.getTachoCount();
-				/**
-				 * the doubles saving the distance which was driven before
-				 * correcting the angle with rotating
+				/*
+				 * This hack combination if driving = true | false is necessary because
+				 * the DirectionManager will call the robots stop method, which will invoke a 
+				 * position update of the current pose which is not necessary at this point.
 				 */
+				driving = false;
 				positionManager.rotateTo(startdegrees);
-				/** reinitialize the distance for motor */
+				driving = true;
+				/* reinitialise the target tachocounts */
 				rotToDriveLeft = robot.leftMotor.getTachoCount() + newrtdl;
 				rotToDriveRight = robot.rightMotor.getTachoCount() + newrtdr;
 				drive(forward);
@@ -92,7 +99,7 @@ public class MovementManager implements Manager {
 			 * stops the moving when the right Tachocount is reached
 			 */
 			if (forward
-					&& (rotToDriveRight <= robot.rightMotor.getTachoCount() || rotToDriveRight <= robot.rightMotor
+					&& (rotToDriveRight <= robot.rightMotor.getTachoCount() || rotToDriveLeft <= robot.leftMotor
 							.getTachoCount())
 					|| !forward
 					&& (rotToDriveRight >= robot.rightMotor.getTachoCount() || rotToDriveLeft >= robot.leftMotor
