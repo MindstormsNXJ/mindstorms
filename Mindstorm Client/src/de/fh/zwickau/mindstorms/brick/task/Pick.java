@@ -121,6 +121,7 @@ public class Pick {
 			if(grabberMotor.getTachoCount() < - wayDown || robot.colorSensor.getColorID() != 2)
 				down = false;
 		}
+		grabberMotor.stop();
 		robot.positionManager.move(-100);
 		pickerUp();
 	}
