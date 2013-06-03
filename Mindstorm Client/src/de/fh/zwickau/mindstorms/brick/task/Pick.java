@@ -20,6 +20,7 @@ public class Pick {
 	private UltrasonicSensor sensor;
 	private int wayDown = 460;			// tacho count of grabber motor to move grabber down
 	private int itemDistance = 250;		// at this distance the robot stops and put the grabber down
+	private int targetDistance = 100;   // the rest distance to the final target where the robot will stop
 	
 
 	public Pick(Robot r){
@@ -109,7 +110,7 @@ public class Pick {
 	public void dropItem(){
 //		robot.positionManager.move(300);
 		int distance = sensor.getDistance() * 10; // for mm
-		int driveDist = distance - itemDistance;
+		int driveDist = distance - targetDistance;
 		// System.out.println(driveDist);
 		robot.positionManager.move(driveDist);
 		grabberMotor.resetTachoCount();
