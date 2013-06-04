@@ -17,11 +17,11 @@ public class Camera {
 
 	ByteBuffer byteBuffer = null;
 	BufferedImage image = null;
-	float[] obstacle = { 0, 0, 0, 0 };
-	float[] obstacle2 = { 0, 0, 0, 0 };
-	float[] ball = { 0, 0, 0, 0 };
-	float[] robot = { 0, 0, 0, 0 };
-	float[] goal = { 0, 0, 0, 0 };
+	float[] obstacle = { 0.2f, 0.2f, 0.15f, 0.2f };
+	float[] obstacle2 = { 0.0f, 0.0f, 0.0f, 0.2f };
+	float[] ball = { 0.0f, 0, 0.8f, 0.2f };
+	float[] robot = { 0.0f, 0.0f, 0.0f, 0.2f };
+	float[] goal = { 1.0f, 1.0f, 0.0f, 0.2f };
 	double xScale,yScale=10;
 
 	public double getxScale() {
