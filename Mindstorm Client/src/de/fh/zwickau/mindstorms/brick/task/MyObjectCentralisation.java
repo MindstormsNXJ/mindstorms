@@ -27,7 +27,7 @@ public class MyObjectCentralisation {
 	 */
 	public MyObjectCentralisation(Robot robot) throws IllegalStateException {
 		this.robot = robot;
-		startAngle = (int) robot.compassSensor.getDegrees();
+		startAngle = robot.getDirection();
 		initDistance();
 		isdetected = true;
 		int leftBorder = scanLeft();
@@ -91,7 +91,7 @@ public class MyObjectCentralisation {
 			Delay.msDelay(50);
 		}
 		Delay.msDelay(5000); //to stop the vibration of the compass sensor
-		int rightBorderAngle = (int) robot.compassSensor.getDegrees();
+		int rightBorderAngle = robot.getDirection();
 		return rightBorderAngle;
 	}
 
@@ -109,7 +109,7 @@ public class MyObjectCentralisation {
 			Delay.msDelay(50);
 		}
 		Delay.msDelay(5000); //to stop the vibration of the compass sensor
-		int leftBorderAngle = (int) robot.compassSensor.getDegrees();
+		int leftBorderAngle = robot.getDirection();
 		return leftBorderAngle;
 	}
 	

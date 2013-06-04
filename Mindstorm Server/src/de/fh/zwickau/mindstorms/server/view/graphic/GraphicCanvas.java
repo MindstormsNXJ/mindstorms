@@ -48,7 +48,7 @@ public class GraphicCanvas extends Thread {
     private Canvas parent;
     
     private Mapper mapper;
-    private Camera camera;
+    private CameraMapper cameraMapper;
     private TargetManager targetM;
     
     private boolean mapChanged;
@@ -63,7 +63,7 @@ public class GraphicCanvas extends Thread {
     private float[] lineVertices;
     private float[] targetVertices;
 
-    private Texture tex_camera;
+    
     
     //Draw options
     boolean drawLine = true;
@@ -75,6 +75,7 @@ public class GraphicCanvas extends Thread {
         this.targetChanged = new Boolean(true);
         this.cameraChanged = new Boolean(true);
         this.semaphore = new Semaphore(1);
+        this.cameraMapper = new CameraMapper();
         
     }
 
@@ -86,7 +87,7 @@ public class GraphicCanvas extends Thread {
         while (!Display.isCloseRequested()) {
             update();
             
-            drawCamera();
+            cameraMapper.draw();
             //drawMapOverview();
         }
 
@@ -166,7 +167,7 @@ public class GraphicCanvas extends Thread {
             semaphore.release();
         }
         if (cameraChanged) {
-        	updateCamera();
+        	cameraMapper.update();
             try {
                 semaphore.acquire();
             } catch (InterruptedException e) {
@@ -238,33 +239,6 @@ public class GraphicCanvas extends Thread {
                 targetVertices[++j] = points.get(i).y / gstsh;
             }
         }
-    }
-    
-    private void updateCamera(){
-    	
-    	tex_camera = new Texture(camera.getImageWidth(), camera.getImageHeight(), "tex");
-    	tex_camera.SetupTextures(camera.getByteBuffer());
-    	//tex_camera.UploadPixelsToGPU(camera.getByteBuffer());
-    }
-
-    private void drawCamera(){
-    	glClear(GL_COLOR_BUFFER_BIT);
-    	
-    	ShaderManager.useShader("compute");
-    	glUniform4f(ShaderManager.getUniformLocation("color"),0.5f,1.0f,0.0f,1.0f); // not needed later
-    	
-    	glUniform4f(ShaderManager.getUniformLocation("v4_obstacle"), 0.7f, 0.6f, 0.4f, 0.2f);
-    	glUniform4f(ShaderManager.getUniformLocation("v4_obstacle2"), 0.8f, 0.7f, 0.6f, 0.01f);
-    	glUniform4f(ShaderManager.getUniformLocation("v4_ball"),     1.0f, 0.3f, 0.3f, 0.30f);
-    	glUniform4f(ShaderManager.getUniformLocation("v4_goal"),     1.0f, 1.0f, 0.0f, 0.30f);
-    	glUniform4f(ShaderManager.getUniformLocation("v4_robot"),    0.0f, 0.0f, 0.0f, 0.5f);
-    	
-    	tex_camera.Bind(0);
-    	
-    	Rectangle quad = new Rectangle();
-    	quad.Draw();
-    	tex_camera.Unbind();
-    	Display.update();
     }
     
     
@@ -464,7 +438,7 @@ public class GraphicCanvas extends Thread {
     }
     
     public void setCamera(Camera camera){
-    	this.camera = camera; 
+    	cameraMapper.setCamera(camera); 
     }
     
     /**
