@@ -254,7 +254,7 @@ public class GraphicCanvas extends Thread {
     	glUniform4f(ShaderManager.getUniformLocation("color"),0.5f,1.0f,0.0f,1.0f); // not needed later
     	
     	glUniform4f(ShaderManager.getUniformLocation("v4_obstacle"), 0.7f, 0.6f, 0.4f, 0.2f);
-    	glUniform4f(ShaderManager.getUniformLocation("v4_obstacle2"), 0.8f, 0.7f, 0.6f, 0.1f);
+    	glUniform4f(ShaderManager.getUniformLocation("v4_obstacle2"), 0.8f, 0.7f, 0.6f, 0.01f);
     	glUniform4f(ShaderManager.getUniformLocation("v4_ball"),     1.0f, 0.3f, 0.3f, 0.30f);
     	glUniform4f(ShaderManager.getUniformLocation("v4_goal"),     1.0f, 1.0f, 0.0f, 0.30f);
     	glUniform4f(ShaderManager.getUniformLocation("v4_robot"),    0.0f, 0.0f, 0.0f, 0.5f);
