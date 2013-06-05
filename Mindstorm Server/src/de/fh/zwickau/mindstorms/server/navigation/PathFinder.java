@@ -26,8 +26,9 @@ public class PathFinder {
 	private boolean mapChanged = true;
 	
 	//two values which will be used for the line map converting process
-	public static final float ROBOT_LENGTH_IN_TILES = 30 / 4; //30 cm
-	public static final float ROBOT_WIDTH_IN_TILES = 20 / 4; //20 cm
+	private static final int BUFFER = 10;
+	public static final float ROBOT_LENGTH_IN_TILES = (30 + BUFFER) / 4; //30 cm
+	public static final float ROBOT_WIDTH_IN_TILES = (20 + BUFFER) / 4; //20 cm
 	
 	/**
 	 * Initialises a PathFinder with the LineMap to use from now on.
@@ -104,7 +105,7 @@ public class PathFinder {
 			}
 			else { //move robot forward
 				if (targetManager.isBallWaypoint(currentWaypoint) || (robotHasBall && targetManager.isFinalTarget(currentWaypoint))) {
-					distanceToMove -= 300; //to leave enough distance for the pick and drop procedures
+					distanceToMove -= 350; //to leave enough distance for the pick and drop procedures
 //					if (distanceToMove < 0) {
 //						//TODO maybe we should move backwards, but that could cause trouble if a wall gets in the ultrasonic sensors range
 ////						manager.sendBackwardCommand(Math.abs(distanceToMove));
