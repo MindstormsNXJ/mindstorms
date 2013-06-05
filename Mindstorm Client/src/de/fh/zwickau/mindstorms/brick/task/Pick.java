@@ -20,7 +20,7 @@ public class Pick {
 	private UltrasonicSensor sensor;
 	private int wayDown = 400;			// tacho count of grabber motor to move grabber down
 	private int itemDistance = 250;		// at this distance the robot stops and put the grabber down
-	private int targetDistance = 100;   // the rest distance to the final target where the robot will stop
+	private int targetDistance = 130;   // the rest distance to the final target where the robot will stop
 	
 
 	public Pick(Robot r){
