@@ -34,6 +34,7 @@ public class ConnectionManager {
 		instance = this;
 		parser = new Parser(robot);
 		establishConnection();
+		ConnectionManager.sendOutputMessage("DriveTranslation: " + robot.driveTranslation);
 		sendPose();
 		waitForCommands();
 	}
