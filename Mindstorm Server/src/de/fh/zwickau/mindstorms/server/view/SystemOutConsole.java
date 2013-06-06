@@ -1,4 +1,4 @@
-package de.fh.zwickau.mindstorms.server;
+package de.fh.zwickau.mindstorms.server.view;
 
 import java.awt.Color;
 import java.io.OutputStream;
