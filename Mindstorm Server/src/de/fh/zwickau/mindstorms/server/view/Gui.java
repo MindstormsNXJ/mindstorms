@@ -1,7 +1,6 @@
 package de.fh.zwickau.mindstorms.server.view;
 
 import de.fh.zwickau.mindstorms.server.Server;
-import de.fh.zwickau.mindstorms.server.communication.*;
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 import de.fh.zwickau.mindstorms.server.view.graphic.GraphicCanvas;
@@ -11,14 +10,10 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.io.OutputStream;
-import java.io.PrintStream;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -30,13 +25,6 @@ public class Gui extends Applet implements ActionListener {
 	private SystemOutConsole console;
 	private Server server;
 	private GraphicCanvas graphicCanvas;
-
-	// public JButton makeButton(String name, GridBagLayout gridbag,
-	// GridBagConstraints c) {
-	// JButton button = new JButton(name);
-	// gridbag.setConstraints(button, c);
-	// return button;
-	// }
 
 	public Gui() {
 
@@ -176,16 +164,15 @@ public class Gui extends Applet implements ActionListener {
 
 			JPanel eastPane = new JPanel();
 			{
-				mainPane.add(eastPane, new GridBagConstraints(0, 1, 1, 1, 0, 0,GridBagConstraints.CENTER, GridBagConstraints.BOTH,new Insets(0, 0, 0, 0), 0, 0));
+				mainPane.add(eastPane, new GridBagConstraints(1, 0, 1, 1, 0, 0,GridBagConstraints.CENTER, GridBagConstraints.BOTH,new Insets(0, 0, 0, 0), 0, 0));
 				eastPane.setLayout(new BorderLayout());
-
+				eastPane.setBackground(Color.GREEN);
 				console = new SystemOutConsole(System.out);
 				{
-					eastPane.add(console,BorderLayout.CENTER);
+					eastPane.add(console, BorderLayout.CENTER);
 					JScrollPane consoleScrollPane = new JScrollPane(console);
 					eastPane.add(consoleScrollPane);
 					consoleScrollPane.setViewportBorder(null);
-					console.append("blabla");
 				}
 			}
 		}
@@ -193,18 +180,6 @@ public class Gui extends Applet implements ActionListener {
 		window.setVisible(true);
 		console.setVisible(true);
 		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//
-//		JFrame frame = new JFrame();
-//		frame.setSize(200,200);
-//		frame.setLayout(new BorderLayout());
-//		console = new SystemOutConsole(System.out);
-//		frame.add(console,BorderLayout.CENTER);
-//		console.append("bla");
-//		frame.setVisible(true);
-	}
-	
-	public static void main(String[] args) {
-		new Gui();
 	}
 
 	@Override
