@@ -54,6 +54,7 @@ public class Gui extends Applet implements ActionListener {
 			{
 				mainPane.add(westPane, new GridBagConstraints(0, 0, 1, 1, 0, 0,GridBagConstraints.CENTER, GridBagConstraints.BOTH,new Insets(0, 0, 0, 0), 0, 0));
 				GridBagLayout gbl_west = new GridBagLayout();
+				gbl_west.columnWidths = new int[] {513};
 				gbl_west.rowHeights = new int[] { 525, 205 };
 				westPane.setLayout(gbl_west);
 				westPane.setBackground(Color.BLACK);
@@ -74,6 +75,15 @@ public class Gui extends Applet implements ActionListener {
 					final JTextField text = new JTextField();
 					gridbag.setConstraints(text, c);
 
+					//savemap button
+					JButton saveMapButton = new JButton("save Map");
+					gridbag.setConstraints(saveMapButton,c);
+					saveMapButton.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							server.saveMap();
+						}
+					});
+					
 					// forward button
 					JButton forbutton = new JButton("forward");
 					forbutton.addActionListener(new ActionListener() {
@@ -145,6 +155,7 @@ public class Gui extends Applet implements ActionListener {
 						}
 					});
 
+					buttonPane.add(saveMapButton);
 					buttonPane.add(stabutton);
 					buttonPane.add(exibutton);
 					buttonPane.add(forbutton);
@@ -158,9 +169,6 @@ public class Gui extends Applet implements ActionListener {
 
 			Canvas graphicPanel = new Canvas();
 			{
-				int n_pixel = 512; // must be power of 2 (64 , 128, 256 ...)
-				graphicPanel.setSize(n_pixel + 1, n_pixel + 1);
-
 				westPane.add(graphicPanel,new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0));
 			}
 			
@@ -170,23 +178,33 @@ public class Gui extends Applet implements ActionListener {
 			{
 				mainPane.add(eastPane, new GridBagConstraints(0, 1, 1, 1, 0, 0,GridBagConstraints.CENTER, GridBagConstraints.BOTH,new Insets(0, 0, 0, 0), 0, 0));
 				eastPane.setLayout(new BorderLayout());
-				eastPane.setBackground(Color.BLACK);
 
 				console = new SystemOutConsole(System.out);
 				{
-					eastPane.add(console, BorderLayout.EAST);
+					eastPane.add(console,BorderLayout.CENTER);
 					JScrollPane consoleScrollPane = new JScrollPane(console);
 					eastPane.add(consoleScrollPane);
 					consoleScrollPane.setViewportBorder(null);
+					console.append("blabla");
 				}
-
 			}
 		}
 
 		window.setVisible(true);
 		console.setVisible(true);
 		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
+//
+//		JFrame frame = new JFrame();
+//		frame.setSize(200,200);
+//		frame.setLayout(new BorderLayout());
+//		console = new SystemOutConsole(System.out);
+//		frame.add(console,BorderLayout.CENTER);
+//		console.append("bla");
+//		frame.setVisible(true);
+	}
+	
+	public static void main(String[] args) {
+		new Gui();
 	}
 
 	@Override
