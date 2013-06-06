@@ -64,8 +64,4 @@ public class Server {
 		connectionManagers.remove(manager);
 	}
 	
-	public ConnectionManager getConnectionManager() {
-		return connectionManagers.get(0);
-	}
-	
 }
