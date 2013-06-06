@@ -108,7 +108,7 @@ public class PhotoAnalyzer {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				takeColorOfSomething(camera.getBall(),buttonTakeBall);
+				takeColorOfSomething(camera.getObstacle(),buttonTakeObstacle);
 				
 			}
 
@@ -118,7 +118,7 @@ public class PhotoAnalyzer {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				takeColorOfSomething(camera.getObstacle(),buttonTakeObstacle);
+				takeColorOfSomething(camera.getBall(),buttonTakeBall);
 				
 			}
 

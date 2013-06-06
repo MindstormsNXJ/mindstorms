@@ -37,8 +37,8 @@ vec4 pickColor(sampler2D texture, vec2 uv){
 void main(void)
 { 
 	vec4 v4_obstacle_final = vec4(1.0,0.25,0.0,1.0);
-	vec4 v4_ball_final = vec4(1.0,1.0,0.0,1.0);
-	vec4 v4_goal_final = vec4(0.25,1.0,0.0,1.0);
+	vec4 v4_ball_final = vec4(0.0,0.0,1.0,1.0);
+	vec4 v4_goal_final = vec4(1.0,1.0,0.0,1.0);
 	vec4 v4_robot_final = vec4(1.0,1.0,1.0,1.0);
 
 	vec4 area_color = pickColor(tex, ex_uv);
