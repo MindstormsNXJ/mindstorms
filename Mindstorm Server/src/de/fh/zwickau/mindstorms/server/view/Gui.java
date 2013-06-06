@@ -178,7 +178,6 @@ public class Gui extends Applet implements ActionListener {
 		}
 
 		window.setVisible(true);
-		console.setVisible(true);
 		window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 
