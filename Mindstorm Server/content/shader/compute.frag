@@ -16,22 +16,22 @@ bool isRelativeEqual(vec4 area_color, vec4 v4){
 }
 
 vec4 pickColor(sampler2D texture, vec2 uv){
-	vec4 color = texture2D(texture, uv)*4;
+	vec4 color = texture2D(texture, uv);
 	float range = 0.002;
 
-	color += texture2D(texture, uv + vec2(range, range)) * 0.5;
-	color += texture2D(texture, uv + vec2(-range, range)) * 0.5;
-	color += texture2D(texture, uv + vec2(-range, -range)) * 0.5;
-	color += texture2D(texture, uv + vec2(range, -range)) * 0.5;
+	color = min(color, texture2D(texture, uv + vec2(range, range)));
+	color = min(color, texture2D(texture, uv + vec2(-range, range)));
+	color = min(color, texture2D(texture, uv + vec2(-range, -range)));
+	color = min(color, texture2D(texture, uv + vec2(range, -range)));
 
 	range = 0.004;
 
-	color += texture2D(texture, uv + vec2(range, range))* 0.25;
-	color += texture2D(texture, uv + vec2(-range, range))* 0.25;
-	color += texture2D(texture, uv + vec2(-range, -range))* 0.25;
-	color += texture2D(texture, uv + vec2(range, -range))* 0.25;
+	color = min(color, texture2D(texture, uv + vec2(range, range)));
+	color = min(color, texture2D(texture, uv + vec2(-range, range)));
+	color = min(color, texture2D(texture, uv + vec2(-range, -range)));
+	color = min(color, texture2D(texture, uv + vec2(range, -range)));
 
-	return color / 7.0;
+	return color;
 }
 
 void main(void)

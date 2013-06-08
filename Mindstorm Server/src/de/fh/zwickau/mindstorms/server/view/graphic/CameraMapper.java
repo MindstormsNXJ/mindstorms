@@ -16,6 +16,8 @@ import de.fh.zwickau.mindstorms.server.view.graphic.shape.Rectangle;
 public class CameraMapper {
     private Camera camera;
     private Texture tex_camera;
+    private ByteBuffer computeOutput;
+    private int resolution = 512;
     
     public CameraMapper(){
 
@@ -29,7 +31,6 @@ public class CameraMapper {
         
         tex_camera = new Texture(camera.getImageWidth(), camera.getImageHeight(), "tex");
         tex_camera.SetupTextures(camera.getByteBuffer());
-        //tex_camera.UploadPixelsToGPU(camera.getByteBuffer());
     }
     
     public void draw(){
@@ -38,6 +39,7 @@ public class CameraMapper {
         float[] obst = camera.getObstacle();
 
         glClear(GL_COLOR_BUFFER_BIT);
+        glViewport(0, 0, resolution, resolution);
         
         ShaderManager.useShader("compute");
         glUniform4f(ShaderManager.getUniformLocation("v4_obstacle"), obst[0], obst[1], obst[2], 0.2f);
@@ -55,8 +57,13 @@ public class CameraMapper {
     }
     
     private void readFromFrameBuffer(){
-    	ByteBuffer buffer = BufferUtils.createByteBuffer(512*512*3);
-    	glReadPixels(0, 0, 512, 512, GL_RGB, GL_BYTE, buffer);
+        computeOutput = BufferUtils.createByteBuffer(resolution*resolution*3);
+    	glReadPixels(0, 0, resolution, resolution, GL_RGB, GL_BYTE, computeOutput);
+    	
+    }
+    
+    public ByteBuffer getComputedOutput(){
+        return computeOutput;
     }
     
 }
