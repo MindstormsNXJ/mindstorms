@@ -18,8 +18,9 @@ public class Pick {
 	private TouchSensor touchSensor;
 	private NXTRegulatedMotor grabberMotor;
 	private UltrasonicSensor sensor;
-	private int wayDown = 460;			// tacho count of grabber motor to move grabber down
+	private int wayDown = 400;			// tacho count of grabber motor to move grabber down
 	private int itemDistance = 250;		// at this distance the robot stops and put the grabber down
+	private int targetDistance = 130;   // the rest distance to the final target where the robot will stop
 	
 
 	public Pick(Robot r){
@@ -37,14 +38,16 @@ public class Pick {
 		grabberMotor.resetTachoCount();
 		grabberMotor.setSpeed(150);
 		grabberMotor.forward();
+		long startTime = System.currentTimeMillis();
 		boolean up = false;
 		while(!up){
-			if(touchSensor.isPressed() || (grabberMotor.getTachoCount() > 700)){
+			if(touchSensor.isPressed() || (System.currentTimeMillis() - startTime) > 8000){
 				Sound.beep();
 				grabberMotor.stop();
 				up = true;
 			}
 		}
+		grabberMotor.rotateTo(grabberMotor.getTachoCount() - 60);
 	}
 	
 	/**
@@ -89,6 +92,7 @@ public class Pick {
 			if(robot.colorSensor.getColorID() == 2){
 				Sound.beepSequenceUp();
 				System.out.println("blue");
+				grabberMotor.rotateTo(grabberMotor.getTachoCount() - 60);
 				return true;
 			}
 			else{
@@ -107,9 +111,8 @@ public class Pick {
 	}
 	
 	public void dropItem(){
-//		robot.positionManager.move(300);
 		int distance = sensor.getDistance() * 10; // for mm
-		int driveDist = distance - itemDistance;
+		int driveDist = distance - targetDistance;
 		// System.out.println(driveDist);
 		robot.positionManager.move(driveDist);
 		grabberMotor.resetTachoCount();
@@ -120,6 +123,7 @@ public class Pick {
 			if(grabberMotor.getTachoCount() < - wayDown || robot.colorSensor.getColorID() != 2)
 				down = false;
 		}
+		grabberMotor.stop();
 		robot.positionManager.move(-100);
 		pickerUp();
 	}

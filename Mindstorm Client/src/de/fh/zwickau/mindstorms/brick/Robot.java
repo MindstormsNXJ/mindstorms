@@ -119,6 +119,15 @@ public class Robot {
 	public void stop() {
 		positionManager.stop();
 	}
+	
+	/**
+	 * This method will only stop the motors and not call the position managers stop method
+	 * in order to prevent a position update (e.g. for angle correction while driving).
+	 */
+	public void stopMotors() {
+		leftMotor.stop(true);
+		rightMotor.stop(false);
+	}
 
 	/**
 	 * This method moves the robot in front of an item and picks the item with

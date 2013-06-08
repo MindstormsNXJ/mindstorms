@@ -22,6 +22,7 @@ public class ConnectionManager {
 	private Parser parser;
 	private DataOutputStream positionSender;
 	private DataInputStream commandReceiver;
+	private static ConnectionManager instance;
 	
 	/**
 	 * Initialises a ConnectionManager, including the connection itself and 
@@ -30,8 +31,10 @@ public class ConnectionManager {
 	 * @param robot the robot which established the connection 
 	 */
 	public ConnectionManager(Robot robot) {
+		instance = this;
 		parser = new Parser(robot);
 		establishConnection();
+		ConnectionManager.sendOutputMessage("DriveTranslation: " + robot.driveTranslation);
 		sendPose();
 		waitForCommands();
 	}
@@ -81,11 +84,11 @@ public class ConnectionManager {
 		}).start();
 	}
 	
-	private void sendOutputMessage(String outputMessage) {
+	public static void sendOutputMessage(String outputMessage) {
 		System.out.println("Sending message: " + outputMessage);
 		try {
-			positionSender.writeUTF("o" + outputMessage);
-			positionSender.flush();
+			instance.positionSender.writeUTF("o" + outputMessage);
+			instance.positionSender.flush();
 		} catch (IOException e) {
 			System.err.println("Error sending message, retrying...");
 			Delay.msDelay(1000);

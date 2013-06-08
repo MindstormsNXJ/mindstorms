@@ -54,9 +54,11 @@ public class Initializer implements ButtonListener {
 //			robot.pickItem();
 		case TEST:
 			//try new rotation with own Cartesian zero
-			robot.positionManager.rotateTo(180);
-			robot.positionManager.rotateTo(90);
-			robot.positionManager.rotateTo(270);
+//			robot.positionManager.rotateTo(180);
+//			robot.positionManager.rotateTo(90);
+//			robot.positionManager.rotateTo(270);
+			robot.positionManager.move(300);
+			
 			break;
 		case PICKERTEST:
 			// testing for the pick and drop mechanism
@@ -93,7 +95,7 @@ public class Initializer implements ButtonListener {
 					// calculate driveTranslation
 					DriveTranslationCalibrator driveTranslationCalibrator = new DriveTranslationCalibrator(robot.leftMotor, robot.rightMotor, robot.ultrasonicSensor);
 					robot.driveTranslation = driveTranslationCalibrator.getDriveTranslation() / 10;
-
+					
 					// calibrate compass sensor
 					new CompassCalibrator(robot);
 				}

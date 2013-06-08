@@ -37,6 +37,7 @@ public class ConnectionManager {
 	
 	//TODO remove for final version
 	private final boolean NO_NXT = false; //true, if there is no NXT available - PathFinding only
+//	private int counter = 0;
 	
 	/**
 	 * Initialises a ConnectionManager, including the connection itself as well as
@@ -170,6 +171,61 @@ public class ConnectionManager {
 			Pose pose = decodePose(receivedString);
 			mapper.addPose(pose, connector.getNXTInfo().name);
 			pathFinder.nextAction(pose, this);
+			//TODO remove for final version
+//			switch (counter) {
+//			case 0:
+//				sendForwardCommand(400);
+//				++counter;
+//				break;
+//			case 1:
+//				sendTurnCommand(90);
+//				++counter;
+//				break;
+//			case 2:
+//				sendForwardCommand(200);
+//				++counter;
+//				break;
+//			case 3:
+//				sendTurnCommand(180);
+//				++counter;
+//				break;
+//			case 4:
+//				sendForwardCommand(400);
+//				++counter;
+//				break;
+//			case 5:
+//				sendTurnCommand(270);
+//				++counter;
+//				break;
+//			case 6:
+//				sendForwardCommand(200);
+//				++counter;
+//				break;
+//			case 7:
+//				sendTurnCommand(0);
+//				++counter;
+//				break;
+//			case 0: 
+//				sendPickCommand(200);
+//				++counter;
+//				break;
+//			case 1:
+//				sendTurnCommand(90);
+//				++counter;
+//				break;
+//			case 2:
+//				sendDropCommand(0);
+//				++counter;
+//				break;
+//			case 0:
+//				sendPickCommand(0);
+//				++counter;
+//				break;
+//			case 1:
+//				sendDropCommand(0);
+//				++counter;
+//				break;
+//			}
 		} else {
 			System.err.println("The received String could not be decoded.");
 		}

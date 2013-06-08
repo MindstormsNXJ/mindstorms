@@ -39,7 +39,7 @@ public class ConverterV2 {
 					{
 						//find right end of line
 						++x; //one field next to the found field
-						while (bytes[x][j] != 0) {
+						while (x < arrayLength && bytes[x][j] != 0) {
 							++x; //the line continues
 						}
 						//x is the first empty field now
@@ -51,9 +51,9 @@ public class ConverterV2 {
 						}
 					}
 					{
-						//find top end of line
+						//find bottom end of line
 						++y; //one field under the found field
-						while (bytes[i][y] != 0) {
+						while (y < arrayLength && bytes[i][y] != 0) {
 							++y; //the line continues
 						}
 						//y is the first empty field now
@@ -81,7 +81,7 @@ public class ConverterV2 {
 	
 	/**
 	 * This method flips the byte array upside down - necessary because for my algorithm the point (0,0) is in the top left
-	 * corner, not in the top left like in the MapGrid.
+	 * corner, not in the bottom left one like in the MapGrid.
 	 * 
 	 * @param bytes the byte array to flip
 	 * @return the flipped byte array

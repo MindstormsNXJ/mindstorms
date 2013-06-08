@@ -5,13 +5,16 @@ import java.util.ArrayList;
 import de.fh.zwickau.mindstorms.server.communication.ConnectionManager;
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
+
 import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.Camera;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.PhotoAnalyzer;
-import de.fh.zwickau.mindstorms.server.view.View;
+
+import de.fh.zwickau.mindstorms.server.view.*;
+
 
 public class Server {
 	
-	private View view;
+	private Gui view;
 	private Mapper mapper;
 	private Camera camera;
 	private PhotoAnalyzer photoAnalyzer;
@@ -21,7 +24,7 @@ public class Server {
 	public Server(){
 		connectionManagers = new ArrayList<ConnectionManager>();
 		
-		view = new View();
+		view = new Gui();
 		mapper = new Mapper(4);
         camera = new Camera();
         photoAnalyzer= new PhotoAnalyzer(camera);
@@ -75,4 +78,9 @@ public class Server {
 		 photoAnalyzer.setPhotoAnalyzerVisible();
 	 }
 	
+	public ConnectionManager getConnectionManager() {
+		return connectionManagers.get(0);
+	}
+	
 }
+
