@@ -107,8 +107,8 @@ public class Camera {
 			image = ImageIO.read(imagefile);
 			width = image.getWidth();
 			height = image.getHeight();
-
 		} catch (IOException e) {
+			System.err.println("Could not load camera Image: content/photos/" + input);	
 			e.printStackTrace();
 		}
 		byteBuffer = makeByteBuffer(image);
