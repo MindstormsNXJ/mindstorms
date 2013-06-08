@@ -34,7 +34,7 @@ public class Gui extends Applet implements ActionListener {
 		{
 			window.add(mainPane);
 			GridBagLayout gbl_main = new GridBagLayout();
-			gbl_main.columnWidths = new int[] { 525, 475 };
+			gbl_main.columnWidths = new int[] { 520, 475 };
 			gbl_main.rowHeights = new int[] { 730 };
 			mainPane.setLayout(gbl_main);
 
@@ -43,7 +43,7 @@ public class Gui extends Applet implements ActionListener {
 				mainPane.add(westPane, new GridBagConstraints(0, 0, 1, 1, 0, 0,GridBagConstraints.CENTER, GridBagConstraints.BOTH,new Insets(0, 0, 0, 0), 0, 0));
 				GridBagLayout gbl_west = new GridBagLayout();
 				gbl_west.columnWidths = new int[] {513};
-				gbl_west.rowHeights = new int[] { 525, 205 };
+				gbl_west.rowHeights = new int[] { 520, 205 };
 				westPane.setLayout(gbl_west);
 				westPane.setBackground(Color.BLACK);
 
