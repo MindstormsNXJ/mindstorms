@@ -17,7 +17,8 @@ public class CameraMapper {
     private Camera camera;
     private Texture tex_camera;
     private ByteBuffer computeOutput;
-    private int resolution = 512;
+
+	private int resolution = 512;
     
     public CameraMapper(){
 
@@ -66,4 +67,7 @@ public class CameraMapper {
         return computeOutput;
     }
     
+    public ByteBuffer getComputeOutput() {
+    	return computeOutput;
+    }
 }
