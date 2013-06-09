@@ -17,7 +17,7 @@ public class CameraMapper {
     private Camera camera;
     private Texture tex_camera;
     private ByteBuffer computeOutput;
-    private int resolution = 512;
+    private int resolution = 64;
     
     public CameraMapper(){
 
@@ -59,7 +59,7 @@ public class CameraMapper {
     private void readFromFrameBuffer(){
         computeOutput = BufferUtils.createByteBuffer(resolution*resolution*3);
     	glReadPixels(0, 0, resolution, resolution, GL_RGB, GL_BYTE, computeOutput);
-    	
+    	camera.setComputedBuffer(computeOutput);
     }
     
     public ByteBuffer getComputedOutput(){

@@ -16,7 +16,9 @@ import org.lwjgl.BufferUtils;
 public class Camera {
 
 	ByteBuffer byteBuffer = null;
+	ByteBuffer computedBuffer = null;
 	BufferedImage image = null;
+	
 	float[] obstacle = { 0.2f, 0.2f, 0.15f, 0.2f };
 	float[] obstacle2 = { 0.0f, 0.0f, 0.0f, 0.2f };
 	float[] ball = { 0.0f, 0, 0.8f, 0.2f };
@@ -141,6 +143,10 @@ public class Camera {
 		}
 		buffer.rewind();
 		return buffer;
+	}
+	
+	public void setComputedBuffer(ByteBuffer computedBuffer){
+	    this.computedBuffer = computedBuffer;
 	}
 
 	public int getImageWidth() {
