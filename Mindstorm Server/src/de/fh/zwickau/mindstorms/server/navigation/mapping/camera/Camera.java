@@ -7,6 +7,9 @@ import java.nio.ByteBuffer;
 import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 
+import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
+import de.fh.zwickau.mindstorms.server.view.graphic.CameraMapper;
+
 /**
  * The camera is used to create/load images from the Environment.
  * 
@@ -25,6 +28,24 @@ public class Camera {
 	float[] robot = { 0.0f, 0.0f, 0.0f, 0.2f };
 	float[] goal = { 1.0f, 1.0f, 0.0f, 0.2f };
 	double xScale,yScale=10;
+	Mapper mapper;
+	CameraMapper Cmapper;
+
+	public CameraMapper getCmapper() {
+		return Cmapper;
+	}
+
+	public void registerCmapper(CameraMapper cmapper) {
+		Cmapper = cmapper;
+	}
+
+	public Mapper getMapper() {
+		return mapper;
+	}
+
+	public void registerMapper(Mapper mapper) {
+		this.mapper = mapper;
+	}
 
 	public double getxScale() {
 		return xScale;

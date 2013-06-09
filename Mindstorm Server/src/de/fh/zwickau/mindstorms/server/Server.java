@@ -48,6 +48,7 @@ public class Server {
 		view.registerMapper(mapper);
 		view.registerCamera(camera);
 		view.registerTargetManager(targetManager);
+		camera.registerMapper(mapper);
 	}
 	
 	public void saveMap(){

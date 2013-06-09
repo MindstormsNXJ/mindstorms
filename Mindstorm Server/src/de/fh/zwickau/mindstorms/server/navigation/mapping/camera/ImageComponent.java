@@ -10,7 +10,7 @@ import javax.swing.JComponent;
  * @author Aismael
  *
  */
-class ImageComponent extends JComponent
+public class ImageComponent extends JComponent
 {
   private static final long serialVersionUID = 8055865896136562197L;
 

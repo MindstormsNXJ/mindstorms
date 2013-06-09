@@ -4,6 +4,7 @@ import de.fh.zwickau.mindstorms.server.Server;
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.Camera;
+import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.ImageComponent;
 import de.fh.zwickau.mindstorms.server.view.graphic.GraphicCanvas;
 
 import java.applet.Applet;

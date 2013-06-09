@@ -66,4 +66,7 @@ public class CameraMapper {
         return computeOutput;
     }
     
+    public ByteBuffer getComputeOutput() {
+    	return computeOutput;
+    }
 }

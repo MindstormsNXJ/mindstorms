@@ -79,7 +79,7 @@ public class PhotoAnalyzer {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				jFrame.setVisible(false);
+				//jFrame.setVisible(false);
 			}
 
 		});
@@ -103,8 +103,8 @@ public class PhotoAnalyzer {
 			}
 
 		});
-		buttonTakeBall = new JButton("TakeObstacle");
-		buttonTakeBall.addActionListener(new ActionListener() {
+		buttonTakeObstacle = new JButton("TakeObstacle");
+		buttonTakeObstacle.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -113,8 +113,8 @@ public class PhotoAnalyzer {
 			}
 
 		});
-		buttonTakeObstacle = new JButton("TakeBall");
-		buttonTakeObstacle.addActionListener(new ActionListener() {
+		buttonTakeBall = new JButton("TakeBall");
+		buttonTakeBall.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
