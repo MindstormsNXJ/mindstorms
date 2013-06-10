@@ -87,7 +87,7 @@ public class GraphicCanvas extends Thread {
         while (!Display.isCloseRequested()) {
             update();
             
-            cameraMapper.draw();
+            cameraMapper.compute();
             //drawMapOverview();
         }
 

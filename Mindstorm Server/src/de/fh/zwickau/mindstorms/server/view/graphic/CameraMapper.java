@@ -13,11 +13,20 @@ import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.Camera;
 import de.fh.zwickau.mindstorms.server.view.graphic.shader.ShaderManager;
 import de.fh.zwickau.mindstorms.server.view.graphic.shape.Rectangle;
 
+/**
+ * The CameraMapper is able to use the GPU
+ * for Obstacle detection the code for this
+ * is in the compute.frag file
+ * 
+ * @author Andre Furchner
+ *
+ */
 public class CameraMapper {
-    private Camera camera;
-    private Texture tex_camera;
-    private ByteBuffer computeOutput;
-    private int resolution = 64;
+    private Camera camera;														// Main Camera
+    private Texture tex_camera;													// Camera Image
+    private ByteBuffer computeOutput;											// Output from compute.frag
+    private int resolution = 64;												// Output resolution
+    
     
     public CameraMapper(){
 
@@ -27,13 +36,21 @@ public class CameraMapper {
         this.camera = camera;
     }
     
+    /**
+     * CameraMapper will be load a new Image from Camera
+     * and upload this Image as a ByteBuffer to the GPU.
+     */
     public void update(){
         
         tex_camera = new Texture(camera.getImageWidth(), camera.getImageHeight(), "tex");
         tex_camera.SetupTextures(camera.getByteBuffer());
     }
     
-    public void draw(){
+    /**
+     * The Image from Camera will be proceed thru the compute.frag shader on the GPU.
+     * The Output is going to the Camera class as a ByteBuffer.
+     */
+    public void compute(){
         float[] ball = camera.getBall();
         float[] goal = camera.getGoal();
         float[] obst = camera.getObstacle();
@@ -56,6 +73,9 @@ public class CameraMapper {
         readFromFrameBuffer();
     }
     
+    /**
+     * Read the output from FrameBuffer
+     */
     private void readFromFrameBuffer(){
         computeOutput = BufferUtils.createByteBuffer(resolution*resolution*3);
     	glReadPixels(0, 0, resolution, resolution, GL_RGB, GL_BYTE, computeOutput);
@@ -64,9 +84,5 @@ public class CameraMapper {
     
     public ByteBuffer getComputedOutput(){
         return computeOutput;
-    }
-    
-    public ByteBuffer getComputeOutput() {
-    	return computeOutput;
     }
 }
