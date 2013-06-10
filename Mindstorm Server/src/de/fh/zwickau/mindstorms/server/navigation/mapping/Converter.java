@@ -5,6 +5,7 @@ import static java.lang.Math.*;
 import java.util.ArrayList;
 
 import lejos.geom.Line;
+import lejos.geom.Point;
 import lejos.geom.Rectangle;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
@@ -24,11 +25,11 @@ public class Converter {
 	 * @param dist distance
 	 * @return float[2] point
 	 */
-	public static float[] calculateObstaclePosition(Pose pose, int dist) {
+	public static Point calculateObstaclePosition(Pose pose, int dist) {
 	
-		float[] target = new float[2];	
-		target[0] = (float)(sin(toRadians((double)pose.getHeading())) * (double)dist + pose.getX());
-		target[1] = (float)(cos(toRadians((double)pose.getHeading())) * (double)dist + pose.getY());
+		Point target = new Point(0);	
+		target.x = (float)(sin(toRadians((double)pose.getHeading())) * (double)dist + pose.getX());
+		target.y = (float)(cos(toRadians((double)pose.getHeading())) * (double)dist + pose.getY());
 		
 		return target;
 	}

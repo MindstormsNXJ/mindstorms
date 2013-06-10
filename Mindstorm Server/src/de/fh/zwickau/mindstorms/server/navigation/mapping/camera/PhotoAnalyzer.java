@@ -2,20 +2,15 @@ package de.fh.zwickau.mindstorms.server.navigation.mapping.camera;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.ImageIcon;
-import javax.swing.JApplet;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -45,12 +40,12 @@ public class PhotoAnalyzer {
 		jFrame.setSize(900, 600);
 		jFrame.setVisible(false);
 		mainPanel = new JPanel();
-		JPanel buttonPanel = new JPanel();// Jpanel for the Buttons
+		JPanel buttonPanel = new JPanel();// JPanel for the Buttons
 		// Make Scaled Image out of the Photo
 		IC = new ImageComponent();
 		IC.setImage(camera.getImage());
 
-		// initialise Panels on the Windows
+		// Initialize Panels on the Windows
 		mainPanel.setLayout(new BorderLayout());
 		SC = new JScrollPane(IC);
 		mainPanel.add(SC, BorderLayout.CENTER);
@@ -185,25 +180,21 @@ public class PhotoAnalyzer {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TO
 
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
 
 			}
 

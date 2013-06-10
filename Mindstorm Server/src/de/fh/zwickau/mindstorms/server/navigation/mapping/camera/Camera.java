@@ -5,17 +5,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 import javax.imageio.ImageIO;
-
-import org.jfree.chart.util.HexNumberFormat;
 import org.lwjgl.BufferUtils;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
-
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
-import de.fh.zwickau.mindstorms.server.view.graphic.CameraMapper;
+
 
 /**
  * The camera is used to create/load images from the Environment.
@@ -238,24 +233,20 @@ public class Camera {
 		float[] obstaclePoints=new float[computedBuffer.remaining()];
 		computedBuffer.get(obstaclePoints);
 		int k=0;
-		float verg= 1.0f;
-		for (int i=0;i<64;i++){
-			for (int j=0;j<64;j++){
-				if(obstaclePoints[k]==verg){
-					System.out.println("ein hinderniss "+obstaclePoints[k]);
-					Point obPoint= new Point(j, i);
+		float verg = 1.0f;
+		for (int i = 0; i < 64; i++){
+			for (int j = 0; j< 64; j++){
+				if(obstaclePoints[k] == verg){
+					Point obPoint = new Point(j, i);
 					mapper.addObstacle(makePointTolejosPoint(obPoint));
-				}else{
-					System.out.println("kein hinderniss "+obstaclePoints[k]);
 				}
-			
 				k++;
 			}
 		}
 	}
 
 	private lejos.geom.Point makePointTolejosPoint(Point toChange){
-		lejos.geom.Point lePoint=new lejos.geom.Point (((float)toChange.getX()-32)*getxScaleFor64Grid(),( (float)toChange.getY()-32)*getyScaleFor64Grid());
+		lejos.geom.Point lePoint = new lejos.geom.Point (((float)toChange.getX() - 32) * getxScaleFor64Grid(), ((float)toChange.getY() - 32) * getyScaleFor64Grid());
 		return lePoint;
 	}
 }

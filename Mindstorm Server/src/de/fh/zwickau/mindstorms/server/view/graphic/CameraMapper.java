@@ -3,12 +3,8 @@ package de.fh.zwickau.mindstorms.server.view.graphic;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.Display;
 
 import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.Camera;
 import de.fh.zwickau.mindstorms.server.view.graphic.shader.ShaderManager;

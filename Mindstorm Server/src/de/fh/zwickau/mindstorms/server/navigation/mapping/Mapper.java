@@ -54,7 +54,7 @@ public class Mapper {
 	public void addObstacle(Pose pose, int dist/*, ID id*/) {
 		
 		//calculate the right coordinates
-		float[] obstacle_position = Converter.calculateObstaclePosition(pose, dist);
+		Point obstacle_position = Converter.calculateObstaclePosition(pose, dist);
 		
 		//TODO: check if its a other robot or a goal
 		boolean isNotRobotOrGoal = true; // =)
@@ -62,16 +62,6 @@ public class Mapper {
 		if(isNotRobotOrGoal){
 			addObstacle(obstacle_position);
 		}
-	}
-
-	/**
-	 * Add an Obstacle at the world position without
-	 * check if its a other robot or a goal.
-	 * @param pos position
-	 */
-	private void addObstacle(float[] pos){
-		addObstacle((int)(pos[0]/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2,
-		            (int)(pos[1]/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2);
 	}
 	
 	/**
@@ -90,11 +80,14 @@ public class Mapper {
 		}
 	}
 	
-	public void addObstacle(Point obstPoint){
-		float[] obstFloat=new float[2];
-		obstFloat[0]=obstPoint.x;
-		obstFloat[1]=obstPoint.y;
-		addObstacle(obstFloat);
+	/**
+     * Add an Obstacle at the world position without
+     * check if its a other robot or a goal.
+     * @param obstPoint position of obstacle
+     */
+	public void addObstacle(Point obstPoint){		
+		addObstacle((int)(obstPoint.x/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2,
+                    (int)(obstPoint.y/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2);
 	}
 	
 	/**
