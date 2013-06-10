@@ -90,6 +90,13 @@ public class Mapper {
 		}
 	}
 	
+	public void addObstacle(Point obstPoint){
+		float[] obstFloat=new float[2];
+		obstFloat[0]=obstPoint.x;
+		obstFloat[1]=obstPoint.y;
+		addObstacle(obstFloat);
+	}
+	
 	/**
 	 * Remove a Obstacle at the local position
 	 * @param x	position

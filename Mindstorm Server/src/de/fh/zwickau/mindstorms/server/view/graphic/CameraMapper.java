@@ -78,8 +78,8 @@ public class CameraMapper {
      * Read the output from FrameBuffer
      */
     private void readFromFrameBuffer(){
-        computeOutput = BufferUtils.createFloatBuffer(resolution*resolution*3);
-    	glReadPixels(0, 0, resolution, resolution, GL_RGB, GL_FLOAT, computeOutput);
+        computeOutput = BufferUtils.createFloatBuffer(resolution*resolution);
+    	glReadPixels(0, 0, resolution, resolution, GL_RED, GL_FLOAT, computeOutput);
     	computeOutput.rewind();
     	camera.setComputedBuffer(computeOutput);
     }

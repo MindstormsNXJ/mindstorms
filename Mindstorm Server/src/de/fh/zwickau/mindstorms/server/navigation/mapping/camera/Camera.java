@@ -243,6 +243,8 @@ public class Camera {
 			for (int j=0;j<64;j++){
 				if(obstaclePoints[k]==verg){
 					System.out.println("ein hinderniss "+obstaclePoints[k]);
+					Point obPoint= new Point(j, i);
+					mapper.addObstacle(makePointTolejosPoint(obPoint));
 				}else{
 					System.out.println("kein hinderniss "+obstaclePoints[k]);
 				}

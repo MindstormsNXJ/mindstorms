@@ -70,6 +70,6 @@ void main(void)
 
 	// if we are here we had nothig detected
 	//float m = (area_color.r + area_color.g + area_color.b) / 3.0;
-	gl_FragColor = vec4(1.0,1.0,1.0,1.0);
+	gl_FragColor = vec4(0.0,0.0,0.0,1.0);
 	//gl_FragColor = area_color;
 }
