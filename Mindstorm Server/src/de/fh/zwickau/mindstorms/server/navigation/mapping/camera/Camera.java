@@ -4,8 +4,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
 import javax.imageio.ImageIO;
+
+import org.jfree.chart.util.HexNumberFormat;
 import org.lwjgl.BufferUtils;
+
+import com.sun.org.apache.xerces.internal.impl.dv.util.HexBin;
 
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 import de.fh.zwickau.mindstorms.server.view.graphic.CameraMapper;
@@ -199,8 +205,8 @@ public class Camera {
 		return buffer;
 	}
 
-	public void setComputedBuffer(ByteBuffer computedBuffer) {
-		this.computedBuffer = computedBuffer;
+	public void setComputedBuffer(ByteBuffer computeOutput) {
+		this.computedBuffer = computeOutput;
 	}
 
 	public int getImageWidth() {
@@ -220,8 +226,33 @@ public class Camera {
 	}
 
 	public void analyzeDataRegister() {
-		//TODO scaling to world choord ball and goal
-		
+		mapper.setBallPosition(makePointTolejosPoint(ballPointOn64Grid));
+		mapper.setGoalPosition(makePointTolejosPoint(goalPointOn64Grid));
+		System.out.println("Registriere Photodaten");
+		analyzeObstaclemap();
+		System.out.println("Registrierung beendet");
+	}
+	
+	public void analyzeObstaclemap(){
+		byte[] obstaclePoints=new byte[computedBuffer.remaining()];
+		computedBuffer.get(obstaclePoints);
+		int k=0;
+		byte verg= (byte) 0xFF;
+		for (int i=0;i<64;i++){
+			for (int j=0;j<64;j++){
+				if(obstaclePoints[(k*3)+1]==verg){
+					System.out.println("ein hinderniss "+obstaclePoints[k]);
+				}else{
+					System.out.println("kein hinderniss "+obstaclePoints[k]);
+				}
+			
+				k++;
+			}
+		}
 	}
 
+	private lejos.geom.Point makePointTolejosPoint(Point toChange){
+		lejos.geom.Point lePoint=new lejos.geom.Point ((float)toChange.getX()*getxScaleFor64Grid(), (float)toChange.getY()*getyScaleFor64Grid());
+		return lePoint;
+	}
 }

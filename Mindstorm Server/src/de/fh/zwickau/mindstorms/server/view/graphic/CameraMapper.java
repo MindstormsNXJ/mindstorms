@@ -4,6 +4,8 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
 
@@ -75,8 +77,9 @@ public class CameraMapper {
      * Read the output from FrameBuffer
      */
     private void readFromFrameBuffer(){
-        computeOutput = BufferUtils.createByteBuffer(resolution*resolution);
-    	glReadPixels(0, 0, resolution, resolution, GL_RED, GL_BYTE, computeOutput);
+        computeOutput = BufferUtils.createByteBuffer(resolution*resolution*3);
+    	glReadPixels(0, 0, resolution, resolution, GL_RGB, GL_BYTE, computeOutput);
+    	computeOutput.rewind();
     	camera.setComputedBuffer(computeOutput);
     }
     

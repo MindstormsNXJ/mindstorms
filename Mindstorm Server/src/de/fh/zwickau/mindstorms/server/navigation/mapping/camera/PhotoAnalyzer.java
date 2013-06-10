@@ -81,6 +81,7 @@ public class PhotoAnalyzer {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				camera.analyzeDataRegister();
+				jFrame.setVisible(false);
 			}
 
 		});
