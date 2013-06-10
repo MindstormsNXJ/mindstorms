@@ -61,6 +61,7 @@ public class PhotoAnalyzer {
 		buttonPanel.add(buttonTakeBall);
 		buttonPanel.add(buttonTakeObstacle);
 		
+		camera.setScaleFromOriginal((float)IC.getScale());
 		jFrame.getContentPane().add(mainPanel);
 
 	}
@@ -98,7 +99,7 @@ public class PhotoAnalyzer {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				takeColorOfSomething(camera.getGoal(),buttonTakeGoal);
+				takeColorOfSomething(camera.getGoal(),camera.getGoalPointOn64Grid(),buttonTakeGoal);
 				
 			}
 
@@ -108,7 +109,7 @@ public class PhotoAnalyzer {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				takeColorOfSomething(camera.getObstacle(),buttonTakeObstacle);
+				takeColorOfSomething(camera.getObstacle(),camera.getObstaclePoint(),buttonTakeObstacle);
 				
 			}
 
@@ -118,15 +119,16 @@ public class PhotoAnalyzer {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				takeColorOfSomething(camera.getBall(),buttonTakeBall);
+				takeColorOfSomething(camera.getBall(),camera.getBallPointOn64Grid(),buttonTakeBall);
 				
 			}
 
 		});
 	}
 
-	protected void takeColorOfSomething(float[] RGBCamera, JButton buttonToChange2) {
+	protected void takeColorOfSomething(float[] RGBCamera,Point TargetPosition, JButton buttonToChange2) {
 		final float[] camera=RGBCamera;
+		final Point cameraPoint=TargetPosition;
 		if(!pickInprocess){
 			pickInprocess=true;
 			buttonToChange2.setForeground(Color.cyan);
@@ -146,6 +148,8 @@ public class PhotoAnalyzer {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				cameraPoint.setX(e.getX()/8-32);
+				cameraPoint.setY(e.getY()/8-32);
 				int pixel = IC.getImage().getRGB(e.getX(), e.getY());
 				R = (float) ((pixel >> 16) & 0xFF) / 255; // Red
 				G=(float)((pixel >> 8) & 0xFF)/255;

@@ -21,22 +21,49 @@ public class Camera {
 	ByteBuffer byteBuffer = null;
 	ByteBuffer computedBuffer = null;
 	BufferedImage image = null;
-	
-	float[] obstacle = { 0.2f, 0.2f, 0.15f, 0.2f };
-	float[] obstacle2 = { 0.0f, 0.0f, 0.0f, 0.2f };
 	float[] ball = { 0.0f, 0, 0.8f, 0.2f };
 	float[] robot = { 0.0f, 0.0f, 0.0f, 0.2f };
 	float[] goal = { 1.0f, 1.0f, 0.0f, 0.2f };
-	double xScale,yScale=10;
-	Mapper mapper;
-	CameraMapper Cmapper;
+	Point goalPointOn64Grid=new Point(0, 0);
+	Point ballPointOn64Grid=new Point(0, 0);;
+	Point obstaclePoint=new Point(0, 0);
+	float scaleFromOriginal;
 
-	public CameraMapper getCmapper() {
-		return Cmapper;
+	public float getScaleFromOriginal() {
+		return scaleFromOriginal;
 	}
 
-	public void registerCmapper(CameraMapper cmapper) {
-		Cmapper = cmapper;
+	public void setScaleFromOriginal(float scaleFromOriginal) {
+		this.scaleFromOriginal = scaleFromOriginal;
+	}
+
+	double xScale, yScale = 10;
+	Mapper mapper;
+
+	float[] obstacle = { 0.2f, 0.2f, 0.15f, 0.2f };
+
+	public Point getGoalPointOn64Grid() {
+		return goalPointOn64Grid;
+	}
+
+	public void setGoalPointOn64Grid(Point goalPoint) {
+		this.goalPointOn64Grid = goalPoint;
+	}
+
+	public Point getBallPointOn64Grid() {
+		return ballPointOn64Grid;
+	}
+
+	public void setBallPointOn64Grid(Point ballPoint) {
+		this.ballPointOn64Grid = ballPoint;
+	}
+
+	public Point getObstaclePoint() {
+		return obstaclePoint;
+	}
+
+	public void setObstaclePoint(Point obstaclePoint) {
+		this.obstaclePoint = obstaclePoint;
 	}
 
 	public Mapper getMapper() {
@@ -51,12 +78,24 @@ public class Camera {
 		return xScale;
 	}
 
+	public float  getxScaleFor64Grid() {
+		float pixelPerCm=(float) ((xScale/scaleFromOriginal)/8.0f);
+		float cmPerPixel=1/pixelPerCm;
+		return cmPerPixel;
+	}
+
 	public void setxScale(double xScale) {
 		this.xScale = xScale;
 	}
 
 	public double getyScale() {
 		return yScale;
+	}
+
+	public float getyScaleFor64Grid() {
+		float pixelPerCm=(float) ((yScale/scaleFromOriginal)/8.0f);
+		float cmPerPixel=1/pixelPerCm;
+		return cmPerPixel;
 	}
 
 	public void setyScale(double yScale) {
@@ -77,14 +116,6 @@ public class Camera {
 
 	public void setObstacle(float[] obstacle) {
 		this.obstacle = obstacle;
-	}
-
-	public float[] getObstacle2() {
-		return obstacle2;
-	}
-
-	public void setObstacle2(float[] obstacle2) {
-		this.obstacle2 = obstacle2;
 	}
 
 	public float[] getRobot() {
@@ -131,7 +162,8 @@ public class Camera {
 			width = image.getWidth();
 			height = image.getHeight();
 		} catch (IOException e) {
-			System.err.println("Could not load camera Image: content/photos/" + input);	
+			System.err.println("Could not load camera Image: content/photos/"
+					+ input);
 			e.printStackTrace();
 		}
 		byteBuffer = makeByteBuffer(image);
@@ -165,9 +197,9 @@ public class Camera {
 		buffer.rewind();
 		return buffer;
 	}
-	
-	public void setComputedBuffer(ByteBuffer computedBuffer){
-	    this.computedBuffer = computedBuffer;
+
+	public void setComputedBuffer(ByteBuffer computedBuffer) {
+		this.computedBuffer = computedBuffer;
 	}
 
 	public int getImageWidth() {
