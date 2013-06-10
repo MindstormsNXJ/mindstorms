@@ -80,7 +80,7 @@ public class PhotoAnalyzer {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//jFrame.setVisible(false);
+				camera.analyzeDataRegister();
 			}
 
 		});

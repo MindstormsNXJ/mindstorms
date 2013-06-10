@@ -28,6 +28,9 @@ public class Camera {
 	Point ballPointOn64Grid=new Point(0, 0);;
 	Point obstaclePoint=new Point(0, 0);
 	float scaleFromOriginal;
+	double xScale, yScale = 10;
+	Mapper mapper;
+
 
 	public float getScaleFromOriginal() {
 		return scaleFromOriginal;
@@ -37,8 +40,6 @@ public class Camera {
 		this.scaleFromOriginal = scaleFromOriginal;
 	}
 
-	double xScale, yScale = 10;
-	Mapper mapper;
 
 	float[] obstacle = { 0.2f, 0.2f, 0.15f, 0.2f };
 
@@ -216,6 +217,11 @@ public class Camera {
 
 	public BufferedImage getImage() {
 		return image;
+	}
+
+	public void analyzeDataRegister() {
+		//TODO scaling to mapper and world choord ball and goal
+		
 	}
 
 }
