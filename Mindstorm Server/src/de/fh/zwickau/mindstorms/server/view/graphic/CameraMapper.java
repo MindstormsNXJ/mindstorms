@@ -69,9 +69,10 @@ public class CameraMapper {
         Rectangle quad = new Rectangle();
         quad.Draw();
         tex_camera.Unbind();
-        Display.update();
         
         readFromFrameBuffer();
+        
+        glUseProgram(0);
     }
     
     /**

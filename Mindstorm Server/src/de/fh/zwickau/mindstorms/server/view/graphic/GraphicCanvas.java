@@ -79,7 +79,7 @@ public class GraphicCanvas extends Thread {
             update();
             
             cameraMapper.compute();
-            //drawMapOverview();
+            drawMapOverview();
         }
 
         Display.destroy();
@@ -243,6 +243,7 @@ public class GraphicCanvas extends Thread {
      */
     private void drawMapOverview() {
         
+        glViewport(0, 0, 512, 512);
     	glClear(GL_COLOR_BUFFER_BIT);
             
         int size = tileVertices.length - 1;
