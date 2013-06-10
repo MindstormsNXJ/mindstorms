@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
@@ -24,7 +25,7 @@ import de.fh.zwickau.mindstorms.server.view.graphic.shape.Rectangle;
 public class CameraMapper {
     private Camera camera;														// Main Camera
     private Texture tex_camera;													// Camera Image
-    private ByteBuffer computeOutput;											// Output from compute.frag
+    private FloatBuffer computeOutput;											// Output from compute.frag
     private int resolution = 64;												// Output resolution
     
     
@@ -77,13 +78,13 @@ public class CameraMapper {
      * Read the output from FrameBuffer
      */
     private void readFromFrameBuffer(){
-        computeOutput = BufferUtils.createByteBuffer(resolution*resolution*3);
-    	glReadPixels(0, 0, resolution, resolution, GL_RGB, GL_BYTE, computeOutput);
+        computeOutput = BufferUtils.createFloatBuffer(resolution*resolution*3);
+    	glReadPixels(0, 0, resolution, resolution, GL_RGB, GL_FLOAT, computeOutput);
     	computeOutput.rewind();
     	camera.setComputedBuffer(computeOutput);
     }
     
-    public ByteBuffer getComputedOutput(){
+    public FloatBuffer getComputedOutput(){
         return computeOutput;
     }
 }

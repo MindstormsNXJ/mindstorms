@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import javax.imageio.ImageIO;
@@ -25,7 +26,7 @@ import de.fh.zwickau.mindstorms.server.view.graphic.CameraMapper;
 public class Camera {
 
 	ByteBuffer byteBuffer = null;
-	ByteBuffer computedBuffer = null;
+	FloatBuffer computedBuffer = null;
 	BufferedImage image = null;
 	float[] ball = { 0.0f, 0, 0.8f, 0.2f };
 	float[] robot = { 0.0f, 0.0f, 0.0f, 0.2f };
@@ -205,7 +206,7 @@ public class Camera {
 		return buffer;
 	}
 
-	public void setComputedBuffer(ByteBuffer computeOutput) {
+	public void setComputedBuffer(FloatBuffer computeOutput) {
 		this.computedBuffer = computeOutput;
 	}
 
@@ -234,13 +235,13 @@ public class Camera {
 	}
 	
 	public void analyzeObstaclemap(){
-		byte[] obstaclePoints=new byte[computedBuffer.remaining()];
+		float[] obstaclePoints=new float[computedBuffer.remaining()];
 		computedBuffer.get(obstaclePoints);
 		int k=0;
-		byte verg= (byte) 0xFF;
+		float verg= 1.0f;
 		for (int i=0;i<64;i++){
 			for (int j=0;j<64;j++){
-				if(obstaclePoints[(k*3)+1]==verg){
+				if(obstaclePoints[k]==verg){
 					System.out.println("ein hinderniss "+obstaclePoints[k]);
 				}else{
 					System.out.println("kein hinderniss "+obstaclePoints[k]);
