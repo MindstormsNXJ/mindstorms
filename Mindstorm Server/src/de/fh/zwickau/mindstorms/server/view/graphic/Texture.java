@@ -2,8 +2,6 @@ package de.fh.zwickau.mindstorms.server.view.graphic;
 
 import java.nio.ByteBuffer;
 
-import org.lwjgl.BufferUtils;
-
 import de.fh.zwickau.mindstorms.server.view.graphic.shader.ShaderManager;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
@@ -69,8 +67,6 @@ class Texture
      */
     public void UploadPixelsToGPU(ByteBuffer pixel)
     {
-        // TODO: This area has not been tested
-        // no one knows exactly what can happen =)
         glBindTexture(GL_TEXTURE_2D, handle);
         glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, pixel);
         glBindTexture(GL_TEXTURE_2D, 0);
