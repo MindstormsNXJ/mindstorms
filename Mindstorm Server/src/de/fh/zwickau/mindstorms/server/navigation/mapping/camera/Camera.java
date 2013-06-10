@@ -252,7 +252,7 @@ public class Camera {
 	}
 
 	private lejos.geom.Point makePointTolejosPoint(Point toChange){
-		lejos.geom.Point lePoint=new lejos.geom.Point ((float)toChange.getX()*getxScaleFor64Grid(), (float)toChange.getY()*getyScaleFor64Grid());
+		lejos.geom.Point lePoint=new lejos.geom.Point (((float)toChange.getX()-32)*getxScaleFor64Grid(),( (float)toChange.getY()-32)*getyScaleFor64Grid());
 		return lePoint;
 	}
 }
