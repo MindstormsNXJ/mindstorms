@@ -220,7 +220,7 @@ public class Camera {
 	}
 
 	public void analyzeDataRegister() {
-		//TODO scaling to mapper and world choord ball and goal
+		//TODO scaling to world choord ball and goal
 		
 	}
 
