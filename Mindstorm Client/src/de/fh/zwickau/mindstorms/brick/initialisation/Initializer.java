@@ -24,7 +24,7 @@ public class Initializer implements ButtonListener {
 	}
 
 	private Robot robot;
-	private final double STD_DRIVE_TRANSLATION = 34.6 / 10;
+	private final double STD_DRIVE_TRANSLATION = 35.7 / 10; //38.7 for test environment
 
 	// config Flags and Enums
 	private boolean hasToCalibrate = false;
@@ -57,7 +57,15 @@ public class Initializer implements ButtonListener {
 //			robot.positionManager.rotateTo(180);
 //			robot.positionManager.rotateTo(90);
 //			robot.positionManager.rotateTo(270);
+			Button.ENTER.waitForPress();
 			robot.positionManager.move(300);
+			robot.positionManager.rotateTo(90);
+			robot.positionManager.move(200);
+			robot.positionManager.rotateTo(180);
+			robot.positionManager.move(300);
+			robot.positionManager.rotateTo(270);
+			robot.positionManager.move(200);
+			robot.positionManager.rotateTo(0);
 			
 			break;
 		case PICKERTEST:

@@ -6,6 +6,7 @@ import lejos.nxt.TouchSensor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.util.Delay;
 import de.fh.zwickau.mindstorms.brick.Robot;
+import de.fh.zwickau.mindstorms.brick.communication.ConnectionManager;
 
 /**
  * Class which enables a robot to use it's grabber. This class provides methods as pickerUp, 
@@ -76,6 +77,7 @@ public class Pick {
 		pickerUp();
 		int distance = sensor.getDistance() * 10;	// for mm
 		if(distance < 2500){
+			ConnectionManager.sendOutputMessage(Integer.toString(robot.colorSensor.getColorID()));
 			int driveDist = distance - itemDistance;
 			System.out.println(driveDist);
 			robot.positionManager.move(driveDist);
@@ -89,19 +91,23 @@ public class Pick {
 			robot.positionManager.move(10);
 			
 			// check the color sensor, if the blue ball was picked
-			if(robot.colorSensor.getColorID() == 2){
-				Sound.beepSequenceUp();
-				System.out.println("blue");
-				grabberMotor.rotateTo(grabberMotor.getTachoCount() - 60);
-				return true;
-			}
-			else{
-				System.out.println("no color");
-				pickerDown();
-				robot.positionManager.move(-50);
-				pickerUp();
-				return false;
-			}
+			return true;
+//			if(robot.colorSensor.getColorID() == 2){
+//				Sound.beepSequenceUp();
+////				System.out.println("blue");
+//				ConnectionManager.sendOutputMessage("blue");
+//				grabberMotor.rotateTo(grabberMotor.getTachoCount() - 60);
+//				return true;
+//			}
+//			else{
+////				System.out.println("no color");
+//				ConnectionManager.sendOutputMessage("no color");
+//				ConnectionManager.sendOutputMessage(Integer.toString(robot.colorSensor.getColorID()));
+//				pickerDown();
+//				robot.positionManager.move(-50);
+//				pickerUp();
+//				return false;
+//			}
 		}
 		else{	// no item was found
 			System.out.println("nothing to pick");
@@ -120,9 +126,12 @@ public class Pick {
 		grabberMotor.setSpeed(50);
 		grabberMotor.backward();
 		while(down){
-			if(grabberMotor.getTachoCount() < - wayDown || robot.colorSensor.getColorID() != 2)
+			if(grabberMotor.getTachoCount() < - wayDown/* || robot.colorSensor.getColorID() != 2*/)
 				down = false;
 		}
+		grabberMotor.stop();
+		grabberMotor.forward();
+		Delay.msDelay(1000);
 		grabberMotor.stop();
 		robot.positionManager.move(-100);
 		pickerUp();
