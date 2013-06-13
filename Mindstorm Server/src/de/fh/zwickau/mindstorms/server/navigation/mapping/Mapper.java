@@ -2,7 +2,6 @@ package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
 import de.fh.zwickau.mindstorms.server.Server;
 import de.fh.zwickau.mindstorms.server.navigation.PathFinder;
-import de.fh.zwickau.mindstorms.server.view.View;
 import lejos.geom.Point;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;

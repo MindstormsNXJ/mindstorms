@@ -1,4 +1,4 @@
-package de.fh.zwickau.mindstorms.server;
+package de.fh.zwickau.mindstorms.server.view;
 
 import java.awt.Color;
 import java.io.OutputStream;
@@ -17,12 +17,14 @@ public class SystemOutConsole extends JTextArea {
 
 	public SystemOutConsole(PrintStream stream) {
 		super();
+		System.setOut(out);
+		System.setErr(out);
 		setEditable(false);
-		if (stream == System.err) {
-			System.setErr(out);
-		} else {
-			System.setOut(out);
-		}
+//		if (stream == System.err) {
+//			System.setErr(out);
+//		} else {
+//			System.setOut(out);
+//		}
 		setBackground(Color.GRAY);
 		setForeground(Color.WHITE);
 	}
