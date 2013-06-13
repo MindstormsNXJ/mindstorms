@@ -139,7 +139,7 @@ public class Gui extends Applet implements ActionListener {
 					gridbag.setConstraints(stabutton, new GridBagConstraints());
 					stabutton.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-
+							
 						}
 					});
 
