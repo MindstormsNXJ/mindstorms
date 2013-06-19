@@ -6,7 +6,8 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 /**
- * A Klass who makes a scaled Jframe Component out of a buffered Image
+ * A Klass who makes a scaled Jframe Component out of a buffered Image , the Jframe Component is to make ,
+ * because a Jframe Gui can only draw Components
  * @author Aismael
  *
  */
@@ -14,12 +15,39 @@ public class ImageComponent extends JComponent
 {
   private static final long serialVersionUID = 8055865896136562197L;
 
-  private BufferedImage image;
-  private float scale;
+  private BufferedImage image;//the Buffered Image who is to Convert
+  private float scale;//the Scaling rate from buffered image to a 512*512 Jframe Component
 
   /**
+ * the Method who can give the Bufferedimage of the Converted Picture to a Gui
+ * @return  Bufferedimage which is set
+ */
+public BufferedImage getImage() {
+	return image;
+}
+
+
+/**
+ * returns thes scaling from orginal to Jframe Component
+ * @return the Scaling rate from buffered image to a 512*512 Jframe Component
+ */
+public float getScale() {
+	return scale;
+}
+
+/**
+ * The Method who draws the Component on a Jcontainer
+ */
+@Override
+  protected void paintComponent( Graphics g )
+  {
+    if ( image != null )
+      g.drawImage( image, 0, 0, this );
+  }
+
+/**
    * 
-   * @param imageIn
+   * @param imageIn the Buffered Image who is to Convert
    */
   public void setImage( BufferedImage imageIn )
   {
@@ -31,19 +59,4 @@ public class ImageComponent extends JComponent
     repaint();
     invalidate();
   }
-
-  public BufferedImage getImage() {
-	return image;
-}
-
-@Override
-  protected void paintComponent( Graphics g )
-  {
-    if ( image != null )
-      g.drawImage( image, 0, 0, this );
-  }
-
-public float getScale() {
-	return scale;
-}
 }

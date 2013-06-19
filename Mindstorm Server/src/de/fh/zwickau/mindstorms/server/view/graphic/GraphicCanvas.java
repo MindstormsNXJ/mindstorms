@@ -1,5 +1,25 @@
 package de.fh.zwickau.mindstorms.server.view.graphic;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.toRadians;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_LINES;
+import static org.lwjgl.opengl.GL11.GL_LINE_STRIP;
+import static org.lwjgl.opengl.GL11.GL_POINTS;
+import static org.lwjgl.opengl.GL11.GL_POINT_SMOOTH;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glLineWidth;
+import static org.lwjgl.opengl.GL11.glPointSize;
+import static org.lwjgl.opengl.GL11.glVertex2f;
+import static org.lwjgl.opengl.GL11.glViewport;
+
 import java.awt.Canvas;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -19,12 +39,6 @@ import de.fh.zwickau.mindstorms.server.navigation.mapping.MapGrid;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.Camera;
 import de.fh.zwickau.mindstorms.server.view.graphic.shader.ShaderManager;
-
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.toRadians;
-
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * OpenGL View for mapping data the graphics will be
@@ -122,8 +136,8 @@ public class GraphicCanvas extends Thread {
         
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                tileVertices[++i] = x / ((float) size / 2.0f) + offset; // X
-                tileVertices[++i] = y / ((float) size / 2.0f) + offset; // Y
+                tileVertices[++i] = x / (size / 2.0f) + offset; // X
+                tileVertices[++i] = y / (size / 2.0f) + offset; // Y
 
                 tileColors[++c] = 0.5f; // red
                 tileColors[++c] = 0.5f; // green
@@ -195,7 +209,7 @@ public class GraphicCanvas extends Thread {
         float strength;
         for (int x = 0; x < g_size; x++) {
             for (int y = 0; y < g_size; y++) {
-                if ((strength = (float)grid.get(x, y)) > 0) {
+                if ((strength = grid.get(x, y)) > 0) {
                     tileColors[++c] = 4.0f * strength / 4.0f;                  //red
                     tileColors[++c] = 1.0f -  1.0f *strength/ 3.0f;            //green
                     tileColors[++c] = 0.0f;                                    //blue
@@ -341,8 +355,8 @@ public class GraphicCanvas extends Thread {
             
             // Draw heading vector
             float[] normal = new float[2];  
-            normal[0] = (float)(sin(toRadians((double)current_pose.getHeading())) * 0.05 + xp);
-            normal[1] = (float)(cos(toRadians((double)current_pose.getHeading())) * 0.05 + yp);
+            normal[0] = (float)(sin(toRadians(current_pose.getHeading())) * 0.05 + xp);
+            normal[1] = (float)(cos(toRadians(current_pose.getHeading())) * 0.05 + yp);
             
             glBegin(GL_LINES);
             glVertex2f(xp, yp);

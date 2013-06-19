@@ -2,13 +2,13 @@ package de.fh.zwickau.mindstorms.server.navigation;
 
 import javax.naming.OperationNotSupportedException;
 
-import de.fh.zwickau.mindstorms.server.communication.ConnectionManager;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.DestinationUnreachableException;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
 import lejos.robotics.pathfinding.ShortestPathFinder;
+import de.fh.zwickau.mindstorms.server.communication.ConnectionManager;
 
 /**
  * This PathFinder class decides which command has to be send next by

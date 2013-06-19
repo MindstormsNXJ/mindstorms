@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import de.fh.zwickau.mindstorms.server.communication.ConnectionManager;
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
-
 import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.Camera;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.PhotoAnalyzer;
-
-import de.fh.zwickau.mindstorms.server.view.*;
+import de.fh.zwickau.mindstorms.server.view.Gui;
 
 
 public class Server {

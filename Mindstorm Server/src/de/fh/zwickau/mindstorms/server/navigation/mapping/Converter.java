@@ -1,6 +1,8 @@
 package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
-import static java.lang.Math.*;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.toRadians;
 
 import java.util.ArrayList;
 
@@ -28,8 +30,8 @@ public class Converter {
 	public static Point calculateObstaclePosition(Pose pose, int dist) {
 	
 		Point target = new Point(0);	
-		target.x = (float)(sin(toRadians((double)pose.getHeading())) * (double)dist + pose.getX());
-		target.y = (float)(cos(toRadians((double)pose.getHeading())) * (double)dist + pose.getY());
+		target.x = (float)(sin(toRadians(pose.getHeading())) * dist + pose.getX());
+		target.y = (float)(cos(toRadians(pose.getHeading())) * dist + pose.getY());
 		
 		return target;
 	}

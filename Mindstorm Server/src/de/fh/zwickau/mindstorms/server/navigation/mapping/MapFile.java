@@ -1,6 +1,9 @@
 package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Class to save and load the current GridMap in a .bm-file

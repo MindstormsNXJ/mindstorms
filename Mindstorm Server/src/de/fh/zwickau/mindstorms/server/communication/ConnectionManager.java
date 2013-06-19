@@ -10,7 +10,6 @@ import lejos.pc.comm.NXTConnector;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
-
 import de.fh.zwickau.mindstorms.server.Server;
 import de.fh.zwickau.mindstorms.server.navigation.PathFinder;
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;

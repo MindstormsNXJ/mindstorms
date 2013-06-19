@@ -2,10 +2,9 @@ package de.fh.zwickau.mindstorms.server.navigation;
 
 import java.util.HashMap;
 
-import de.fh.zwickau.mindstorms.server.Server;
-
 import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.pathfinding.Path;
+import de.fh.zwickau.mindstorms.server.Server;
 
 /**
  * This class is responsible for managing the target points the robot should move to.

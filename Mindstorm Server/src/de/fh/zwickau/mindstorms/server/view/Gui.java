@@ -1,25 +1,27 @@
 package de.fh.zwickau.mindstorms.server.view;
 
-import de.fh.zwickau.mindstorms.server.Server;
-import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
-import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
-import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.Camera;
-import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.ImageComponent;
-import de.fh.zwickau.mindstorms.server.view.graphic.GraphicCanvas;
-
 import java.applet.Applet;
+import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.WindowConstants;
 
-import javax.swing.*;
+import de.fh.zwickau.mindstorms.server.Server;
+import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
+import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
+import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.Camera;
+import de.fh.zwickau.mindstorms.server.view.graphic.GraphicCanvas;
 
 public class Gui extends Applet implements ActionListener {
 	private static final long serialVersionUID = 1L;
@@ -69,6 +71,7 @@ public class Gui extends Applet implements ActionListener {
 					JButton saveMapButton = new JButton("save Map");
 					gridbag.setConstraints(saveMapButton,c);
 					saveMapButton.addActionListener(new ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent e) {
 							server.saveMap();
 						}
@@ -78,7 +81,8 @@ public class Gui extends Applet implements ActionListener {
                     JButton cameraSettingsButton = new JButton("Camera Settings");
                     gridbag.setConstraints(cameraSettingsButton,c);
                     cameraSettingsButton.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
+                        @Override
+						public void actionPerformed(ActionEvent e) {
                             server.setPhotoAnalyzerVisible();
                         }
                     });
@@ -86,6 +90,7 @@ public class Gui extends Applet implements ActionListener {
 					// forward button
 					JButton forbutton = new JButton("forward");
 					forbutton.addActionListener(new ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent e) {
 							final int number = Integer.parseInt(text.getText());
 							server.getConnectionManager().sendForwardCommand(
@@ -97,6 +102,7 @@ public class Gui extends Applet implements ActionListener {
 					JButton bacbutton = new JButton("backward");
 					gridbag.setConstraints(bacbutton, c);
 					bacbutton.addActionListener(new ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent e) {
 							final int number = Integer.parseInt(text.getText());
 							server.getConnectionManager().sendBackwardCommand(
@@ -108,6 +114,7 @@ public class Gui extends Applet implements ActionListener {
 					JButton turbutton = new JButton("turn");
 					gridbag.setConstraints(turbutton, c);
 					turbutton.addActionListener(new ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent e) {
 							final int number = Integer.parseInt(text.getText());
 							server.getConnectionManager().sendTurnCommand(
@@ -118,6 +125,7 @@ public class Gui extends Applet implements ActionListener {
 					// pickbutton
 					JButton picbutton = new JButton("pick");
 					picbutton.addActionListener(new ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent e) {
 							final int number = Integer.parseInt(text.getText());
 							server.getConnectionManager().sendPickCommand(
@@ -129,6 +137,7 @@ public class Gui extends Applet implements ActionListener {
 					JButton drobutton = new JButton("drop");
 					gridbag.setConstraints(drobutton, c);
 					drobutton.addActionListener(new ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent e) {
 							final int number = Integer.parseInt(text.getText());
 							server.getConnectionManager().sendDropCommand(
@@ -140,6 +149,7 @@ public class Gui extends Applet implements ActionListener {
 					JButton exibutton = new JButton("exit");
 					gridbag.setConstraints(exibutton, c);
 					exibutton.addActionListener(new ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent e) {
 							server.getConnectionManager().terminate();
 						}
@@ -149,6 +159,7 @@ public class Gui extends Applet implements ActionListener {
 					JButton stabutton = new JButton("start");
 					gridbag.setConstraints(stabutton, new GridBagConstraints());
 					stabutton.addActionListener(new ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent e) {
 
 						}
@@ -198,6 +209,7 @@ public class Gui extends Applet implements ActionListener {
 
 	}
 	
+	@Override
 	public void start(){
 	    graphicCanvas.start();
 	}
