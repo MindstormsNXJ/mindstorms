@@ -45,8 +45,8 @@ public class TargetManager {
 	 * Initialises the ball and the finish target. //TODO these targets should be stored in the mapper
 	 */
 	private void initTargets() {
-		ball = new Waypoint(0, 61);
-		target = new Waypoint(0, -30);
+		ball = new Waypoint(0, 81);
+		target = new Waypoint(40, -30);
 	}
 	
 	/**

@@ -164,7 +164,7 @@ public class ConverterV2 {
 		int index = 0;
 		for (Line line : lineList) {
 			if (isHorizontalLine(line)) {
-				int leftAddtion = checkLeftSideOfLine((int) line.x1 - 1 - halfRoboterSize, (int) line.y1, lines);
+				int leftAddtion = 0/*checkLeftSideOfLine((int) line.x1 - 1 - halfRoboterSize, (int) line.y1, lines)*/;
 				lines[index] = new Line(line.x1 - halfRoboterSize - leftAddtion, line.y1 - halfRoboterSize + 1, line.x2 + halfRoboterSize, line.y2 - halfRoboterSize + 1);
 				++index;
 				lines[index] = new Line(line.x2 + halfRoboterSize, line.y2 - halfRoboterSize + 1, line.x2 + halfRoboterSize, line.y2 + halfRoboterSize + 1);

@@ -124,6 +124,9 @@ public class Gui extends Applet implements ActionListener {
 
 					// pickbutton
 					JButton picbutton = new JButton("pick");
+					GridBagConstraints pickConstraints = new GridBagConstraints();
+					pickConstraints.fill = GridBagConstraints.BOTH;
+					gridbag.setConstraints(picbutton, pickConstraints);
 					picbutton.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
@@ -157,7 +160,9 @@ public class Gui extends Applet implements ActionListener {
 
 					// button to try to start a connection to the brick
 					JButton stabutton = new JButton("start");
-					gridbag.setConstraints(stabutton, new GridBagConstraints());
+					GridBagConstraints startConstraints = new GridBagConstraints();
+					startConstraints.fill = GridBagConstraints.BOTH;
+					gridbag.setConstraints(stabutton, startConstraints);
 					stabutton.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {

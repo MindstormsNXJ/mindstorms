@@ -26,7 +26,7 @@ public class PathFinder {
 	private boolean mapChanged = true;
 	
 	//two values which will be used for the line map converting process
-	private static final int BUFFER = 10;
+	private static final int BUFFER = 5;
 	public static final float ROBOT_LENGTH_IN_TILES = (30 + BUFFER) / 4; //30 cm
 	public static final float ROBOT_WIDTH_IN_TILES = (20 + BUFFER) / 4; //20 cm
 	

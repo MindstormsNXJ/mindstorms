@@ -36,7 +36,7 @@ public class CompassCalibrator {
 		}
 		leftMotor.forward();
 		rightMotor.backward();
-		Delay.msDelay(1000);
+		Delay.msDelay(3000);
 		while (leftMotor.isMoving()) {
 			float direction = robot.getDirection();
 			if (Math.abs(startDirection - direction) < 2) {
