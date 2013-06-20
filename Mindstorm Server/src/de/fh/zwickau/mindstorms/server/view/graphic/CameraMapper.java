@@ -55,8 +55,6 @@ public class CameraMapper {
      * The Output is going to the Camera class as a ByteBuffer.
      */
     public void compute(){
-        float[] ball = camera.getBall();
-        float[] goal = camera.getGoal();
         float[] obst = camera.getObstacle();
 
         glClear(GL_COLOR_BUFFER_BIT);
@@ -64,9 +62,7 @@ public class CameraMapper {
         
         ShaderManager.useShader("compute");
         glUniform4f(ShaderManager.getUniformLocation("v4_obstacle"), obst[0], obst[1], obst[2], 0.2f);
-        glUniform4f(ShaderManager.getUniformLocation("v4_ball"), ball[0], ball[1], ball[2], 0.20f);
-        glUniform4f(ShaderManager.getUniformLocation("v4_goal"), goal[0], goal[1], goal[2], 0.20f);
-        
+       
         tex_camera.Bind(0);
         
         Rectangle quad = new Rectangle();
