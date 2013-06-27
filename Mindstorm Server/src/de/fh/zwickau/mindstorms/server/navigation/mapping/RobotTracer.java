@@ -2,6 +2,7 @@ package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import lejos.robotics.navigation.Pose;
 
 /**

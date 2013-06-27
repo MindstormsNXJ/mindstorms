@@ -1,10 +1,10 @@
 package de.fh.zwickau.mindstorms.server.navigation.mapping;
 
-import de.fh.zwickau.mindstorms.server.Server;
-import de.fh.zwickau.mindstorms.server.navigation.PathFinder;
 import lejos.geom.Point;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
+import de.fh.zwickau.mindstorms.server.Server;
+import de.fh.zwickau.mindstorms.server.navigation.PathFinder;
 
 /**
  * The Mapper generate a GridMap of obstacles.
@@ -53,7 +53,7 @@ public class Mapper {
 	public void addObstacle(Pose pose, int dist/*, ID id*/) {
 		
 		//calculate the right coordinates
-		float[] obstacle_position = Converter.calculateObstaclePosition(pose, dist);
+		Point obstacle_position = Converter.calculateObstaclePosition(pose, dist);
 		
 		//TODO: check if its a other robot or a goal
 		boolean isNotRobotOrGoal = true; // =)
@@ -61,16 +61,6 @@ public class Mapper {
 		if(isNotRobotOrGoal){
 			addObstacle(obstacle_position);
 		}
-	}
-
-	/**
-	 * Add an Obstacle at the world position without
-	 * check if its a other robot or a goal.
-	 * @param pos position
-	 */
-	private void addObstacle(float[] pos){
-		addObstacle((int)(pos[0]/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2,
-		            (int)(pos[1]/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2);
 	}
 	
 	/**
@@ -87,6 +77,16 @@ public class Mapper {
 		} catch (ArrayIndexOutOfBoundsException e){
 			//ignore it
 		}
+	}
+	
+	/**
+     * Add an Obstacle at the world position without
+     * check if its a other robot or a goal.
+     * @param obstPoint position of obstacle
+     */
+	public void addObstacle(Point obstPoint){		
+		addObstacle((int)(obstPoint.x/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2,
+                    (int)(obstPoint.y/mapGrid.getTileSize() + 0.5f) + mapGrid.getGridSize() / 2);
 	}
 	
 	/**

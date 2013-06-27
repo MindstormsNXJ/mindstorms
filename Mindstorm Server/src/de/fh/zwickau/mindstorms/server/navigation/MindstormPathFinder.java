@@ -8,9 +8,6 @@ import java.util.Set;
 
 import javax.naming.OperationNotSupportedException;
 
-import de.fh.zwickau.mindstorms.server.navigation.mapping.MapGrid;
-import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
-
 import lejos.geom.Line;
 import lejos.geom.Point;
 import lejos.geom.Rectangle;
@@ -21,6 +18,8 @@ import lejos.robotics.navigation.Waypoint;
 import lejos.robotics.navigation.WaypointListener;
 import lejos.robotics.pathfinding.Path;
 import lejos.robotics.pathfinding.PathFinder;
+import de.fh.zwickau.mindstorms.server.navigation.mapping.MapGrid;
+import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
 
 public class MindstormPathFinder implements PathFinder {
 

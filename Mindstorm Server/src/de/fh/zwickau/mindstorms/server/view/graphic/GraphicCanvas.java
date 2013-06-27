@@ -1,5 +1,11 @@
 package de.fh.zwickau.mindstorms.server.view.graphic;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.toRadians;
+import static org.lwjgl.opengl.GL11.*;
+
+
 import java.awt.Canvas;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -13,18 +19,20 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.MapGrid;
 import de.fh.zwickau.mindstorms.server.navigation.mapping.Mapper;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.toRadians;
-import static org.lwjgl.opengl.GL11.*;
+import de.fh.zwickau.mindstorms.server.navigation.mapping.camera.Camera;
+import de.fh.zwickau.mindstorms.server.view.graphic.shader.ShaderManager;
 
 /**
- * OpenGL View for mapping data
+ * OpenGL View for mapping data the graphics will be
+ * drawn to the parent canvas.
+ * 
+ * This class is also used to start computing for
+ * obstacle detection on GPU when the camera has a
+ * new Image.
  * 
  * @author Andre Furchner
  *
@@ -32,32 +40,34 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class GraphicCanvas extends Thread {
     
-    private Canvas parent;
+    private Canvas parent;				// Canvas where OpenGL will be drawn 
+    private Mapper mapper;				// For map-data that will be drawn
+    private CameraMapper cameraMapper;	// Compute obstacles from Image with GLSL
+    private TargetManager targetM;		// Have Targets that will be drawn
+    private Semaphore semaphore;		// For other Threads to sync
     
-    private Mapper mapper;
-    private TargetManager targetM;
-    
-    private Boolean mapChanged;
-    private Boolean targetChanged;
-    private Semaphore semaphore;
-    
+    private boolean mapChanged;			// true if map was changed
+    private boolean targetChanged;		// true if targets was changed
+    private boolean cameraChanged;		// true if camera has new Image
     
     // Draw Items
-    private float[] tileVertices;
-    private float[] tileColors;
-    private float[] lineVertices;
-    private float[] targetVertices;
+    private float[] tileVertices;		// tile vertex-data 
+    private float[] tileColors;			// tile color data
+    private float[] lineVertices;		// line vertex-data
+    private float[] targetVertices;		// target position data
 
-    //Draw options
+    //	Draw options
     boolean drawLine = true;
     boolean drawTile = true;
+    
     
     public GraphicCanvas(Canvas parent) {
         this.parent = parent;
         this.mapChanged = new Boolean(true);
         this.targetChanged = new Boolean(true);
+        this.cameraChanged = new Boolean(true);
         this.semaphore = new Semaphore(1);
-        
+        this.cameraMapper = new CameraMapper();
     }
 
     @Override
@@ -67,10 +77,13 @@ public class GraphicCanvas extends Thread {
 
         while (!Display.isCloseRequested()) {
             update();
-            draw();
+            
+            cameraMapper.compute();
+            drawMapOverview();
         }
 
         Display.destroy();
+        System.exit(0);
     }
 
     /**
@@ -78,20 +91,21 @@ public class GraphicCanvas extends Thread {
      */
     private void createWindow() {
         try {
-            Display.setParent(parent);
-            
+            Display.setParent(parent);   
             Display.create();
         } catch (LWJGLException e) {
             e.printStackTrace();
             System.err.println("Failed to create an OpenGL Window :(");
         }
-
     }
 
     /**
      * Initialize some OpenGL parameters and allocate memory
+     * for vertex and color data.
      */
     private void initialize() {
+        ShaderManager.Initialize();
+        
         final int size = mapper.getGrid().getGridSize();
         
         // GL initialize
@@ -102,14 +116,14 @@ public class GraphicCanvas extends Thread {
         // initialize pixel grid
         tileVertices = new float[size * size * 2];
         tileColors = new float[size * size * 3];
-
+        float offset = -1.0f + 1.0f / size;
         int i = -1;
         int c = -1;
-        float offset = -1.0f + 1.0f / size;
+        
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                tileVertices[++i] = x / ((float) size / 2.0f) + offset; // X
-                tileVertices[++i] = y / ((float) size / 2.0f) + offset; // Y
+                tileVertices[++i] = x / (size / 2.0f) + offset; // X
+                tileVertices[++i] = y / (size / 2.0f) + offset; // Y
 
                 tileColors[++c] = 0.5f; // red
                 tileColors[++c] = 0.5f; // green
@@ -118,15 +132,48 @@ public class GraphicCanvas extends Thread {
         }
     }
 
+    /**
+     * Update data if map, targets or camera
+     * was changed and check if user have started
+     * a event.
+     */
     private void update(){
-        //Map update if it was changed
+    	
+        // Map update if it was changed
         if (mapChanged) {
             rebuildMap();
-        }
-        if (targetChanged) {
-            rebuildTargets();
+            try {
+                semaphore.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            mapChanged = false;
+            semaphore.release();
         }
         
+        // update targets if it was changed
+        if (targetChanged) {
+            rebuildTargets();
+            try {
+                semaphore.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            targetChanged = false;
+            semaphore.release();
+        }
+        
+        // compute new obstacles if the camera has a new Image.
+        if (cameraChanged) {
+        	cameraMapper.update();
+            try {
+                semaphore.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            cameraChanged = false;
+            semaphore.release();
+        }
         
         input();    
     }
@@ -138,7 +185,6 @@ public class GraphicCanvas extends Thread {
      * And generate the new LineMap view.
      */
     private void rebuildMap() {
-        setFalse(mapChanged);
     
         MapGrid grid = mapper.getGrid();
         final int g_size = grid.getGridSize();
@@ -149,7 +195,7 @@ public class GraphicCanvas extends Thread {
         float strength;
         for (int x = 0; x < g_size; x++) {
             for (int y = 0; y < g_size; y++) {
-                if ((strength = (float)grid.get(x, y)) > 0) {
+                if ((strength = grid.get(x, y)) > 0) {
                     tileColors[++c] = 4.0f * strength / 4.0f;                  //red
                     tileColors[++c] = 1.0f -  1.0f *strength/ 3.0f;            //green
                     tileColors[++c] = 0.0f;                                    //blue
@@ -190,12 +236,15 @@ public class GraphicCanvas extends Thread {
             }
         }
     }
-
+    
+    
     /**
      * Draw all data on OpenGL canvas.
      */
-    private void draw() {
-        glClear(GL_COLOR_BUFFER_BIT);
+    private void drawMapOverview() {
+        
+        glViewport(0, 0, 512, 512);
+    	glClear(GL_COLOR_BUFFER_BIT);
             
         int size = tileVertices.length - 1;
         int i = -1;
@@ -222,10 +271,8 @@ public class GraphicCanvas extends Thread {
                     glVertex2f(lineVertices[++i], lineVertices[++i]);          //Set new LinePoint
                 }
                 glEnd();                                                       //End with Line draw
-            }
-                                                                 
+            }                                                         
         }
-        
         
         // draw the center lines
         glLineWidth(1.0f);
@@ -239,7 +286,7 @@ public class GraphicCanvas extends Thread {
         drawRobots();
         drawObjects();
         
-        Display.update();                                                      //Bring it to the screen.
+        Display.update();                                                      	// Bring it to the screen.
     }
     
     private void drawTargets(){
@@ -248,12 +295,11 @@ public class GraphicCanvas extends Thread {
 
         glLineWidth(1.51f);
         glColor3f(1.0f, 0.75f, 0.0f);
-        glBegin(GL_LINE_STRIP);                                                //Begin to draw Lines
+        glBegin(GL_LINE_STRIP);                                                	// Begin to draw Lines
         while (i < size) {
-            glVertex2f(targetVertices[++i], targetVertices[++i]);              //make a point
+            glVertex2f(targetVertices[++i], targetVertices[++i]);              	// make a point
         }
-        glEnd();                                                               //End with target draw
-        
+        glEnd();                                                               	// End with target draw
     }
     
     private void drawRobots(){
@@ -295,14 +341,13 @@ public class GraphicCanvas extends Thread {
             
             // Draw heading vector
             float[] normal = new float[2];  
-            normal[0] = (float)(sin(toRadians((double)current_pose.getHeading())) * 0.05 + xp);
-            normal[1] = (float)(cos(toRadians((double)current_pose.getHeading())) * 0.05 + yp);
+            normal[0] = (float)(sin(toRadians(current_pose.getHeading())) * 0.05 + xp);
+            normal[1] = (float)(cos(toRadians(current_pose.getHeading())) * 0.05 + yp);
             
             glBegin(GL_LINES);
             glVertex2f(xp, yp);
             glVertex2f(normal[0], normal [1]);
             glEnd();
-                 
         }
         glDisable(GL_POINT_SMOOTH);
     }
@@ -385,42 +430,41 @@ public class GraphicCanvas extends Thread {
     public void setTargetManager(TargetManager tM) {
         this.targetM = tM;
     }
+
+    /**
+     * Register the Camera to be observed.
+     * 
+     * @param camera Camera
+     */
+    public void setCamera(Camera camera){
+    	cameraMapper.setCamera(camera); 
+    }
     
     /**
      * Tells view that the map has changed (Thread safe)
      */
     public void mapChanged() {
-        setTrue(mapChanged);
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        mapChanged = true;
+        semaphore.release();
     }
 
     /**
      * Tells view that the Target has changed (Thread safe)
      */
     public void targetChanged() {
-            setTrue(targetChanged);
-    }
-    
-    private void setTrue(Boolean bool){
         try {
             semaphore.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        bool = true;
+        targetChanged = true;
         semaphore.release();
     }
-    
-    private void setFalse(Boolean bool){
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        bool = false;
-        semaphore.release();
-    }   
-    
-
 }
