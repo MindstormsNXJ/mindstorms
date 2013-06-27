@@ -10,7 +10,6 @@ import lejos.pc.comm.NXTConnector;
 import lejos.robotics.mapping.LineMap;
 import lejos.robotics.navigation.Pose;
 import lejos.util.Delay;
-
 import de.fh.zwickau.mindstorms.server.Server;
 import de.fh.zwickau.mindstorms.server.navigation.PathFinder;
 import de.fh.zwickau.mindstorms.server.navigation.TargetManager;
@@ -80,8 +79,33 @@ public class ConnectionManager {
 		LineMap lineMap = mapper.getLineMap();
 		pathFinder = new PathFinder(lineMap, robotName);
 		//long way
-//		pathFinder.nextAction(new Pose(0,0,0), this);
-//		pathFinder.nextAction(new Pose(0,0,200), this);
+//		Pose pose = new Pose(0,0,0);
+//		pathFinder.nextAction(pose, this);
+//		mapper.addPose(pose, robotName);
+//		pose = new Pose(0,0,278);
+//		pathFinder.nextAction(pose, this);
+//		mapper.addPose(pose, robotName);
+//		pose = new Pose(-32,4,278);
+//		pathFinder.nextAction(pose, this);
+//		mapper.addPose(pose, robotName);
+//		pose = new Pose(-32,4,0);
+//		pathFinder.nextAction(pose, this);
+//		mapper.addPose(pose, robotName);
+//		pose = new Pose(-32,28,0);
+//		pathFinder.nextAction(pose, this);
+//		mapper.addPose(pose, robotName);
+//		pose = new Pose(-32,68,0);
+//		pathFinder.nextAction(pose, this);
+//		mapper.addPose(pose, robotName);
+//		pose = new Pose(-32,68,67);
+//		pathFinder.nextAction(pose, this);
+//		mapper.addPose(pose, robotName);
+//		pose = new Pose(0,81,67);
+//		pathFinder.nextAction(pose, this);
+//		mapper.addPose(pose, robotName);
+		
+//		pathFinder.nextAction(pose, this);
+//		mapper.addPose(pose, robotName);
 //		pathFinder.nextAction(new Pose(-3,-8,200), this);
 //		pathFinder.nextAction(new Pose(-3,-8,180), this);
 //		pathFinder.nextAction(new Pose(-3,-14,180), this);
