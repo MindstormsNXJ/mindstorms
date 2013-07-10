@@ -27,7 +27,7 @@ public class Initializer implements ButtonListener {
 	private final double STD_DRIVE_TRANSLATION = 35.7 / 10; //38.7 for test environment
 
 	// config Flags and Enums
-	private boolean hasToCalibrate = false;
+	private boolean hasToCalibrate = true;
 	private Mode mode = Mode.SERVERMODE;
 
 	/**
